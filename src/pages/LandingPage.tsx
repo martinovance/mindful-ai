@@ -1,6 +1,6 @@
-// import Image1 from "@/assets/Image1.svg";
 import { Button } from "@/components/ui/button";
 import { HOMESCREEN } from "@/constant/homeDetails";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   return (
@@ -21,7 +21,7 @@ const LandingPage = () => {
             <div className="w-[223px] h-[223px]">
               <img
                 src={item.img}
-                alt="Therapist"
+                alt="therapist"
                 className="object-cover rounded-sm"
               />
             </div>
@@ -31,12 +31,14 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <Button
-        className="bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white 
-      cursor-pointer"
-      >
-        Start your journey
-      </Button>
+      <Link to="/create-account">
+        <Button
+          className="bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white 
+          cursor-pointer"
+        >
+          Start your journey
+        </Button>
+      </Link>
     </div>
   );
 };

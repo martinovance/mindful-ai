@@ -45,9 +45,11 @@ const Appbar = () => {
             </Link>
           </nav>
 
-          <Button className="bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white cursor-pointer">
-            Get Started
-          </Button>
+          <Link to="/create-account">
+            <Button className="bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white cursor-pointer">
+              Get Started
+            </Button>
+          </Link>
         </div>
       </div>
     </header>
