@@ -6,7 +6,7 @@ import { validationSchema } from "./validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -89,6 +89,13 @@ const CreateAccount = () => {
           >
             Create Account
           </Button>
+          <p className="font-medium text-sm mt-1">
+            Already have an account? {""}
+            <Link to="/login" className="text-blue-700 cursor-pointer">
+              Login
+            </Link>{" "}
+            instead.
+          </p>
         </form>
       </Form>
     </section>

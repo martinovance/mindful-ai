@@ -3,6 +3,7 @@ import LandingPage from "./pages/LandingPage";
 import Appbar from "./components/Appbar";
 import Login from "./pages/auth/Login";
 import CreateAccount from "./pages/auth/CreateAccount";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="create-account" element={<CreateAccount />} />
             <Route index element={<LandingPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </div>
       </BrowserRouter>

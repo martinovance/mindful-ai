@@ -21,7 +21,7 @@ const CreateAccount = () => {
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
     console.log(values);
 
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
