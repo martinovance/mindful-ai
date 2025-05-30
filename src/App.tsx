@@ -4,6 +4,8 @@ import Appbar from "./components/Appbar";
 import Login from "./pages/auth/Login";
 import CreateAccount from "./pages/auth/CreateAccount";
 import Dashboard from "./pages/Dashboard";
+import Voice from "./pages/Voice";
+import Resources from "./pages/Resources";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <Route path="create-account" element={<CreateAccount />} />
             <Route index element={<LandingPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/voice" element={<Voice />} />
+            <Route path="/resources" element={<Resources />} />
           </Routes>
         </div>
       </BrowserRouter>

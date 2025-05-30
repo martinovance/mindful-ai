@@ -10,6 +10,20 @@ const Appbar = () => {
   const location = useLocation();
   const pathname = location.pathname;
 
+  const getTitle = () => {
+    switch (pathname) {
+      case "/":
+        return "Mindful AI";
+      case "/dashboard":
+        return "MindfulPath";
+      case "/voice":
+        return "MindfulTalk";
+
+      default:
+        return "Mindful AI";
+    }
+  };
+
   return (
     <header
       className="top-0 z-50 h-[65PX] w-full p-8 border-b 
@@ -17,40 +31,38 @@ const Appbar = () => {
     dark:bg-gray-950/90"
     >
       <div className="flex flex-row justify-between items-center h-full">
-        <Link to="/">
+        <Link
+          to={
+            ["/", "/create-account", "/login"].includes(pathname)
+              ? "/"
+              : "/dashboard"
+          }
+        >
           <div className="flex flex-row gap-4 items-center">
             <img src={Logo} alt="app-logo" className="h[20px] w-[20px]" />
-            {pathname === "/" ? (
-              <p className="text-[#121417] text-xl font-bold">Mindful AI</p>
-            ) : (
-              <p className="text-[#121417] text-xl font-bold">MindfulPath</p>
+            {getTitle() && (
+              <p className="text-[#121417] text-xl font-bold">{getTitle()}</p>
             )}
           </div>
         </Link>
 
         <div className="flex flex-row justify-end items-center gap-10 ">
-          {pathname === "/dashboard" ? (
+          {!["/", "/create-account", "/login"].includes(pathname) ? (
             <nav className="flex flex-row items-center gap-8 ">
               <Link
-                to="/"
+                to="/dashboard"
                 className="text-md font-small hover:text-primary transition-colors"
               >
                 Home
               </Link>
               <Link
-                to="/"
+                to="/voice"
                 className="text-md font-small hover:text-primary transition-colors"
               >
                 Sessions
               </Link>
               <Link
-                to="/"
-                className="text-md font-small hover:text-primary transition-colors"
-              >
-                Mood Tracker
-              </Link>
-              <Link
-                to="/"
+                to="/resources"
                 className="text-md font-small hover:text-primary transition-colors"
               >
                 Resources
