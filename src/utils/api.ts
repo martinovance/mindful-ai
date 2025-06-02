@@ -1,4 +1,3 @@
-/* eslint-disable */
 import axios from "axios";
 import Auth from "./auth";
 
@@ -10,34 +9,25 @@ const Api = axios.create({
 
 Api.interceptors.request.use(
   (config) => {
-    if (Auth.isAuthenticated()) {
-      config.headers["Authorization"] = `Bearer ${Auth.getToken()}`;
+    const noAuthEndpoints = [
+      "/accounts:signUp",
+      "/accounts:signInWithPassword",
+    ];
+
+    const shouldSkipAuth = noAuthEndpoints.some((endpoint) =>
+      config.url?.includes(endpoint)
+    );
+
+    if (!shouldSkipAuth) {
+      const token = Auth.getToken();
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
-
-// Api.interceptors.response.use(
-//     (response) => response,
-//     async (error) => {
-//       const originalRequest = error.config;
-
-//       if (error.response.status === 401 && !originalRequest._retry) {
-//         originalRequest._retry = true;
-//         const token = await authService.refreshAccessToken();
-//         const newRequest = {
-//           ...originalRequest,
-//           headers: {
-//             ...originalRequest.headers,
-//             Authorization: `Bearer ${token}`,
-//           },
-//         };
-//         return Api(newRequest);
-//       }
-
-//       return Promise.reject(error);
-//     }
-//   );
 
 export default Api;

@@ -1,5 +1,10 @@
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import React from "react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { validationSchema } from "./validationSchema";
@@ -7,9 +12,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { CreateUserAccount } from "@/services/authService";
+import Auth from "@/utils/auth";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
+
+  const CreateUser = useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      CreateUserAccount(email, password),
+    onSuccess: (data) => {
+      console.log(data);
+      Auth.setToken(data?.data?.idToken);
+      navigate("/login");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const form = useForm<z.infer<typeof validationSchema>>({
     resolver: zodResolver(validationSchema),
@@ -21,9 +42,8 @@ const CreateAccount = () => {
   });
 
   const onSubmit = (values: z.infer<typeof validationSchema>) => {
-    console.log(values);
-
-    navigate("/login");
+    const { email, password } = values;
+    CreateUser.mutate({ email, password });
   };
 
   return (
@@ -36,6 +56,7 @@ const CreateAccount = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
+                <FormMessage />
                 <FormControl>
                   <Input
                     placeholder="Email"
@@ -52,6 +73,7 @@ const CreateAccount = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
+                <FormMessage />
                 <FormControl>
                   <Input
                     placeholder="Password"
@@ -69,6 +91,7 @@ const CreateAccount = () => {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
+                <FormMessage />
                 <FormControl>
                   <Input
                     placeholder="Confirm password"

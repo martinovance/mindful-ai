@@ -1,4 +1,10 @@
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { loginSchema } from "./validationSchema";
@@ -6,9 +12,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { LoginUserCredentials } from "@/services/authService";
+import Auth from "@/utils/auth";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
+
+  const LoginUser = useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      LoginUserCredentials(email, password),
+    onSuccess: (data) => {
+      Auth.setToken(data?.data?.idToken);
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -19,9 +40,8 @@ const CreateAccount = () => {
   });
 
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    console.log(values);
-
-    navigate("/dashboard");
+    const { email, password } = values;
+    LoginUser.mutate({ email, password });
   };
 
   return (
@@ -34,6 +54,7 @@ const CreateAccount = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
+                <FormMessage />
                 <FormControl>
                   <Input
                     placeholder="Email"
@@ -50,6 +71,7 @@ const CreateAccount = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
+                <FormMessage />
                 <FormControl>
                   <Input
                     placeholder="Password"
