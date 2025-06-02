@@ -1,15 +1,23 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
 import Appbar from "./components/Appbar";
-import Login from "./pages/auth/Login";
-import CreateAccount from "./pages/auth/CreateAccount";
-import Dashboard from "./pages/Dashboard";
-import Voice from "./pages/Voice";
-import Resources from "./pages/Resources";
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Login = lazy(() => import("./pages/auth/Login"));
+const CreateAccount = lazy(() => import("./pages/auth/CreateAccount"));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Resources = lazy(() => import("./pages/Resources"));
+const Voice = lazy(() => import("./pages/Voice"));
+import { LoaderCircle } from "lucide-react";
 
 function App() {
   return (
-    <>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-[100vh] w-full">
+          <LoaderCircle className="w-20 h-20" />
+        </div>
+      }
+    >
       <BrowserRouter>
         <div className="flex flex-col gap-2">
           <Appbar />
@@ -23,7 +31,7 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
-    </>
+    </Suspense>
   );
 }
 
