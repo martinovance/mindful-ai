@@ -23,7 +23,6 @@ const CreateAccount = () => {
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       CreateUserAccount(email, password),
     onSuccess: (data) => {
-      console.log(data);
       Auth.setToken(data?.data?.idToken);
       navigate("/login");
     },

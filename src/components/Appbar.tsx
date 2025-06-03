@@ -56,7 +56,7 @@ const Appbar = () => {
                 Home
               </Link>
               <Link
-                to="/voice"
+                to="/sessions"
                 className="text-md font-small hover:text-primary transition-colors"
               >
                 Sessions
@@ -97,13 +97,13 @@ const Appbar = () => {
             </nav>
           )}
 
-          {pathname === "/" ? (
+          {["/", "/create-account", "/login"].includes(pathname) ? (
             <Link to="/create-account">
               <Button
                 className="bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white 
               cursor-pointer"
               >
-                Get Started
+                {pathname === "/create-account" ? "Login" : "Get Started"}
               </Button>
             </Link>
           ) : (

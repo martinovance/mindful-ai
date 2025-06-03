@@ -12,11 +12,17 @@ const Dashboard = () => {
           Track your emotional well-being over time to identify patterns and
           triggers.
         </p>
-        <Tabs defaultValue="weekly" className="w-full cursor-pointer">
+        <Tabs defaultValue="weekly" className="w-full">
           <TabsList className="w-full">
-            <TabsTrigger value="daily">Daily</TabsTrigger>
-            <TabsTrigger value="weekly">Weekly</TabsTrigger>
-            <TabsTrigger value="monthly">Monthly</TabsTrigger>
+            <TabsTrigger value="daily" className="cursor-pointer">
+              Daily
+            </TabsTrigger>
+            <TabsTrigger value="weekly" className="cursor-pointer">
+              Weekly
+            </TabsTrigger>
+            <TabsTrigger value="monthly" className="cursor-pointer">
+              Monthly
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="daily">

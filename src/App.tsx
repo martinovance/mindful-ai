@@ -1,12 +1,12 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Appbar from "./components/Appbar";
-const Dashboard = lazy(() => import("./pages/Dashboard"));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/auth/Login"));
 const CreateAccount = lazy(() => import("./pages/auth/CreateAccount"));
-const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Sessions = lazy(() => import("./pages/Sessions"));
 const Resources = lazy(() => import("./pages/Resources"));
-const Voice = lazy(() => import("./pages/Voice"));
 import { LoaderCircle } from "lucide-react";
 
 function App() {
@@ -22,11 +22,11 @@ function App() {
         <div className="flex flex-col gap-2">
           <Appbar />
           <Routes>
+            <Route index element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="create-account" element={<CreateAccount />} />
-            <Route index element={<LandingPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/voice" element={<Voice />} />
+            <Route path="/sessions" element={<Sessions />} />
             <Route path="/resources" element={<Resources />} />
           </Routes>
         </div>
