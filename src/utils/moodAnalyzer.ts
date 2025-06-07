@@ -64,7 +64,6 @@ export const generateSuggestions = (mood: MoodType): string[] => {
 export const getTimeOfDay = (): "Morning" | "Afternoon" | "Evening" => {
   const hour = new Date().getHours();
   if (hour < 12) return "Morning";
-  if (hour < 12) return "Afternoon";
-  if (hour < 12) return "Evening";
+  if (hour < 18) return "Afternoon";
   return "Evening";
 };

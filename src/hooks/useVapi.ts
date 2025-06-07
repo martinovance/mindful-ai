@@ -41,25 +41,33 @@ export const useVapi = (userId: string) => {
 
     vapi.on("call-end", async () => {
       setIsSpeaking(false);
-      const rawTranscript = transcript.join(" ");
-      const moodLabel = analyzeMood(rawTranscript);
-      const summary = summarizeTranscript(transcript);
-      const moodScore = generateMoodScore(moodLabel);
-      const recommendations = generateSuggestions(moodLabel);
-      const timeOfDay = getTimeOfDay();
+      try {
+        const rawTranscript = transcript.join(" ");
+        const moodLabel = analyzeMood(rawTranscript);
+        const summary = summarizeTranscript(transcript);
+        const moodScore = generateMoodScore(moodLabel);
+        const recommendations = generateSuggestions(moodLabel);
+        const timeOfDay = getTimeOfDay();
 
-      const session = {
-        userId,
-        transcript,
-        summary,
-        moodScore,
-        moodLabel,
-        recommendations,
-        timeOfDay,
-        createdAt: Timestamp.fromDate(new Date()),
-      };
+        if (!moodScore || !moodLabel || !recommendations) {
+          throw new Error("Missing required session data");
+        }
 
-      await storeSessionData(session);
+        const session = {
+          userId,
+          transcript,
+          summary: summary || "No summary available",
+          moodScore: moodScore || 5,
+          moodLabel: moodLabel || "Neutral",
+          recommendations: recommendations || ["No recomendations"],
+          timeOfDay: timeOfDay || "Evening",
+          createdAt: Timestamp.fromDate(new Date()),
+        };
+
+        await storeSessionData(session);
+      } catch (error) {
+        console.log("Failed to save session:", error);
+      }
     });
 
     return () => {

@@ -48,22 +48,20 @@ const Agent = () => {
         </Card>
       </div>
 
-      <div className="border-gradient p-0.5 rounded-lg w-full">
-        <div className="dark-gradient rounded-lg min-h-12 px-5 py-3 flex items-center justify-center">
-          {transcript.length > 0 && (
+      {transcript.length > 0 && (
+        <div className="border-gradient p-0.5 rounded-lg w-full">
+          <div className="dark-gradient rounded-lg min-h-12 px-5 py-3 flex items-center justify-center">
             <p
               className={cn(
                 "transition-opacity duration-500 opacity-0 text-white",
                 "animate-fadeIn opacity-100"
               )}
             >
-              {isSpeaking
-                ? transcript[transcript.length - 1]
-                : "Start session👇"}
+              {transcript[transcript.length - 1]}
             </p>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       <Button
         onClick={isSpeaking ? stopCall : startCall}
