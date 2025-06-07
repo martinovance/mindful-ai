@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import AvatarImg from "@/assets/AvatarImg.svg";
 import { Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Auth from "@/utils/auth";
 
 const Appbar = () => {
   const location = useLocation();
@@ -117,7 +118,10 @@ const Appbar = () => {
                   3
                 </Badge>
               </div>
-              <Avatar className="h-[30px] w-[30px] cursor-pointer">
+              <Avatar
+                onClick={() => Auth.logOut()}
+                className="h-[30px] w-[30px] cursor-pointer"
+              >
                 <AvatarImage src={AvatarImg} />
                 <AvatarFallback>MO</AvatarFallback>
               </Avatar>

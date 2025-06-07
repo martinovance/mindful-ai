@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { LoginUserCredentials } from "@/services/authService";
-import Auth from "@/utils/auth";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -24,7 +23,7 @@ const CreateAccount = () => {
       LoginUserCredentials(email, password),
     onSuccess: (data) => {
       console.log(data);
-      Auth.setToken(data?.data?.idToken);
+      // Auth.setToken(data?.idToken);
       navigate("/dashboard");
     },
     onError: (error) => {
