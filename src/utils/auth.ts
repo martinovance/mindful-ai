@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+import { auth } from "@/lib/firebase/firebase";
+import { signOut } from "firebase/auth";
 import { jwtDecode } from "jwt-decode";
 
 const setToken = (token: string) => {
@@ -31,7 +33,8 @@ const removeToken = () => {
   localStorage.removeItem("token");
 };
 
-const logOut = () => {
+const logOut = async () => {
+  await signOut(auth); // <-- properly signs out from Firebase
   removeToken();
   window.location.replace("/");
 };
