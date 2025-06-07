@@ -117,4 +117,28 @@
   body {
     @apply bg-background text-foreground;
   }
+  p {
+    @apply text-light-100;
+  }
+}
+
+@layer components {
+  .transcript-border {
+    @apply border-gradient p-0.5 rounded-2xl w-full;
+
+    .transcript {
+      @apply dark-gradient rounded-2xl min-h-12 px-5 py-3 flex items-center justify-center;
+    }
+  }
+}
+
+@utility dark-gradient {
+  @apply bg-gradient-to-b from-[#1A1C20] to-[#08090D];
+}
+
+@utility border-gradient {
+  @apply bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33];
+}
+@utility animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
 }

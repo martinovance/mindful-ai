@@ -6,6 +6,7 @@ import AgentPin from "@/assets/AgentPin.svg";
 import { useAuth } from "@/hooks/useAuth";
 import { useVapi } from "@/hooks/useVapi";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 const Agent = () => {
   const { user } = useAuth();
@@ -47,16 +48,29 @@ const Agent = () => {
         </Card>
       </div>
 
-      {transcript?.map((line, idx) => (
-        <p key={idx}>{line}</p>
-      ))}
+      <div className="border-gradient p-0.5 rounded-lg w-full">
+        <div className="dark-gradient rounded-lg min-h-12 px-5 py-3 flex items-center justify-center">
+          {transcript.length > 0 && (
+            <p
+              className={cn(
+                "transition-opacity duration-500 opacity-0 text-white",
+                "animate-fadeIn opacity-100"
+              )}
+            >
+              {isSpeaking
+                ? transcript[transcript.length - 1]
+                : "Start session👇"}
+            </p>
+          )}
+        </div>
+      </div>
 
       <Button
         onClick={isSpeaking ? stopCall : startCall}
         className={`bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white 
               cursor-pointer, ${isSpeaking ? "bg-red-600" : "[#B2C9E5]"}`}
       >
-        Start Voice Session
+        {!isSpeaking ? "Start Voice Session" : "End Call"}
       </Button>
     </div>
   );

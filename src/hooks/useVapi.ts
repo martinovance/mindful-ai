@@ -23,9 +23,20 @@ export const useVapi = (userId: string) => {
     });
 
     vapi.on("message", (message) => {
-      const { role, content } = message;
-      const emoji = role === "user" ? "🧑" : "🤖";
-      setTranscript((prev) => [...prev, `${emoji} ${content}`]);
+      if (message.type === "conversation-update") {
+        const lastConversationItem =
+          message.conversation[message.conversation.length - 1];
+        const lastMessageItem = message.messages[message.messages.length - 1];
+
+        const content =
+          lastMessageItem?.message || lastConversationItem?.content;
+        const role = lastMessageItem?.role || lastConversationItem?.role;
+
+        if (content) {
+          const emoji = role === "user" ? "🧑" : "🤖";
+          setTranscript((prev) => [...prev, `${emoji} ${content}`]);
+        }
+      }
     });
 
     vapi.on("call-end", async () => {
