@@ -10,6 +10,7 @@ const Resources = lazy(() => import("./pages/Resources"));
 import { LoaderCircle } from "lucide-react";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import PublicRoute from "./utils/PublicRoute";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
               }
             />
           </Routes>
+          <Toaster />
         </div>
       </BrowserRouter>
     </Suspense>

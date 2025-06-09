@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { LoginUserCredentials } from "@/services/authService";
+import { toast } from "sonner";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -24,10 +25,12 @@ const CreateAccount = () => {
     onSuccess: (data) => {
       console.log(data);
       // Auth.setToken(data?.idToken);
+      toast("Login sucessful");
       navigate("/dashboard");
     },
     onError: (error) => {
       console.log(error);
+      toast("Something went wrong");
     },
   });
 

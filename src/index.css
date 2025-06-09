@@ -117,9 +117,6 @@
   body {
     @apply bg-background text-foreground;
   }
-  p {
-    @apply text-light-100;
-  }
 }
 
 @layer components {

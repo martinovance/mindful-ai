@@ -6,6 +6,7 @@ import Affirm2 from "@/assets/Affirm2.svg";
 import Affirm3 from "@/assets/Affirm3.svg";
 import Affirm4 from "@/assets/Affirm4.svg";
 import Affirm5 from "@/assets/Affirm5.svg";
+import { TherapyCall } from "@/types/vapiTypes";
 
 export const moodData = {
   daily: [
@@ -136,5 +137,37 @@ export const Faqs: faqsType[] = [
   {
     title: "What if I need immediate help?",
     desc: "If you are in immediate help or in immediate danger, please call 911 or your local emergency number.",
+  },
+];
+
+export const calls: TherapyCall[] = [
+  {
+    title: "AI Therapy Call: Coping with Stress",
+    summary:
+      "In this call, the user discussed their coping mechanisms for stress.",
+    date: "April 14, 2023",
+    mood: "Anxious",
+    moodColor: "yellow",
+  },
+  {
+    title: "AI Therapy Call: Overcoming Trauma",
+    summary: "In this call, the user discussed their experience with trauma.",
+    date: "April 15, 2023",
+    mood: "Happy",
+    moodColor: "green",
+  },
+  {
+    title: "AI Therapy Call: Managing Relationships",
+    summary: "In this call, the user discussed their relationship dynamics.",
+    date: "April 16, 2023",
+    mood: "Sad",
+    moodColor: "red",
+  },
+  {
+    title: "AI Therapy Call: Managing Relationships",
+    summary: "In this call, the user discussed their relationship dynamics.",
+    date: "April 16, 2023",
+    mood: "Neutral",
+    moodColor: "yellow",
   },
 ];

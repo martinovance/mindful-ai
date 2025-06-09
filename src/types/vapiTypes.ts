@@ -13,3 +13,11 @@ export interface MoodSession {
   timeOfDay: "Morning" | "Afternoon" | "Evening";
   createdAt: Timestamp;
 }
+
+export interface TherapyCall {
+  title: string;
+  summary: string;
+  date: string;
+  mood: string;
+  moodColor: "red" | "green" | "yellow" | "blue" | "gray";
+}
