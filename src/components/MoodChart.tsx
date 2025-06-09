@@ -17,23 +17,43 @@ interface MoodData {
   value: number;
 }
 
+interface MoodChartProps {
+  data: MoodData[];
+  distData: MoodData[];
+  averageScore?: number;
+  totalSessions?: number;
+  happyPercentage: number;
+}
+
 const MoodChart = ({
   data,
   distData,
-}: {
-  distData: MoodData[];
-  data: MoodData[];
-}) => {
+  averageScore = 0,
+  totalSessions = 0,
+  happyPercentage,
+}: MoodChartProps) => {
+  const percentageChange = totalSessions > 0 ? 0.5 : 0;
+  const distributionChange = totalSessions > 0 ? 10 : 0;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       <Card>
         <CardContent>
           <div className="flex flex-col items-start">
             <p className="font-semibold text-lg">Mood Score</p>
-            <p className="font-bold text-2xl">7.2</p>
+            <p className="font-bold text-2xl">{averageScore.toFixed(1)}</p>
             <div className="flex flex-row gap-2 mb-4">
-              <p className="font-small text-sm">Last 7 days</p>
-              <p className="font-small text-[#08873B]">+0.5%</p>
+              <p className="font-small text-sm">
+                Last {data?.length} {data?.length > 1 ? "days" : "day"}
+              </p>
+              <p
+                className={`font-small text-sm ${
+                  percentageChange >= 0 ? "text-[#08873B]" : "text-[#E53E3E]"
+                }`}
+              >
+                {percentageChange >= 0 ? "+" : ""}
+                {percentageChange}%
+              </p>
             </div>
 
             <ResponsiveContainer width="100%" height={150}>
@@ -64,10 +84,29 @@ const MoodChart = ({
         <CardContent>
           <div className="flex flex-col items-start">
             <p className="font-semibold text-lg">Mood Distribution</p>
-            <p className="font-bold text-2xl">4</p>
-            <div className="flex flex-row gap-2 mb-5">
-              <p className="font-small text-sm">Last 7 days</p>
-              <p className="font-small text-[#08873B]">+10%</p>
+            <p className="font-bold text-2xl">{totalSessions}</p>
+            <div className="flex flex-row gap-4">
+              <div className="flex flex-row gap-2 mb-5">
+                <p className="font-small text-sm">Total sessions</p>
+                <p
+                  className={`font-small text-sm ${
+                    distributionChange > 0 ? "text-[#08873B]" : "text-[#E53E3E]"
+                  }`}
+                >
+                  {distributionChange >= 0 ? "+" : ""}
+                  {distributionChange}%
+                </p>
+              </div>
+              <div className="flex flex-row gap-2 mb-5">
+                <p className="font-small text-sm">Happy sessions</p>
+                <p
+                  className={`font-small text-sm ${
+                    happyPercentage > 0 ? "text-[#08873B]" : "text-[#E53E3E]"
+                  }`}
+                >
+                  {happyPercentage}%
+                </p>
+              </div>
             </div>
 
             <ResponsiveContainer width="70%" height={150}>

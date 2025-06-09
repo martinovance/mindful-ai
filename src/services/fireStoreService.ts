@@ -1,6 +1,13 @@
 import { db } from "@/lib/firebase/firebase";
 import { MoodSession } from "@/types/vapiTypes";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  // orderBy,
+} from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
   try {
@@ -20,4 +27,28 @@ export const storeSessionData = async (session: MoodSession) => {
     console.error("Error adding document: ", error);
     throw error; // Re-throw for calling code to handle
   }
+};
+
+export const getUserSessions = async (
+  userId: string
+): Promise<MoodSession[]> => {
+  const sessionsRef = collection(db, "sessions");
+  const q = query(
+    sessionsRef,
+    where("userId", "==", userId)
+    // orderBy("createdAt", "desc")
+  );
+
+  const querySnapshot = await getDocs(q);
+  const sessions: MoodSession[] = [];
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    sessions.push({
+      id: doc.id,
+      ...(data as Omit<MoodSession, "id">),
+    });
+  });
+
+  return sessions;
 };

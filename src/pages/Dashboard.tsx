@@ -2,9 +2,42 @@ import Affirmation from "@/components/Affirmation";
 import CallHistory from "@/components/CallHistory";
 import MoodChart from "@/components/MoodChart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { moodData } from "@/constant/dashData";
+// import { moodData } from "@/constant/dashData";
+import { useAuth } from "@/hooks/useAuth";
+import { getUserSessions } from "@/services/fireStoreService";
+import {
+  calculateAverage,
+  transformToChartData,
+} from "@/utils/sessionDataTransformer";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const Dashboard = () => {
+  const { user } = useAuth();
+
+  const { data: sessions } = useQuery({
+    queryKey: ["session", user?.uid],
+    queryFn: () => {
+      if (!user?.uid) {
+        toast("User not logged in");
+        throw new Error("User not logged in");
+      }
+      return getUserSessions(user?.uid);
+    },
+    enabled: !!user?.uid,
+  });
+
+  const chartData = transformToChartData(sessions);
+
+  const averageScore = calculateAverage(sessions);
+  const totalSessions = sessions?.length;
+  const happyPercentage = sessions?.length
+    ? Math.round(
+        (chartData.moodDistribution.find((m) => m.type === "Happy")?.value ||
+          0 / sessions.length) * 100
+      )
+    : 0;
+
   return (
     <div className="p-8 flex flex-col justify-center items-center">
       <div className="flex flex-col justify-start items-start gap-5 w-[900px]">
@@ -28,20 +61,29 @@ const Dashboard = () => {
 
           <TabsContent value="daily">
             <MoodChart
-              data={moodData.daily}
-              distData={moodData.moodDistribution}
+              data={chartData.daily}
+              distData={chartData.moodDistribution}
+              averageScore={averageScore}
+              totalSessions={totalSessions}
+              happyPercentage={happyPercentage}
             />
           </TabsContent>
           <TabsContent value="weekly">
             <MoodChart
-              data={moodData.weekly}
-              distData={moodData.moodDistribution}
+              data={chartData.weekly}
+              distData={chartData.moodDistribution}
+              averageScore={averageScore}
+              totalSessions={totalSessions}
+              happyPercentage={happyPercentage}
             />
           </TabsContent>
           <TabsContent value="monthly">
             <MoodChart
-              data={moodData.monthly}
-              distData={moodData.moodDistribution}
+              data={chartData.monthly}
+              distData={chartData.moodDistribution}
+              averageScore={averageScore}
+              totalSessions={totalSessions}
+              happyPercentage={happyPercentage}
             />
           </TabsContent>
         </Tabs>

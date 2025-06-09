@@ -109,7 +109,7 @@ const CallHistory = () => {
                 className="bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white 
           cursor-pointer"
               >
-                Start a chat
+                Start a call with your ai therapist
               </Button>
             </Link>
           </div>
