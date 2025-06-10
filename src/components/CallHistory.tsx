@@ -94,7 +94,9 @@ const CallHistory = ({ sessions = [] }: CallHistoryProps) => {
                     <h3 className="font-semibold text-lg">{call.title}</h3>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-2">{call.summary}</p>
+                    <p className="text-gray-600 mb-2">
+                      {call.summary.slice(0, 60)}...
+                    </p>
                     <div className="flex items-center gap-4 text-sm">
                       <span className="text-gray-500">Date: {call.date}</span>
                       <span className="flex items-center">

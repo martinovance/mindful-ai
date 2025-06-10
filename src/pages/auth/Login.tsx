@@ -11,7 +11,7 @@ import { loginSchema } from "./validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { LoginUserCredentials } from "@/services/authService";
 import { toast } from "sonner";
@@ -51,7 +51,10 @@ const CreateAccount = () => {
     <section className="flex flex-col justify-center items-center mt-10 gap-5">
       <p className="text-2xl font-bold">Login</p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-[500px]">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full sm:w-[500px] px-4 md:px-0"
+        >
           <FormField
             control={form.control}
             name="email"
@@ -95,6 +98,13 @@ const CreateAccount = () => {
           >
             Login
           </Button>
+          <p className="font-medium text-sm mt-1">
+            You don't have an account? {""}
+            <Link to="/create-account" className="text-blue-700 cursor-pointer">
+              Sign up
+            </Link>{" "}
+            now.
+          </p>
         </form>
       </Form>
     </section>

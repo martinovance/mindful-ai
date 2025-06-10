@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { CreateUserAccount } from "@/services/authService";
-import Auth from "@/utils/auth";
+// import Auth from "@/utils/auth";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -22,8 +22,8 @@ const CreateAccount = () => {
   const CreateUser = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       CreateUserAccount(email, password),
-    onSuccess: (data) => {
-      Auth.setToken(data?.data?.idToken);
+    onSuccess: () => {
+      // Auth.setToken(data?.idToken);
       navigate("/login");
     },
     onError: (error) => {
@@ -49,7 +49,10 @@ const CreateAccount = () => {
     <section className="flex flex-col justify-center items-center mt-10 gap-5">
       <p className="text-2xl font-bold">Create Account</p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-[500px]">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full sm:w-[500px] px-4 md:px-0"
+        >
           <FormField
             control={form.control}
             name="email"
