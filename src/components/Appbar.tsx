@@ -1,4 +1,4 @@
-import Logo from "@/assets/logo.svg";
+import Logo from "@/assets/Logo.svg";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
