@@ -21,3 +21,12 @@ export interface TherapyCall {
   mood: string;
   moodColor: "red" | "green" | "yellow" | "blue" | "gray";
 }
+
+export interface MoodColorMap {
+  red: string;
+  green: string;
+  yellow: string;
+  blue: string;
+  gray: string;
+  [key: string]: string;
+}

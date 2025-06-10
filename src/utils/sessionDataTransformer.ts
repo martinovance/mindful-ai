@@ -1,13 +1,11 @@
-import { MoodSession } from "@/types/vapiTypes";
+import { MoodColorMap, MoodSession } from "@/types/vapiTypes";
 
-// Calculate average mood score for a set of sessions
 export const calculateAverage = (sessions: MoodSession[] = []) => {
   if (!sessions?.length) return 0;
   const sum = sessions?.reduce((acc, session) => acc + session.moodScore, 0);
   return parseFloat((sum / sessions?.length).toFixed(1));
 };
 
-// Get sessions from specific time period
 const getSessionsByPeriod = (
   sessions: MoodSession[],
   period: "daily" | "weekly" | "monthly"
@@ -91,4 +89,38 @@ export const transformToChartData = (sessions: MoodSession[] = []) => {
     monthly: transformMonthlyData(monthlySessions),
     moodDistribution: transformMoodDistribution(sessions),
   };
+};
+
+export const getCallTitle = (summary: string): string => {
+  if (!summary) return "Therapy Session";
+
+  const lowerSummary = summary.toLowerCase();
+  if (lowerSummary.includes("stress")) return "Coping with Stress";
+  if (lowerSummary.includes("trauma")) return "Overcoming Trauma";
+  if (lowerSummary.includes("relationship")) return "Managing Relationships";
+  if (lowerSummary.includes("anxious")) return "Managing Anxiety";
+  return "Therapy Session";
+};
+
+export const formatDate = (date: Date): string => {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+};
+
+export const getMoodColor = (mood: string): keyof MoodColorMap => {
+  switch (mood.toLowerCase()) {
+    case "happy":
+      return "green";
+    case "neutral":
+      return "blue";
+    case "sad":
+      return "red";
+    case "anxious":
+      return "yellow";
+    default:
+      return "gray";
+  }
 };

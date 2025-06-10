@@ -1,6 +1,5 @@
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
-import { calls } from "@/constant/dashData";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 
@@ -10,9 +9,28 @@ import YellowStatus from "@/assets/YellowStatus.svg";
 import NeutralStatus from "@/assets/NeutralStatus.svg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { MoodColorMap, MoodSession } from "@/types/vapiTypes";
+import {
+  formatDate,
+  getCallTitle,
+  getMoodColor,
+} from "@/utils/sessionDataTransformer";
 
-const CallHistory = () => {
+interface CallHistoryProps {
+  sessions?: MoodSession[];
+}
+
+const CallHistory = ({ sessions = [] }: CallHistoryProps) => {
   const [searchQuery, setSearchQuery] = useState("");
+
+  const calls = sessions?.map((session) => ({
+    id: session.id,
+    title: `AI Call Title: ${getCallTitle(session.summary)}`,
+    summary: session.summary || "No summary available",
+    date: formatDate(session.createdAt.toDate()),
+    mood: session.moodLabel,
+    moodColor: getMoodColor(session.moodLabel),
+  }));
 
   const filteredCalls = calls.filter(
     (call) =>
@@ -21,7 +39,7 @@ const CallHistory = () => {
       call.mood.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const moodColorMap = {
+  const moodColorMap: MoodColorMap = {
     red: "bg-red-500",
     green: "bg-green-500",
     yellow: "bg-yellow-500",
@@ -66,7 +84,11 @@ const CallHistory = () => {
           filteredCalls.map((call, index) => (
             <Card key={index} className="h-35 p-0">
               <div className="flex h-full flex-row justify-start items-center gap-4 p-2">
-                <img src={getMoodImage(call?.mood)} alt="" className="h-full" />
+                <img
+                  src={getMoodImage(call?.mood)}
+                  alt={`${call.mood} mood`}
+                  className="h-full"
+                />
                 <div>
                   <CardHeader>
                     <h3 className="font-semibold text-lg">{call.title}</h3>
@@ -94,24 +116,20 @@ const CallHistory = () => {
               </div>
             </Card>
           ))
+        ) : sessions?.length === 0 ? (
+          <div className="flex flex-col justify-center items-center gap-3 text-center">
+            <p className="text-gray-500">You haven't had any calls yet.</p>
+            <Link to="/sessions">
+              <Button className="bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white cursor-pointer">
+                Start a call with your AI therapist
+              </Button>
+            </Link>
+          </div>
         ) : (
           <div className="flex flex-col justify-center items-center gap-3 text-center py-8">
             <p className="text-gray-500">
               No therapy calls found matching your search.
             </p>
-          </div>
-        )}
-        {calls?.length === 0 && (
-          <div className="flex flex-col justify-center items-center gap-3 text-center">
-            <p className="text-gray-500">You haven't had any calls yet.</p>
-            <Link to="/sessions">
-              <Button
-                className="bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white 
-          cursor-pointer"
-              >
-                Start a call with your ai therapist
-              </Button>
-            </Link>
           </div>
         )}
       </div>

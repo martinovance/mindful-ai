@@ -2,7 +2,6 @@ import Affirmation from "@/components/Affirmation";
 import CallHistory from "@/components/CallHistory";
 import MoodChart from "@/components/MoodChart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { moodData } from "@/constant/dashData";
 import { useAuth } from "@/hooks/useAuth";
 import { getUserSessions } from "@/services/fireStoreService";
 import {
@@ -87,7 +86,7 @@ const Dashboard = () => {
             />
           </TabsContent>
         </Tabs>
-        <CallHistory />
+        <CallHistory sessions={sessions} />
         <Affirmation />
         <div className="flex justify-between items-center gap-5 w-full mt-10">
           <p className="text-[#637387] text-sm font-medium">Terms of Service</p>
