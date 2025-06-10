@@ -5,10 +5,10 @@ import { Separator } from "@/components/ui/separator";
 
 const Sessions = () => {
   return (
-    <div className="p-8 flex flex-col justify-center items-center">
-      <div className="flex flex-col justify-start items-start gap-5 w-[850px]">
+    <div className="p-4 md:p-8 flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-start items-start gap-5 lg:w-[850px]">
         <Tabs defaultValue="agent" className="w-full">
-          <TabsList className="w-[50%] mb-0">
+          <TabsList className="w-full sm:w-[50%] mb-0">
             <TabsTrigger value="agent" className="cursor-pointer">
               AI Therapist
             </TabsTrigger>

@@ -82,22 +82,22 @@ const CallHistory = ({ sessions = [] }: CallHistoryProps) => {
       <div className="space-y-4">
         {filteredCalls.length > 0 ? (
           filteredCalls.map((call, index) => (
-            <Card key={index} className="h-35 p-0">
-              <div className="flex h-full flex-row justify-start items-center gap-4 p-2">
+            <Card key={index} className="min-h-35 p-0">
+              <div className="flex h-full flex-col sm:flex-row justify-start items-center gap-4 p-2">
                 <img
                   src={getMoodImage(call?.mood)}
                   alt={`${call.mood} mood`}
-                  className="h-full"
+                  className="h-25 sm:h-35"
                 />
-                <div>
-                  <CardHeader>
+                <div className="w-full">
+                  <CardHeader className="px-1">
                     <h3 className="font-semibold text-lg">{call.title}</h3>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="px-1">
                     <p className="text-gray-600 mb-2">
                       {call.summary.slice(0, 60)}...
                     </p>
-                    <div className="flex items-center gap-4 text-sm">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-4 text-sm">
                       <span className="text-gray-500">Date: {call.date}</span>
                       <span className="flex items-center">
                         Mood: {call.mood}
@@ -109,7 +109,7 @@ const CallHistory = ({ sessions = [] }: CallHistoryProps) => {
                       </span>
                     </div>
                   </CardContent>
-                  <CardFooter>
+                  <CardFooter className="px-1">
                     <Button variant="link" className="text-blue-600 p-0 h-auto">
                       To view details, click here.
                     </Button>

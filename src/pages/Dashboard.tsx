@@ -38,10 +38,10 @@ const Dashboard = () => {
     : 0;
 
   return (
-    <div className="p-8 flex flex-col justify-center items-center">
-      <div className="flex flex-col justify-start items-start gap-5 w-[900px]">
+    <div className="p-4 md:p-8 flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-start items-start gap-5 w-full lg:w-[900px]">
         <p className="font-bold text-2xl">Mood Trends</p>
-        <p className="font-medium text-md text-[#637387]">
+        <p className="font-medium text-center text-md text-[#637387]">
           Track your emotional well-being over time to identify patterns and
           triggers.
         </p>
@@ -93,7 +93,7 @@ const Dashboard = () => {
           <p className="text-[#637387] text-sm font-medium">Privacy Policy</p>
         </div>
         <p className=" text-[#637387] text-sm text-center font-medium w-full">
-          @2025 MindfulPath. All rights reserved.
+          @2025 Mindful-HQ. All rights reserved.
         </p>
       </div>
     </div>

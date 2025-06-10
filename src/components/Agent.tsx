@@ -21,16 +21,18 @@ const Agent = () => {
   }, [user]);
 
   return (
-    <div className="p-8 flex flex-col justify-center items-center gap-5">
-      <p className="text-2xl font-bold">Your Personal AI Therapist</p>
+    <div className="p-0 md:p-8 w-full flex flex-col justify-center items-center gap-5">
+      <p className="text-2xl text-center font-bold">
+        Your Personal AI Therapist
+      </p>
       <p className="text-sm text-[#121417] text-center font-small">
         Engage in supportive, CBT-based talk therapy anytime, anywhere. Our AI
         therapist is here to listen and guide you towards better mental
         well-being.
       </p>
-      <div className="flex flex-row justify-center items-center w-[850px] h-[400px] gap-3">
+      <div className="flex flex-row justify-center items-center w-full lg:w-[850px] h-full sm:h-[400px] gap-3">
         <Card
-          className={`max-w-[50%] h-[400px] p-0 overflow-hidden shadow-md transition duration-300,
+          className={`w-[50%] h-full p-0 overflow-hidden shadow-md transition duration-300,
           ${isSpeaking ? "animate-pulse ring-4 ring-blue-400" : ""} `}
         >
           <img
@@ -39,7 +41,7 @@ const Agent = () => {
             className="w-full h-full object-cover rounded-xl"
           />
         </Card>
-        <Card className="max-w-[50%] h-[400px] p-0 overflow-hidden">
+        <Card className="w-[50%] h-full p-0 overflow-hidden">
           <img
             src={UserPin}
             alt="record"

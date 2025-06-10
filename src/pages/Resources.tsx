@@ -12,16 +12,16 @@ const Resources = () => {
   };
 
   return (
-    <div className="p-8 flex flex-col justify-center items-center gap-5">
-      <p className="font-bold text-2xl">Connect with a Therapist</p>
-      <p className="text-sm text-muted-foreground font-medium w-[800px]">
+    <div className="p-4 md:p-8 flex flex-col justify-center items-center gap-5">
+      <p className="font-bold text-center text-2xl">Connect with a Therapist</p>
+      <p className="text-sm text-muted-foreground text-center font-medium w-full lg:w-[800px]">
         If you're feeling overwhelmed or need additional support, we can connect
         you with a licensed therapist. Please note that this service is not a
         substitute for emergency care. If you are in immediate danger, please
         call 911 or your local emergency number.
       </p>
 
-      <div className="w-[800px] flex flex-col justify-center items-start gap-5">
+      <div className="w-full lg:w-[800px] flex flex-col justify-center items-start gap-5">
         <p className="font-bold text-2xl">How it Works</p>
         <div className="flex flex-col gap-1">
           {steps.map((step, index) => (

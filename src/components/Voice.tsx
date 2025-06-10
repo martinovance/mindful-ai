@@ -8,12 +8,12 @@ import { Recordings } from "@/constant/dashData";
 
 const Voice = () => {
   return (
-    <div className="p-8 flex flex-col justify-center items-center gap-5">
+    <div className="p-0 md:p-8 flex flex-col justify-center items-center gap-5">
       <p className="text-2xl font-bold">Record Your Thoughts</p>
       <p className="text-sm text-[#121417] font-small">
         Capture your reflections and insights in your personal voice journal.
       </p>
-      <Card className="max-w-[850px] max-h-[619px] p-0 overflow-hidden">
+      <Card className="w-full lg:w-[850px] max-h-[619px] p-0 overflow-hidden">
         <img
           src={VoiceImg}
           alt="record"
@@ -27,7 +27,7 @@ const Voice = () => {
         Start Recording
       </Button>
 
-      <div className="flex flex-col justify-center w-[850px] items-start gap-5">
+      <div className="flex flex-col justify-center w-full lg:w-[850px] items-start gap-5">
         <p className="text-lg font-medium">Recent Recordings</p>
         <div className="flex flex-col justify-start items-start w-full gap-4">
           {Recordings.map((record, i) => (
