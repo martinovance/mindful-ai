@@ -2,6 +2,20 @@ import { Timestamp } from "firebase/firestore";
 
 export type MoodType = "Happy" | "Neutral" | "Sad" | "Anxious";
 
+export interface VapiMessage {
+  type: string;
+  conversation: Array<{
+    role: "system" | "user" | "assistant" | "bot";
+    content?: string;
+  }>;
+  messages: Array<{
+    role: "system" | "user" | "assistant" | "bot";
+    message?: string;
+    time?: number;
+  }>;
+  messagesOpenAIFormatted?: Array<unknown>;
+}
+
 export interface MoodSession {
   id?: string;
   userId: string;

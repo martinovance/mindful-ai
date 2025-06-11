@@ -1,25 +1,36 @@
 import { db } from "@/lib/firebase/firebase";
 import { MoodSession } from "@/types/vapiTypes";
+import { getTimeOfDay } from "@/utils/moodAnalyzer";
 import {
   collection,
   addDoc,
   getDocs,
   query,
   where,
+  serverTimestamp,
   // orderBy,
 } from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
+  if (
+    !session.userId ||
+    !session.transcript ||
+    session.transcript.length === 0
+  ) {
+    throw new Error("Invalid session data");
+  }
+
   try {
     const docRef = await addDoc(collection(db, "sessions"), {
       userId: session.userId,
       transcript: session.transcript,
-      summary: session.summary,
-      moodScore: session.moodScore,
-      moodLabel: session.moodLabel,
-      recommendations: session.recommendations,
-      timeOfDay: session.timeOfDay,
-      createdAt: session.createdAt,
+      summary: session.summary || "No summary available",
+      moodScore: session.moodScore || 5,
+      moodLabel: session.moodLabel || "Neutral",
+      recommendations: session.recommendations || ["No recommendations"],
+      timeOfDay: session.timeOfDay || getTimeOfDay(),
+      createdAt: session.createdAt || serverTimestamp(),
+      status: "complete",
     });
     console.log("Document written with ID: ", docRef.id);
     return docRef.id;

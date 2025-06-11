@@ -1,6 +1,8 @@
 import { assistantOverrides } from "@/lib/vapi/assistantConfig";
 import vapi from "@/lib/vapi/vapiClient";
 import { storeSessionData } from "@/services/fireStoreService";
+import { VapiMessage } from "@/types/vapiTypes";
+import { debounce } from "@/utils/debounce";
 import {
   analyzeMood,
   generateMoodScore,
@@ -9,20 +11,37 @@ import {
   summarizeTranscript,
 } from "@/utils/moodAnalyzer";
 import { Timestamp } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const useVapi = (userId: string) => {
   const [transcript, setTranscript] = useState<string[]>([]);
+  const [pendingTranscript, setPendingTranscript] = useState<string[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+
+  // debounce transcript update
+  const updateTranscript = useMemo(
+    () =>
+      debounce(() => {
+        if (setPendingTranscript.length > 0) {
+          setTranscript((prev) => [...prev, ...pendingTranscript]);
+          setPendingTranscript([]);
+        }
+      }, 500),
+    [pendingTranscript]
+  );
 
   useEffect(() => {
-    vapi.on("call-start", () => {
-      console.log("Call started");
-      setIsSpeaking(true);
-      setTranscript([]);
-    });
+    const interval = setInterval(updateTranscript, 200);
 
-    vapi.on("message", (message) => {
+    return () => {
+      updateTranscript.flush();
+      clearInterval(interval);
+    };
+  }, [updateTranscript]);
+
+  useEffect(() => {
+    const handleMessage = (message: VapiMessage) => {
       if (message.type === "conversation-update") {
         const lastConversationItem =
           message.conversation[message.conversation.length - 1];
@@ -37,43 +56,70 @@ export const useVapi = (userId: string) => {
           setTranscript((prev) => [...prev, `${emoji} ${content}`]);
         }
       }
-    });
+    };
 
-    vapi.on("call-end", async () => {
+    const handleCallEnd = async () => {
+      if (currentSessionId) return;
+
       setIsSpeaking(false);
+      updateTranscript.flush();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       try {
-        const rawTranscript = transcript.join(" ");
+        const filteredTranscript = transcript.filter(Boolean);
+        if (filteredTranscript.length === 0) {
+          throw new Error("Empty transcript");
+        }
+
+        const rawTranscript = filteredTranscript.join(" ");
         const moodLabel = analyzeMood(rawTranscript);
-        const summary = summarizeTranscript(transcript);
+        const summary = summarizeTranscript(filteredTranscript);
         const moodScore = generateMoodScore(moodLabel);
         const recommendations = generateSuggestions(moodLabel);
         const timeOfDay = getTimeOfDay();
 
-        if (!moodScore || !moodLabel || !recommendations) {
-          throw new Error("Missing required session data");
-        }
-
         const session = {
           userId,
-          transcript,
-          summary: summary || "No summary available",
-          moodScore: moodScore || 5,
-          moodLabel: moodLabel || "Neutral",
-          recommendations: recommendations || ["No recomendations"],
-          timeOfDay: timeOfDay || "Evening",
+          transcript: filteredTranscript,
+          summary,
+          moodScore,
+          moodLabel,
+          recommendations,
+          timeOfDay,
           createdAt: Timestamp.fromDate(new Date()),
         };
 
-        await storeSessionData(session);
+        const docId = await storeSessionData(session);
+        setCurrentSessionId(docId);
       } catch (error) {
-        console.log("Failed to save session:", error);
+        console.log(error);
       }
-    });
+    };
+
+    const handleCallStart = () => {
+      setCurrentSessionId(null);
+      setIsSpeaking(true);
+      setTranscript([]);
+      setPendingTranscript([]);
+    };
+
+    vapi.on("call-start", handleCallStart);
+    vapi.on("message", handleMessage);
+    vapi.on("call-end", handleCallEnd);
 
     return () => {
-      vapi.removeAllListeners();
+      vapi.off("call-start", handleCallStart);
+      vapi.off("message", handleMessage);
+      vapi.off("call-end", handleCallEnd);
+      updateTranscript.flush();
     };
-  }, [userId, transcript]);
+  }, [
+    userId,
+    transcript,
+    pendingTranscript,
+    currentSessionId,
+    updateTranscript,
+  ]);
 
   const startCall = () => {
     vapi.start(import.meta.env.VITE_VAPI_ASSISTANT_ID!, assistantOverrides);
