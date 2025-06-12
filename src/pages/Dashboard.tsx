@@ -9,24 +9,36 @@ import {
   transformToChartData,
 } from "@/utils/sessionDataTransformer";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  const { data: sessions } = useQuery({
-    queryKey: ["session", user?.uid],
+  const { data: sessionsData } = useQuery({
+    queryKey: ["session", user?.uid, currentPage],
     queryFn: () => {
       if (!user?.uid) {
         toast("User not logged in");
         throw new Error("User not logged in");
       }
-      return getUserSessions(user?.uid);
+      return getUserSessions(user?.uid, currentPage, itemsPerPage);
     },
     enabled: !!user?.uid,
   });
+  console.log(sessionsData);
 
-  const chartData = transformToChartData(sessions);
+  const {
+    paginatedSessions = [],
+    sessions = [],
+    total = 0,
+  } = sessionsData || {};
+
+  const chartData = transformToChartData(
+    sessions.length > 0 ? sessions : paginatedSessions
+  );
 
   const averageScore = calculateAverage(sessions);
   const totalSessions = sessions?.length;
@@ -86,7 +98,14 @@ const Dashboard = () => {
             />
           </TabsContent>
         </Tabs>
-        <CallHistory sessions={sessions} />
+        <CallHistory
+          paginatedSessions={paginatedSessions}
+          sessions={sessions}
+          totalItems={total}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
         <Affirmation />
         <div className="flex justify-between items-center gap-5 w-full mt-10">
           <p className="text-[#637387] text-sm font-medium">Terms of Service</p>

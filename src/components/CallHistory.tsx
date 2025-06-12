@@ -18,26 +18,49 @@ import {
 
 interface CallHistoryProps {
   sessions?: MoodSession[];
+  paginatedSessions?: MoodSession[];
+  totalItems: number;
+  itemsPerPage?: number;
+  currentPage: number;
+  onPageChange?: (page: number) => void;
 }
 
-const CallHistory = ({ sessions = [] }: CallHistoryProps) => {
+const CallHistory = ({
+  sessions = [],
+  paginatedSessions = [],
+  totalItems,
+  itemsPerPage = 1,
+  currentPage,
+  onPageChange,
+}: CallHistoryProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const calls = sessions?.map((session) => ({
+  const transformSession = (session: MoodSession) => ({
     id: session.id,
     title: `AI Call Title: ${getCallTitle(session.summary)}`,
     summary: session.summary || "No summary available",
     date: formatDate(session.createdAt.toDate()),
     mood: session.moodLabel,
     moodColor: getMoodColor(session.moodLabel),
-  }));
+  });
 
-  const filteredCalls = calls.filter(
-    (call) =>
-      call.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      call.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      call.mood.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const paginatedCalls = paginatedSessions.map(transformSession);
+  const allCalls = sessions.map(transformSession);
+
+  const filteredCalls = searchQuery
+    ? allCalls.filter(
+        (call) =>
+          call.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          call.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          call.mood.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : paginatedCalls;
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    onPageChange?.(page);
+  };
 
   const moodColorMap: MoodColorMap = {
     red: "bg-red-500",
@@ -135,6 +158,49 @@ const CallHistory = ({ sessions = [] }: CallHistoryProps) => {
           </div>
         )}
       </div>
+
+      {!searchQuery && totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <Button
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Previous
+          </Button>
+
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+
+            return (
+              <Button
+                key={pageNum}
+                variant={currentPage === pageNum ? "default" : "outline"}
+                onClick={() => handlePageChange(pageNum)}
+              >
+                {pageNum}
+              </Button>
+            );
+          })}
+
+          <Button
+            variant="outline"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

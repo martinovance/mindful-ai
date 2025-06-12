@@ -8,7 +8,13 @@ import {
   query,
   where,
   serverTimestamp,
-  // orderBy,
+  getCountFromServer,
+  limit,
+  orderBy,
+  QueryDocumentSnapshot,
+  DocumentData,
+  startAfter,
+  Timestamp,
 } from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
@@ -36,30 +42,104 @@ export const storeSessionData = async (session: MoodSession) => {
     return docRef.id;
   } catch (error) {
     console.error("Error adding document: ", error);
-    throw error; // Re-throw for calling code to handle
+    throw error;
   }
 };
 
 export const getUserSessions = async (
-  userId: string
-): Promise<MoodSession[]> => {
-  const sessionsRef = collection(db, "sessions");
-  const q = query(
-    sessionsRef,
-    where("userId", "==", userId)
-    // orderBy("createdAt", "desc")
-  );
+  userId: string,
+  page: number = 1,
+  itemsPerPage: number = 5
+): Promise<{
+  paginatedSessions: MoodSession[];
+  sessions: MoodSession[];
+  total: number;
+  lastVisible: QueryDocumentSnapshot<DocumentData> | null;
+}> => {
+  try {
+    const sessionsRef = collection(db, "sessions");
 
-  const querySnapshot = await getDocs(q);
-  const sessions: MoodSession[] = [];
+    // Get total count
+    const countQuery = query(sessionsRef, where("userId", "==", userId));
+    const countSnapshot = await getCountFromServer(countQuery);
+    const total = countSnapshot.data().count || 0;
 
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    sessions.push({
-      id: doc.id,
-      ...(data as Omit<MoodSession, "id">),
-    });
-  });
+    // Get paginated data
+    let q = query(
+      sessionsRef,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc"),
+      limit(itemsPerPage)
+    );
 
-  return sessions;
+    // Handle pagination
+    let lastVisible: QueryDocumentSnapshot<DocumentData> | null = null;
+    if (page > 1) {
+      const prevQuery = query(
+        sessionsRef,
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc"),
+        limit((page - 1) * itemsPerPage)
+      );
+      const prevSnapshot = await getDocs(prevQuery);
+      lastVisible = prevSnapshot.docs[prevSnapshot.docs.length - 1] || null;
+
+      if (lastVisible) {
+        q = query(
+          sessionsRef,
+          where("userId", "==", userId),
+          orderBy("createdAt", "desc"),
+          startAfter(lastVisible),
+          limit(itemsPerPage)
+        );
+      }
+    }
+
+    // Execute both queries in parallel
+    const [paginatedSnapshot, allSnapshot] = await Promise.all([
+      getDocs(q),
+      total <= 100
+        ? getDocs(
+            query(
+              sessionsRef,
+              where("userId", "==", userId),
+              orderBy("createdAt", "desc")
+            )
+          )
+        : Promise.resolve(null),
+    ]);
+
+    // Process results
+    const paginatedSessions = paginatedSnapshot.docs.map(
+      (doc: QueryDocumentSnapshot<DocumentData>) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<MoodSession, "id">),
+        createdAt:
+          doc.data().createdAt instanceof Timestamp
+            ? doc.data().createdAt
+            : Timestamp.fromDate(new Date()),
+      })
+    );
+
+    const sessions =
+      allSnapshot?.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<MoodSession, "id">),
+        createdAt:
+          doc.data().createdAt instanceof Timestamp
+            ? doc.data().createdAt
+            : Timestamp.fromDate(new Date()),
+      })) || [];
+
+    return {
+      paginatedSessions,
+      sessions,
+      total,
+      lastVisible:
+        paginatedSnapshot.docs[paginatedSnapshot.docs.length - 1] || null,
+    };
+  } catch (error) {
+    console.error("Error fetching sessions:", error);
+    throw error;
+  }
 };
