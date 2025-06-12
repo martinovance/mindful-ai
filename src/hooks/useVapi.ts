@@ -18,6 +18,8 @@ export const useVapi = (userId: string) => {
   const [pendingTranscript, setPendingTranscript] = useState<string[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isAgentActive, setIsAgentActive] = useState<boolean>(false);
 
   // debounce transcript update
   const updateTranscript = useMemo(
@@ -62,6 +64,7 @@ export const useVapi = (userId: string) => {
       if (currentSessionId) return;
 
       setIsSpeaking(false);
+      setIsLoading(false);
       updateTranscript.flush();
       await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -97,6 +100,7 @@ export const useVapi = (userId: string) => {
     };
 
     const handleCallStart = () => {
+      setIsLoading(false);
       setCurrentSessionId(null);
       setIsSpeaking(true);
       setTranscript([]);
@@ -121,11 +125,26 @@ export const useVapi = (userId: string) => {
     updateTranscript,
   ]);
 
-  const startCall = () => {
-    vapi.start(import.meta.env.VITE_VAPI_ASSISTANT_ID!, assistantOverrides);
+  const startCall = async () => {
+    setIsLoading(true);
+    try {
+      await vapi.start(
+        import.meta.env.VITE_VAPI_ASSISTANT_ID!,
+        assistantOverrides
+      );
+    } catch (error) {
+      setIsLoading(false);
+      console.log("Call failed to start:", error);
+    }
   };
 
   const stopCall = () => vapi.stop();
 
-  return { transcript, isSpeaking, startCall, stopCall };
+  return {
+    isLoading,
+    transcript,
+    isSpeaking,
+    startCall,
+    stopCall,
+  };
 };

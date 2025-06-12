@@ -14,12 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { CreateUserAccount } from "@/services/authService";
+import { Loader2 } from "lucide-react";
 // import Auth from "@/utils/auth";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
 
-  const CreateUser = useMutation({
+  const { mutate: CreateUser, isPending } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       CreateUserAccount(email, password),
     onSuccess: () => {
@@ -42,7 +43,7 @@ const CreateAccount = () => {
 
   const onSubmit = (values: z.infer<typeof validationSchema>) => {
     const { email, password } = values;
-    CreateUser.mutate({ email, password });
+    CreateUser({ email, password });
   };
 
   return (
@@ -112,7 +113,11 @@ const CreateAccount = () => {
             className="w-full bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white 
             cursor-pointer"
           >
-            Create Account
+            {isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Create Account"
+            )}
           </Button>
           <p className="font-medium text-sm mt-1">
             Already have an account? {""}

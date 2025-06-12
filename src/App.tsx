@@ -17,7 +17,7 @@ function App() {
     <Suspense
       fallback={
         <div className="flex justify-center items-center h-[100vh] w-full">
-          <LoaderCircle className="w-20 h-20" />
+          <LoaderCircle className="w-10 h-10 animate-spin" />
         </div>
       }
     >

@@ -7,10 +7,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { useVapi } from "@/hooks/useVapi";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 const Agent = () => {
   const { user } = useAuth();
-  const { isSpeaking, transcript, startCall, stopCall } = useVapi(
+  const { isLoading, isSpeaking, transcript, startCall, stopCall } = useVapi(
     user?.uid ?? ""
   );
 
@@ -70,7 +71,16 @@ const Agent = () => {
         className={`bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white 
               cursor-pointer, ${isSpeaking ? "bg-red-600" : "[#B2C9E5]"}`}
       >
-        {!isSpeaking ? "Start Voice Session" : "End Call"}
+        {isLoading ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <p>Connecting to your assistant...</p>
+          </>
+        ) : isSpeaking ? (
+          "End Call"
+        ) : (
+          "Start Voice Session"
+        )}
       </Button>
     </div>
   );

@@ -15,11 +15,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { LoginUserCredentials } from "@/services/authService";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
 
-  const LoginUser = useMutation({
+  const { mutate: LoginUser, isPending } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       LoginUserCredentials(email, password),
     onSuccess: (data) => {
@@ -44,7 +45,7 @@ const CreateAccount = () => {
 
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
     const { email, password } = values;
-    LoginUser.mutate({ email, password });
+    LoginUser({ email, password });
   };
 
   return (
@@ -96,7 +97,7 @@ const CreateAccount = () => {
             className="w-full bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white 
             cursor-pointer"
           >
-            Login
+            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Login"}
           </Button>
           <p className="font-medium text-sm mt-1">
             You don't have an account? {""}
