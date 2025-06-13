@@ -16,6 +16,7 @@ import {
   startAfter,
   Timestamp,
 } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 export const storeSessionData = async (session: MoodSession) => {
   if (
@@ -142,4 +143,51 @@ export const getUserSessions = async (
     console.error("Error fetching sessions:", error);
     throw error;
   }
+};
+
+export interface VoiceJournal {
+  userId: string;
+  title: string;
+  createdAt: Timestamp;
+  audioUrl: string;
+}
+
+export const uploadVoiceRecording = async (
+  blob: Blob,
+  userId: string,
+  title: string
+) => {
+  const storage = getStorage();
+  const fileName = `${userId}_${Date.now()}.webm`;
+  const audioRef = ref(storage, `recording/${fileName}`);
+
+  await uploadBytes(audioRef, blob);
+  const audioUrl = await getDownloadURL(audioRef);
+
+  const newEntry: VoiceJournal = {
+    userId,
+    title,
+    audioUrl,
+    createdAt: Timestamp.now(),
+  };
+
+  const docRef = await addDoc(collection(db, "voice_journal"), newEntry);
+  return { ...newEntry, id: docRef.id };
+};
+
+export const fetchVoiceJournals = async (userId: string) => {
+  const ref = collection(db, "voice_journals");
+  const q = query(
+    ref,
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc")
+  );
+  const snapshot = await getDocs(q);
+
+  return (
+    snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) || []
+  );
 };

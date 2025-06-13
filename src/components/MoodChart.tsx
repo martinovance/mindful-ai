@@ -11,6 +11,7 @@ import {
 } from "recharts";
 
 import { Card, CardContent } from "./ui/card";
+import { useEffect, useState } from "react";
 
 interface MoodData {
   type: string;
@@ -34,6 +35,19 @@ const MoodChart = ({
 }: MoodChartProps) => {
   const percentageChange = totalSessions > 0 ? 0.5 : 0;
   const distributionChange = totalSessions > 0 ? 10 : 0;
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const sampleValue = data[0].type;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -63,7 +77,10 @@ const MoodChart = ({
                   axisLine={false}
                   tickLine={false}
                   interval={0}
-                  padding={{ left: 15, right: 15 }}
+                  padding={{
+                    left: sampleValue === "Mon" ? 10 : 25,
+                    right: sampleValue === "Mon" ? 10 : 25,
+                  }}
                 />
                 <YAxis hide />
                 <Tooltip />
@@ -109,7 +126,7 @@ const MoodChart = ({
               </div>
             </div>
 
-            <ResponsiveContainer width="70%" height={150}>
+            <ResponsiveContainer width={isMobile ? "100%" : "70%"} height={150}>
               <BarChart data={distData} barCategoryGap="20%">
                 <XAxis dataKey="type" axisLine={false} tickLine={false} />
                 <YAxis hide />

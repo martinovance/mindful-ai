@@ -15,6 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { CreateUserAccount } from "@/services/authService";
 import { Loader2 } from "lucide-react";
+import { showToast } from "@/shared/Toast";
 // import Auth from "@/utils/auth";
 
 const CreateAccount = () => {
@@ -25,10 +26,20 @@ const CreateAccount = () => {
       CreateUserAccount(email, password),
     onSuccess: () => {
       // Auth.setToken(data?.idToken);
+      showToast({
+        title: "Success!",
+        description: "Account created successfully.",
+        status: "success",
+      });
       navigate("/login");
     },
     onError: (error) => {
       console.log(error);
+      showToast({
+        title: "Error",
+        description: "Something went wrong.",
+        status: "error",
+      });
     },
   });
 

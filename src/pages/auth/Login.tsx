@@ -14,8 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { LoginUserCredentials } from "@/services/authService";
-import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { showToast } from "@/shared/Toast";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -26,12 +26,20 @@ const CreateAccount = () => {
     onSuccess: (data) => {
       console.log(data);
       // Auth.setToken(data?.idToken);
-      toast("Login sucessful");
+      showToast({
+        title: "Success!",
+        description: "User signed in successfully.",
+        status: "success",
+      });
       navigate("/dashboard");
     },
     onError: (error) => {
       console.log(error);
-      toast("Something went wrong");
+      showToast({
+        title: "Error",
+        description: "Unable to sign user in, please try again",
+        status: "error",
+      });
     },
   });
 
