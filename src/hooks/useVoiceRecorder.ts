@@ -5,10 +5,12 @@ export function useVoiceRecorder() {
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
-  const chunks: Blob[] = [];
+  const chunks = useRef<Blob[]>([]);
   const [volume, setVolume] = useState(0);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
+  const [audioDuration, setAudioDuration] = useState<string | null>(null);
+
   let animationId: number;
 
   const startRecording = async () => {
@@ -35,13 +37,26 @@ export function useVoiceRecorder() {
     draw();
 
     mediaRecorder.current = new MediaRecorder(stream);
-    mediaRecorder.current.ondataavailable = (e) => chunks.push(e.data);
+    mediaRecorder.current.ondataavailable = (e) => {
+      if (e.data.size > 0) {
+        chunks.current.push(e.data);
+      }
+    };
     mediaRecorder.current.onstop = () => {
-      const completeBlob = new Blob(chunks, { type: "audio/webm" });
+      const completeBlob = new Blob(chunks.current, { type: "audio/webm" });
+      const url = URL.createObjectURL(completeBlob);
+      const audio = new Audio(url);
+
+      audio.onloadedmetadata = () => {
+        const duration = audio.duration;
+        setAudioDuration(duration.toFixed(2)); // store in state
+      };
+
       setBlob(completeBlob);
-      setAudioURL(URL.createObjectURL(completeBlob));
+      setAudioURL(url);
       cancelAnimationFrame(animationId);
       audioContext.close();
+      chunks.current = [];
     };
     mediaRecorder.current.start();
     setRecording(true);
@@ -53,10 +68,13 @@ export function useVoiceRecorder() {
   };
 
   return {
+    audioDuration,
     recording,
     audioURL,
     blob,
     volume,
+    analyserRef,
+    dataArrayRef,
     startRecording,
     stopRecording,
   };

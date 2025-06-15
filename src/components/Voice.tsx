@@ -9,17 +9,26 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadVoiceRecording } from "@/services/fireStoreService";
 import { useAuth } from "@/hooks/useAuth";
 import { showToast } from "@/shared/Toast";
-import { useState } from "react";
-import { useVoiceRecorder } from "@/utils/useVoiceRecorder";
+import { useEffect, useState } from "react";
+import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import { Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
+import WaveformPlayer from "@/shared/WaveformPlayer";
+import LiveWaveform from "@/shared/LiveWaveform";
 
 const Voice = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const { stopRecording, blob, startRecording, recording, volume, audioURL } =
-    useVoiceRecorder();
+  const {
+    stopRecording,
+    blob,
+    startRecording,
+    recording,
+    audioURL,
+    analyserRef,
+    dataArrayRef,
+  } = useVoiceRecorder();
 
   const { mutate: saveRecording, isPending } = useMutation({
     mutationFn: ({ blob, title }: { blob: Blob; title: string }) => {
@@ -67,11 +76,15 @@ const Voice = () => {
 
   const [title, setTitle] = useState("");
 
-  const handleStop = () => {
-    stopRecording();
+  // eslint-disable
+  useEffect(() => {
     if (blob && title && user?.uid) {
       saveRecording({ blob, title });
     }
+  }, [blob, saveRecording, user?.uid, title]);
+
+  const handleStop = () => {
+    stopRecording();
   };
 
   return (
@@ -89,10 +102,20 @@ const Voice = () => {
       </Card>
       <Input
         placeholder="Give your recording a title"
-        className="input"
+        className="input w-full"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+
+      {recording && (
+        <LiveWaveform
+          analyserRef={analyserRef}
+          dataArrayRef={dataArrayRef}
+          barCount={74}
+          height={34}
+        />
+      )}
+
       {!recording ? (
         <Button
           onClick={startRecording}
@@ -115,19 +138,8 @@ const Voice = () => {
         </Button>
       )}
 
-      {recording && (
-        <div className="w-full max-w-md h-3 bg-gray-200 rounded">
-          <div
-            className="h-full bg-green-500 rounded transition-all duration-75"
-            style={{ width: `${Math.min(volume, 100)}%` }}
-          ></div>
-        </div>
-      )}
-
       {/* Playback */}
-      {audioURL && (
-        <audio controls src={audioURL} className="mt-4 w-full max-w-md" />
-      )}
+      {audioURL && <WaveformPlayer audioURL={audioURL} />}
 
       <div className="flex flex-col justify-center w-full lg:w-[850px] items-start gap-5">
         <p className="text-lg font-medium">Recent Recordings</p>
