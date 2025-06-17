@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadVoiceRecording } from "@/services/fireStoreService";
 import { useAuth } from "@/hooks/useAuth";
 import { showToast } from "@/shared/Toast";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import { Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
@@ -22,7 +22,6 @@ const Voice = () => {
 
   const {
     stopRecording,
-    blob,
     startRecording,
     recording,
     audioURL,
@@ -32,6 +31,7 @@ const Voice = () => {
 
   const { mutate: saveRecording, isPending } = useMutation({
     mutationFn: ({ blob, title }: { blob: Blob; title: string }) => {
+      console.log("Uploading blob:", blob);
       if (!user?.uid) {
         showToast({
           title: "Error",
@@ -76,15 +76,19 @@ const Voice = () => {
 
   const [title, setTitle] = useState("");
 
-  // eslint-disable
-  useEffect(() => {
-    if (blob && title && user?.uid) {
-      saveRecording({ blob, title });
-    }
-  }, [blob, saveRecording, user?.uid, title]);
-
   const handleStop = () => {
-    stopRecording();
+    stopRecording((finalBlob) => {
+      console.log("Final blob ready in callback:", finalBlob);
+      if (finalBlob && title) {
+        saveRecording({ blob: finalBlob, title });
+      } else {
+        showToast({
+          title: "Error",
+          description: "No recording or title.",
+          status: "error",
+        });
+      }
+    });
   };
 
   return (
