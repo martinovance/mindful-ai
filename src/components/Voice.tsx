@@ -6,8 +6,6 @@ import Recorder from "@/assets/Recorder.svg";
 import Play from "@/assets/Play.svg";
 import { Recordings } from "@/constant/dashData";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { uploadVoiceRecording } from "@/services/fireStoreService";
-import { useAuth } from "@/hooks/useAuth";
 import { showToast } from "@/shared/Toast";
 import { useState } from "react";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
@@ -17,7 +15,6 @@ import WaveformPlayer from "@/shared/WaveformPlayer";
 import LiveWaveform from "@/shared/LiveWaveform";
 
 const Voice = () => {
-  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const {
@@ -29,65 +26,64 @@ const Voice = () => {
     dataArrayRef,
   } = useVoiceRecorder();
 
-  const { mutate: saveRecording, isPending } = useMutation({
-    mutationFn: ({ blob, title }: { blob: Blob; title: string }) => {
-      console.log("Uploading blob:", blob);
-      if (!user?.uid) {
-        showToast({
-          title: "Error",
-          description: "You must be logged in to save recordings.",
-          status: "error",
-        });
-        throw new Error("user not logged in");
-      }
-      return uploadVoiceRecording(blob, user?.uid, title);
+  const { mutate: uploadRecording, isPending } = useMutation({
+    mutationFn: async ({ blob, title }: { blob: Blob; title: string }) => {
+      const formData = new FormData();
+      formData.append("file", blob);
+      formData.append(
+        "upload_preset",
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+      );
+      formData.append("folder", "voice_journals");
+
+      const res = await fetch(import.meta.env.VITE_CLOUDINARY_UPLOAD_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Upload to Cloudinary failed");
+
+      const data = await res.json();
+
+      // Optionally save to Firestore or log it
+      return {
+        url: data.secure_url,
+        title,
+        createdAt: new Date(),
+      };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data);
       showToast({
-        title: "Completed",
-        description: "Recording saved!",
+        title: "Uploaded!",
+        description: "Recording successfully uploaded.",
         status: "success",
       });
       queryClient.invalidateQueries({ queryKey: ["voice-journals"] });
     },
-    onError: (error) =>
+    onError: (err: Error) => {
       showToast({
         title: "Error",
-        description: `${error.message}. Failed to save recording.`,
+        description: err.message,
         status: "error",
-      }),
+      });
+    },
   });
-
-  // const { data: voiceJournals = [] } = useQuery({
-  //   queryKey: ["voice-journals", user?.uid],
-  //   queryFn: () => {
-  //     if (!user?.uid) {
-  //       showToast({
-  //         title: "Error",
-  //         description: "User not logged in",
-  //         status: "error",
-  //       });
-  //       throw new Error("User nor logged in");
-  //     }
-  //     return fetchVoiceJournals(user?.uid);
-  //   },
-  //   enabled: !!user?.uid,
-  // });
 
   const [title, setTitle] = useState("");
 
   const handleStop = () => {
     stopRecording((finalBlob) => {
-      console.log("Final blob ready in callback:", finalBlob);
-      if (finalBlob && title) {
-        saveRecording({ blob: finalBlob, title });
-      } else {
+      if (!finalBlob || !title) {
         showToast({
           title: "Error",
-          description: "No recording or title.",
+          description: "Recording blob or title missing.",
           status: "error",
         });
+        return;
       }
+
+      uploadRecording({ blob: finalBlob, title });
     });
   };
 
