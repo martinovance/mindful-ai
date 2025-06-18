@@ -5,7 +5,7 @@ import VoiceImg from "@/assets/VoiceImg.svg";
 import Recorder from "@/assets/Recorder.svg";
 import Play from "@/assets/Play.svg";
 import { Recordings } from "@/constant/dashData";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { showToast } from "@/shared/Toast";
 import { useState } from "react";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
@@ -13,9 +13,16 @@ import { Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
 import WaveformPlayer from "@/shared/WaveformPlayer";
 import LiveWaveform from "@/shared/LiveWaveform";
+import {
+  fetchVoiceJournals,
+  saveAudioToFirestore,
+} from "@/services/fireStoreService";
+import { useAuth } from "@/hooks/useAuth";
 
 const Voice = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const [title, setTitle] = useState("");
 
   const {
     stopRecording,
@@ -34,7 +41,7 @@ const Voice = () => {
         "upload_preset",
         import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
       );
-      formData.append("folder", "voice_journals");
+      formData.append("folder", "voiceJournals");
 
       const res = await fetch(import.meta.env.VITE_CLOUDINARY_UPLOAD_URL, {
         method: "POST",
@@ -42,35 +49,53 @@ const Voice = () => {
       });
 
       if (!res.ok) throw new Error("Upload to Cloudinary failed");
+      if (!user?.uid) throw new Error("User not authenticated");
 
       const data = await res.json();
+      const audioUrl = data.secure_url;
 
-      // Optionally save to Firestore or log it
+      await saveAudioToFirestore({
+        userId: user?.uid,
+        title,
+        audioUrl,
+      });
+
       return {
-        url: data.secure_url,
+        audioUrl,
         title,
         createdAt: new Date(),
       };
     },
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
       showToast({
         title: "Uploaded!",
         description: "Recording successfully uploaded.",
         status: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["voice-journals"] });
+      queryClient.invalidateQueries({
+        queryKey: ["voiceJournals", user?.uid],
+      });
     },
-    onError: (err: Error) => {
+    onError: (error: Error) => {
       showToast({
         title: "Error",
-        description: err.message,
+        description: error.message,
         status: "error",
       });
     },
   });
 
-  const [title, setTitle] = useState("");
+  const { data: voiceJournals = [] /* isPending: LoadingJournals */ } =
+    useQuery({
+      queryKey: ["voiceJournals", user?.uid],
+      queryFn: () => {
+        if (!user?.uid) throw new Error("User not authenticated");
+        const data = fetchVoiceJournals(user?.uid);
+        return data ?? [];
+      },
+      enabled: !!user?.uid,
+    });
+  console.log(voiceJournals);
 
   const handleStop = () => {
     stopRecording((finalBlob) => {

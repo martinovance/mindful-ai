@@ -16,7 +16,6 @@ import {
   startAfter,
   Timestamp,
 } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 export const storeSessionData = async (session: MoodSession) => {
   if (
@@ -145,49 +144,45 @@ export const getUserSessions = async (
   }
 };
 
-export interface VoiceJournal {
+export const saveAudioToFirestore = async ({
+  userId,
+  title,
+  audioUrl,
+}: {
   userId: string;
   title: string;
-  createdAt: Timestamp;
   audioUrl: string;
-}
-
-export const uploadVoiceRecording = async (
-  blob: Blob,
-  userId: string,
-  title: string
-) => {
-  const storage = getStorage();
-  const fileName = `${userId}_${Date.now()}.webm`;
-  const audioRef = ref(storage, `recording/${fileName}`);
-
-  await uploadBytes(audioRef, blob);
-  const audioUrl = await getDownloadURL(audioRef);
-
-  const newEntry: VoiceJournal = {
+}) => {
+  await addDoc(collection(db, "voiceJournals"), {
     userId,
     title,
     audioUrl,
-    createdAt: Timestamp.now(),
-  };
-
-  const docRef = await addDoc(collection(db, "voice_journal"), newEntry);
-  return { ...newEntry, id: docRef.id };
+    createdAt: new Date(),
+  });
 };
 
 export const fetchVoiceJournals = async (userId: string) => {
-  const ref = collection(db, "voice_journals");
-  const q = query(
-    ref,
-    where("userId", "==", userId),
-    orderBy("createdAt", "desc")
-  );
-  const snapshot = await getDocs(q);
+  try {
+    const q = query(
+      collection(db, "voiceJournals"),
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
 
-  return (
-    snapshot.docs.map((doc) => ({
+    const snapshot = await getDocs(q);
+    const result = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    })) || []
-  );
+    })) as {
+      id: string;
+      title: string;
+      audioUrl: string;
+      createdAt: { seconds: number };
+    }[];
+
+    return result;
+  } catch (error) {
+    console.log("Error fetching journals:", error);
+    throw error;
+  }
 };
