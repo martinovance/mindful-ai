@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 
 import VoiceImg from "@/assets/VoiceImg.svg";
 import Recorder from "@/assets/Recorder.svg";
-import Play from "@/assets/Play.svg";
-import { Recordings } from "@/constant/dashData";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { showToast } from "@/shared/Toast";
 import { useState } from "react";
@@ -18,6 +16,7 @@ import {
   saveAudioToFirestore,
 } from "@/services/fireStoreService";
 import { useAuth } from "@/hooks/useAuth";
+import WaveJournalPlayer from "@/shared/JournalPlayer";
 
 const Voice = () => {
   const queryClient = useQueryClient();
@@ -95,7 +94,6 @@ const Voice = () => {
       },
       enabled: !!user?.uid,
     });
-  console.log(voiceJournals);
 
   const handleStop = () => {
     stopRecording((finalBlob) => {
@@ -164,30 +162,28 @@ const Voice = () => {
       )}
 
       {/* Playback */}
-      {audioURL && <WaveformPlayer audioURL={audioURL} />}
+      {isPending && audioURL && <WaveformPlayer audioURL={audioURL} />}
 
       <div className="flex flex-col justify-center w-full lg:w-[850px] items-start gap-5">
         <p className="text-lg font-medium">Recent Recordings</p>
-        <div className="flex flex-col justify-start items-start w-full gap-4">
-          {Recordings.map((record, i) => (
+        <div className="flex flex-col justify-start items-start w-full min-h-[80px] gap-4">
+          {voiceJournals?.map((record, i) => (
             <div
               key={i}
-              className="flex flex-row justify-between items-center w-full"
+              className="flex flex-row justify-between items-center w-full min-h-[80px] gap-3"
             >
-              <div className="flex flex-row gap-3 items-center">
-                <div className="flex justify-center items-center w-[48px] h-[48px] bg-[#F0F2F5] rounded-8">
-                  <img src={Recorder} alt="recorder" />
+              <div className="flex flex-row gap-3 items-center w-full min-h-[80px]">
+                <div className="flex justify-center items-center w-[80px] min-h-[80px] bg-[#F0F2F5] rounded-8">
+                  <img src={Recorder} alt="recorder" className="h-10 w-10" />
                 </div>
-                <div className="flex flex-col justify-between items-start gap-2 h-[48px]">
+
+                <div className="flex flex-col justify-between items-start gap-2 h-full w-full">
                   <p className="text-sm font-medium">{record.title}</p>
+                  <WaveJournalPlayer audioURL={record.audioUrl} />
                   <p className="text-sm font-normal text-[#637387]">
-                    {record.date}
+                    {new Date(record.createdAt.seconds * 1000).toLocaleString()}
                   </p>
                 </div>
-              </div>
-
-              <div className="flex justify-end items-end">
-                <img src={Play} alt="play" />
               </div>
             </div>
           ))}
