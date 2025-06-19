@@ -16,8 +16,7 @@ export const LoginUserCredentials = async (email: string, password: string) => {
 };
 
 export const CreateUserAccount = async ({
-  firstName,
-  lastName,
+  fullName,
   email,
   password,
 }: AuthTypes) => {
@@ -28,7 +27,7 @@ export const CreateUserAccount = async ({
   );
 
   await updateProfile(userCredential.user, {
-    displayName: `${firstName} ${lastName}`,
+    displayName: `${fullName}`,
   });
 
   return userCredential.user;

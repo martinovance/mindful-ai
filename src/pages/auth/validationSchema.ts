@@ -2,8 +2,7 @@ import { z } from "zod";
 
 export const validationSchema = z
   .object({
-    firstName: z.string().min(3, "First name is required"),
-    lastName: z.string().min(3, "Last name is required"),
+    fullName: z.string().min(30, "First name is required"),
     email: z.string().email({
       message: "Enter a valid email",
     }),

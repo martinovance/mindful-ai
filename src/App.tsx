@@ -2,8 +2,6 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Appbar from "./components/Appbar";
 const LandingPage = lazy(() => import("./pages/LandingPage"));
-const Login = lazy(() => import("./pages/auth/Login"));
-const CreateAccount = lazy(() => import("./pages/auth/CreateAccount"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Sessions = lazy(() => import("./pages/Sessions"));
 const Resources = lazy(() => import("./pages/Resources"));
@@ -30,22 +28,6 @@ function App() {
               element={
                 <PublicRoute>
                   <LandingPage />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <PublicRoute>
-                  <Login />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="create-account"
-              element={
-                <PublicRoute>
-                  <CreateAccount />
                 </PublicRoute>
               }
             />

@@ -11,13 +11,14 @@ import { loginSchema } from "./validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { LoginUserCredentials } from "@/services/authService";
 import { Loader2 } from "lucide-react";
 import { showToast } from "@/shared/Toast";
+import { DialogOpen } from "@/types/auth";
 
-const CreateAccount = () => {
+const Login = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
   const navigate = useNavigate();
 
   const { mutate: LoginUser, isPending } = useMutation({
@@ -25,7 +26,6 @@ const CreateAccount = () => {
       LoginUserCredentials(email, password),
     onSuccess: (data) => {
       console.log(data);
-      // Auth.setToken(data?.idToken);
       showToast({
         title: "Success!",
         description: "User signed in successfully.",
@@ -34,7 +34,7 @@ const CreateAccount = () => {
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.log(error);
+      console.log("Error here:", error);
       showToast({
         title: "Error",
         description: "Unable to sign user in, please try again",
@@ -57,13 +57,9 @@ const CreateAccount = () => {
   };
 
   return (
-    <section className="flex flex-col justify-center items-center mt-10 gap-5">
-      <p className="text-2xl font-bold">Login</p>
+    <section className="flex flex-col justify-center items-center gap-5">
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full sm:w-[500px] px-4 md:px-0"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <FormField
             control={form.control}
             name="email"
@@ -107,12 +103,17 @@ const CreateAccount = () => {
           >
             {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Login"}
           </Button>
-          <p className="font-medium text-sm mt-1">
-            You don't have an account? {""}
-            <Link to="/create-account" className="text-blue-700 cursor-pointer">
+          <p className="font-medium text-sm text-center mt-1">
+            Don't have an account? {""}
+            <span
+              onClick={() => {
+                setIsLoginOpen(false);
+                setIsSignupOpen(true);
+              }}
+              className="text-blue-700 cursor-pointer"
+            >
               Sign up
-            </Link>{" "}
-            now.
+            </span>
           </p>
         </form>
       </Form>
@@ -120,4 +121,4 @@ const CreateAccount = () => {
   );
 };
 
-export default CreateAccount;
+export default Login;

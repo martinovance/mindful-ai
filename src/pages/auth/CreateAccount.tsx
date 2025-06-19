@@ -11,28 +11,22 @@ import { validationSchema } from "./validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { CreateUserAccount } from "@/services/authService";
 import { Loader2 } from "lucide-react";
 import { showToast } from "@/shared/Toast";
-import { AuthTypes } from "@/types/auth";
-// import Auth from "@/utils/auth";
+import { AuthTypes, DialogOpen } from "@/types/auth";
 
-const CreateAccount = () => {
-  const navigate = useNavigate();
-
+const CreateAccount = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
   const { mutate: CreateUser, isPending } = useMutation({
-    mutationFn: ({ firstName, lastName, email, password }: AuthTypes) =>
-      CreateUserAccount({ firstName, lastName, email, password }),
+    mutationFn: ({ fullName, email, password }: AuthTypes) =>
+      CreateUserAccount({ fullName, email, password }),
     onSuccess: () => {
-      // Auth.setToken(data?.idToken);
       showToast({
         title: "Success!",
         description: "Account created successfully.",
         status: "success",
       });
-      navigate("/login");
     },
     onError: (error) => {
       console.log(error);
@@ -47,8 +41,7 @@ const CreateAccount = () => {
   const form = useForm<z.infer<typeof validationSchema>>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -56,44 +49,23 @@ const CreateAccount = () => {
   });
 
   const onSubmit = (values: z.infer<typeof validationSchema>) => {
-    const { firstName, lastName, email, password } = values;
-    CreateUser({ firstName, lastName, email, password });
+    const { fullName, email, password } = values;
+    CreateUser({ fullName, email, password });
   };
 
   return (
-    <section className="flex flex-col justify-center items-center mt-10 gap-5">
-      <p className="text-2xl font-bold">Create Account</p>
+    <section className="flex flex-col justify-center items-center gap-5">
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full sm:w-[500px] px-4 md:px-0"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <FormField
             control={form.control}
-            name="firstName"
+            name="fullName"
             render={({ field }) => (
               <FormItem>
                 <FormMessage />
                 <FormControl>
                   <Input
-                    placeholder="First Name"
-                    {...field}
-                    className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
-                    focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormMessage />
-                <FormControl>
-                  <Input
-                    placeholder="Last Name"
+                    placeholder="Full Name"
                     {...field}
                     className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
                     focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"
@@ -167,12 +139,17 @@ const CreateAccount = () => {
               "Create Account"
             )}
           </Button>
-          <p className="font-medium text-sm mt-1">
+          <p className="font-medium text-sm text-center mt-1">
             Already have an account? {""}
-            <Link to="/login" className="text-blue-700 cursor-pointer">
+            <span
+              onClick={() => {
+                setIsLoginOpen(true);
+                setIsSignupOpen(false);
+              }}
+              className="text-blue-700 cursor-pointer"
+            >
               Login
-            </Link>{" "}
-            instead.
+            </span>
           </p>
         </form>
       </Form>

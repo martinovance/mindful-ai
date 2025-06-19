@@ -8,13 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import Auth from "@/utils/auth";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import CustomDialog from "@/shared/Dialog";
+import Login from "@/pages/auth/Login";
+import CreateAccount from "@/pages/auth/CreateAccount";
 
 const Appbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const pathname = location.pathname;
   const { user } = useAuth();
-  const isAuthPage = ["/", "/create-account", "/login"].includes(pathname);
+  const isAuthPage = ["/"].includes(pathname);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
   const getTitle = () => {
     switch (pathname) {
@@ -83,17 +88,46 @@ const Appbar = () => {
   );
 
   const renderAuthButton = () => (
-    <Link
-      to={pathname === "/create-account" ? "/login" : "/create-account"}
-      className=" xs:block"
-    >
-      <Button
-        variant="default"
-        className="cursor-pointer bg-[#B2C9E5] text-[#121417] rounded-full hover:bg-[#9fb8d9]"
+    <>
+      <CustomDialog
+        title="Login"
+        open={isLoginOpen}
+        onOpenChange={setIsLoginOpen}
+        trigger={
+          <Button
+            size="sm"
+            variant="link"
+            className="hidden sm:flex cursor-pointer text-[#121417]"
+          >
+            Login
+          </Button>
+        }
       >
-        {pathname === "/create-account" ? "Login" : "Get Started"}
-      </Button>
-    </Link>
+        <Login
+          setIsSignupOpen={setIsSignupOpen}
+          setIsLoginOpen={setIsLoginOpen}
+        />
+      </CustomDialog>
+      <CustomDialog
+        title="Create Account"
+        open={isSignupOpen}
+        onOpenChange={setIsSignupOpen}
+        trigger={
+          <Button
+            size="sm"
+            variant="default"
+            className="cursor-pointer bg-[#B2C9E5] text-[#121417] rounded-full hover:bg-[#9fb8d9]"
+          >
+            Get Started
+          </Button>
+        }
+      >
+        <CreateAccount
+          setIsLoginOpen={setIsLoginOpen}
+          setIsSignupOpen={setIsSignupOpen}
+        />
+      </CustomDialog>
+    </>
   );
 
   const renderUserControls = () => (
@@ -195,19 +229,25 @@ const Appbar = () => {
             ) : null}
 
             {!user && (
-              <Link
-                to={
-                  pathname === "/create-account" ? "/login" : "/create-account"
+              <CustomDialog
+                title="Create Account"
+                open={isSignupOpen}
+                onOpenChange={setIsSignupOpen}
+                trigger={
+                  <Button
+                    size="sm"
+                    variant="default"
+                    className="cursor-pointer bg-[#B2C9E5] text-[#121417] rounded-full hover:bg-[#9fb8d9]"
+                  >
+                    Get started
+                  </Button>
                 }
-                className="w-full"
               >
-                <Button
-                  variant="default"
-                  className="w-full bg-[#B2C9E5] text-[#121417] hover:bg-[#9fb8d9]"
-                >
-                  {pathname === "/create-account" ? "Login" : "Get Started"}
-                </Button>
-              </Link>
+                <CreateAccount
+                  setIsLoginOpen={setIsLoginOpen}
+                  setIsSignupOpen={setIsSignupOpen}
+                />
+              </CustomDialog>
             )}
           </div>
         </div>
