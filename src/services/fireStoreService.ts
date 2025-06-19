@@ -161,15 +161,38 @@ export const saveAudioToFirestore = async ({
   });
 };
 
-export const fetchVoiceJournals = async (userId: string) => {
+export const fetchVoiceJournals = async (
+  userId: string,
+  // page = 1,
+  lastItem: QueryDocumentSnapshot<DocumentData> | null,
+  itemsPerPage: number = 5
+): Promise<{
+  result: {
+    id: string;
+    title: string;
+    audioUrl: string;
+    createdAt: { seconds: number };
+  }[];
+  total: number;
+  lastVisible: QueryDocumentSnapshot<DocumentData> | null;
+}> => {
   try {
-    const q = query(
-      collection(db, "voiceJournals"),
+    const voiceJournalsRef = collection(db, "voiceJournals");
+
+    const countQuery = query(voiceJournalsRef, where("userId", "==", userId));
+    const countSnapshot = await getCountFromServer(countQuery);
+    const total = countSnapshot.data().count || 0;
+
+    const baseQuery = query(
+      voiceJournalsRef,
       where("userId", "==", userId),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "desc"),
+      ...(lastItem ? [startAfter(lastItem)] : []),
+      limit(itemsPerPage)
     );
 
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocs(baseQuery);
+    const lastVisible = snapshot.docs[snapshot.docs.length - 1] ?? null;
     const result = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -180,7 +203,11 @@ export const fetchVoiceJournals = async (userId: string) => {
       createdAt: { seconds: number };
     }[];
 
-    return result;
+    return {
+      result,
+      total,
+      lastVisible,
+    };
   } catch (error) {
     console.log("Error fetching journals:", error);
     throw error;

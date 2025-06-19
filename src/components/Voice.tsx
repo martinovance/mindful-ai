@@ -17,11 +17,18 @@ import {
 } from "@/services/fireStoreService";
 import { useAuth } from "@/hooks/useAuth";
 import WaveJournalPlayer from "@/shared/JournalPlayer";
+import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 
 const Voice = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [title, setTitle] = useState("");
+
+  const itemsPerPage = 1;
+  const [page, setPage] = useState(1);
+  const [lastItems, setLastItems] = useState<
+    Record<number, QueryDocumentSnapshot<DocumentData> | null>
+  >({});
 
   const {
     stopRecording,
@@ -84,16 +91,30 @@ const Voice = () => {
     },
   });
 
-  const { data: voiceJournals = [] /* isPending: LoadingJournals */ } =
-    useQuery({
-      queryKey: ["voiceJournals", user?.uid],
-      queryFn: () => {
-        if (!user?.uid) throw new Error("User not authenticated");
-        const data = fetchVoiceJournals(user?.uid);
-        return data ?? [];
-      },
-      enabled: !!user?.uid,
-    });
+  const { data: voiceJournals /* isPending: LoadingJournals */ } = useQuery({
+    queryKey: ["voiceJournals", user?.uid, page],
+    queryFn: async () => {
+      const lastDoc = lastItems[page - 1] || null;
+      if (!user?.uid) throw new Error("User not authenticated");
+      const data = await fetchVoiceJournals(user?.uid, lastDoc, itemsPerPage);
+
+      setLastItems((prev) => ({
+        ...prev,
+        [page]: data.lastVisible,
+      }));
+      return data;
+    },
+    enabled: !!user?.uid,
+  });
+  console.log(voiceJournals);
+
+  const totalPages = voiceJournals?.total
+    ? Math.ceil(voiceJournals?.total / itemsPerPage)
+    : 1;
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) setPage(page);
+  };
 
   const handleStop = () => {
     stopRecording((finalBlob) => {
@@ -167,26 +188,77 @@ const Voice = () => {
       <div className="flex flex-col justify-center w-full lg:w-[850px] items-start gap-5">
         <p className="text-lg font-medium">Recent Recordings</p>
         <div className="flex flex-col justify-start items-start w-full min-h-[80px] gap-4">
-          {voiceJournals?.map((record, i) => (
-            <div
-              key={i}
-              className="flex flex-row justify-between items-center w-full min-h-[80px] gap-3"
-            >
-              <div className="flex flex-row gap-3 items-center w-full min-h-[80px]">
-                <div className="flex justify-center items-center w-[80px] min-h-[80px] bg-[#F0F2F5] rounded-8">
-                  <img src={Recorder} alt="recorder" className="h-10 w-10" />
-                </div>
+          {(voiceJournals?.result ?? [])?.length > 0 ? (
+            voiceJournals?.result?.map((record, i) => (
+              <div
+                key={i}
+                className="flex flex-row justify-between items-center w-full min-h-[80px] gap-3"
+              >
+                <div className="flex flex-row gap-3 items-center w-full min-h-[80px]">
+                  <div className="flex justify-center items-center w-[80px] min-h-[80px] bg-[#F0F2F5] rounded-8">
+                    <img src={Recorder} alt="recorder" className="h-10 w-10" />
+                  </div>
 
-                <div className="flex flex-col justify-between items-start gap-2 h-full w-full">
-                  <p className="text-sm font-medium">{record.title}</p>
-                  <WaveJournalPlayer audioURL={record.audioUrl} />
-                  <p className="text-sm font-normal text-[#637387]">
-                    {new Date(record.createdAt.seconds * 1000).toLocaleString()}
-                  </p>
+                  <div className="flex flex-col justify-between items-start gap-2 h-full w-full">
+                    <p className="text-sm font-medium">{record.title}</p>
+                    <WaveJournalPlayer audioURL={record.audioUrl} />
+                    <p className="text-sm font-normal text-[#637387]">
+                      {new Date(
+                        record.createdAt.seconds * 1000
+                      ).toLocaleString()}
+                    </p>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="flex justify-center items-center gap-3 text-center w-full">
+              <p className="text-gray-500 text-center">
+                You haven't had any calls yet.
+              </p>
             </div>
-          ))}
+          )}
+
+          <div className="flex justify-center items-center gap-2 mt-4">
+            <Button
+              variant="outline"
+              disabled={page === 1}
+              onClick={() => handlePageChange(page - 1)}
+            >
+              Previous
+            </Button>
+
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (page <= 3) {
+                pageNum = i + 1;
+              } else if (page >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = page - 2 + i;
+              }
+
+              return (
+                <Button
+                  key={pageNum}
+                  variant={page === pageNum ? "default" : "outline"}
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+
+            <Button
+              variant="outline"
+              disabled={page === totalPages}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              Next
+            </Button>
+          </div>
         </div>
 
         <div className="flex flex-col justify-start items-start w-full gap-4 mt-4">
