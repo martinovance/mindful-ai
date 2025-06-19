@@ -24,7 +24,7 @@ const Voice = () => {
   const { user } = useAuth();
   const [title, setTitle] = useState("");
 
-  const itemsPerPage = 1;
+  const itemsPerPage = 5;
   const [page, setPage] = useState(1);
   const [lastItems, setLastItems] = useState<
     Record<number, QueryDocumentSnapshot<DocumentData> | null>

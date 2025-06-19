@@ -16,14 +16,15 @@ import { useMutation } from "@tanstack/react-query";
 import { CreateUserAccount } from "@/services/authService";
 import { Loader2 } from "lucide-react";
 import { showToast } from "@/shared/Toast";
+import { AuthTypes } from "@/types/auth";
 // import Auth from "@/utils/auth";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
 
   const { mutate: CreateUser, isPending } = useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      CreateUserAccount(email, password),
+    mutationFn: ({ firstName, lastName, email, password }: AuthTypes) =>
+      CreateUserAccount({ firstName, lastName, email, password }),
     onSuccess: () => {
       // Auth.setToken(data?.idToken);
       showToast({
@@ -46,6 +47,8 @@ const CreateAccount = () => {
   const form = useForm<z.infer<typeof validationSchema>>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -53,8 +56,8 @@ const CreateAccount = () => {
   });
 
   const onSubmit = (values: z.infer<typeof validationSchema>) => {
-    const { email, password } = values;
-    CreateUser({ email, password });
+    const { firstName, lastName, email, password } = values;
+    CreateUser({ firstName, lastName, email, password });
   };
 
   return (
@@ -65,6 +68,40 @@ const CreateAccount = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full sm:w-[500px] px-4 md:px-0"
         >
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormMessage />
+                <FormControl>
+                  <Input
+                    placeholder="First Name"
+                    {...field}
+                    className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
+                    focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormMessage />
+                <FormControl>
+                  <Input
+                    placeholder="Last Name"
+                    {...field}
+                    className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
+                    focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="email"
