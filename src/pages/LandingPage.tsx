@@ -34,7 +34,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <Link to="/create-account">
+      <Link to="/">
         <Button
           className="bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white 
           cursor-pointer"
