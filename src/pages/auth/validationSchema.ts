@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const validationSchema = z
   .object({
-    fullName: z.string().min(30, "First name is required"),
+    fullName: z.string().max(30, "Name is required"),
     email: z.string().email({
       message: "Enter a valid email",
     }),
