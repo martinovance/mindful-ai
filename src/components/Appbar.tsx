@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import AvatarImg from "@/assets/AvatarImg.svg";
-import { Bell, Menu, X } from "lucide-react";
+import { Bell, LogOut, Menu, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Auth from "@/utils/auth";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import CustomDialog from "@/shared/Dialog";
 import Login from "@/pages/auth/Login";
 import CreateAccount from "@/pages/auth/CreateAccount";
+import CustomDropdown from "@/shared/Dropdown";
 
 const Appbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -20,6 +21,8 @@ const Appbar = () => {
   const isAuthPage = ["/"].includes(pathname);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+
+  console.log(user);
 
   const getTitle = () => {
     switch (pathname) {
@@ -141,10 +144,26 @@ const Appbar = () => {
           3
         </Badge>
       </div>
-      <Avatar onClick={() => Auth.logOut()} className="h-8 w-8 cursor-pointer">
-        <AvatarImage src={AvatarImg} />
-        <AvatarFallback>MO</AvatarFallback>
-      </Avatar>
+      <CustomDropdown
+        title={user?.displayName || "User"}
+        email={user?.email ?? ""}
+        image={user?.photoURL ?? AvatarImg}
+        trigger={
+          <Avatar className="h-8 w-8 cursor-pointer">
+            <AvatarImage src={AvatarImg} />
+            <AvatarFallback>MO</AvatarFallback>
+          </Avatar>
+        }
+      >
+        <Button
+          variant="outline"
+          onClick={() => Auth.logOut()}
+          className="cursor-pointer border-none"
+        >
+          <LogOut className="mr-5" />
+          Log Out
+        </Button>
+      </CustomDropdown>
     </div>
   );
 
