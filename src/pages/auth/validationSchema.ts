@@ -5,7 +5,7 @@ export const validationSchema = z
     fullName: z
       .string()
       .trim()
-      .min(2, "Name is required and must be at least 2 characters")
+      .min(2, "Name must be at least 2 characters")
       .max(30, "Name must be 30 characters or less"),
     email: z.string().email({
       message: "Enter a valid email",
