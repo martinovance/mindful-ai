@@ -9,6 +9,7 @@ import { LoaderCircle } from "lucide-react";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import PublicRoute from "./utils/PublicRoute";
 import { Toaster } from "sonner";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
               }
             />
           </Routes>
+          <Footer />
           <Toaster />
         </div>
       </BrowserRouter>

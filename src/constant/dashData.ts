@@ -127,15 +127,19 @@ interface faqsType {
 
 export const Faqs: faqsType[] = [
   {
-    title: "What qualifications do the therapists have?",
+    title: "Will this help if I already have bladder issues or bone concerns?",
+    desc: "Yes! Many women see improvement in bladder control within just a few weeks of regular practice. The bone health techniques work regardless of where you're starting from, and everything can be modified to meet you where you are.",
+  },
+  {
+    title: "Is Mindful Ai a replacement for therapy?",
     desc: "All therapists are licensed professionals with extensive experience in mental health care.",
   },
   {
-    title: "How long does it take to get connected?",
-    desc: "All therapists are licensed professionals with extensive experience in mental health care.",
+    title: "What if I can't attend the live Q&A sessions?",
+    desc: "If you are in immediate help or in immediate danger, please call 911 or your local emergency number.",
   },
   {
-    title: "What if I need immediate help?",
+    title: "Will I need special equipment?",
     desc: "If you are in immediate help or in immediate danger, please call 911 or your local emergency number.",
   },
 ];

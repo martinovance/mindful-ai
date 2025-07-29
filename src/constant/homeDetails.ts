@@ -1,31 +1,50 @@
-import Image1 from "@/assets/Image1.svg";
-import Image2 from "@/assets/Image2.svg";
-import Image3 from "@/assets/Image3.svg";
-import Image4 from "@/assets/Image4.svg";
+import Image1 from "@/assets/Mic1.svg";
+import Image2 from "@/assets/Analysis1.svg";
+import Image3 from "@/assets/Galaxy1.svg";
+import Image4 from "@/assets/Therapist1.svg";
+import { Mic, UserPlus } from "lucide-react";
 
 export const HOMESCREEN = [
   {
     img: Image1,
     header: "Voice Journaling",
     description:
-      "Reflect on your day and express your thoughts through voice journaling.",
+      "Express yourself freely with voice journaling. Record your thoughts and feelings anytime, anywhere.",
   },
   {
     img: Image2,
     header: "Mood Tracking",
     description:
-      "Monitor your emotional state and identify patterns in your mood.",
+      "Track your emotional well-being over time. Identify patterns and gain insights into your mood fluctuations.",
   },
   {
     img: Image3,
-    header: "Daily Affirmations",
+    header: "Personalized Affirmations",
     description:
-      "Receive personalized affirmations to boost your self-esteem and positivity.",
+      "Receive daily affirmations tailored to your needs. Boost your self-esteem and cultivate a positive mindset.",
   },
   {
     img: Image4,
-    header: "Therapist Escalation",
+    header: "Therapist Support",
     description:
-      "Connect with a licensed therapist when you need additional support.",
+      "Connect with licensed therapists for professional guidance. Access support and resources to enhance your mental health.",
+  },
+];
+
+export const GETSTARTED = [
+  {
+    icon: UserPlus,
+    title: "Sign Up",
+    description: "Create your account and personalize your profile.",
+  },
+  {
+    icon: Mic,
+    title: "Start Talking",
+    description: "Begin your conversation with our AI companion.",
+  },
+  {
+    icon: UserPlus,
+    title: "Track & Improve",
+    description: "Monitor your progress and see improvements over time.",
   },
 ];
