@@ -173,7 +173,7 @@ const Appbar = () => {
     bg-[E5E8EB] backdrop-blur supports-[backdrop-filter]:bg-white/60 
     dark:bg-gray-950/90"
     >
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+      <div className="flex h-16 items-center justify-between px-3 sm:px-6">
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"

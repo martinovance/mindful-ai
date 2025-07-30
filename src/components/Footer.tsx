@@ -10,8 +10,8 @@ import InstagramLogo from "@/assets/InstagramLogo.svg";
 const Footer = () => {
   return (
     <footer
-      className="bg-[#1F2937] h-[312px] mt-auto p-10 grid grid-cols-1 
-    md:grid-cols-2 lg:grid-cols-4 justify-between items-center gap-3"
+      className="bg-[#1F2937] h-full lg:h-[312px] mt-auto p-10 grid grid-cols-1 
+    md:grid-cols-2 lg:grid-cols-4 justify-between items-center gap-8 lg:gap-3"
     >
       <div className="flex flex-col justify-start items-start gap-3">
         <div className="flex gap-1 items-center">

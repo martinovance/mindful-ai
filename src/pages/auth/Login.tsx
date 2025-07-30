@@ -98,7 +98,7 @@ const Login = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
 
           <Button
             type="submit"
-            className="w-full bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white 
+            className="w-full bg-[#0D80F2] text-[#fff] font-bold rounded-full hover:text-white 
             cursor-pointer"
           >
             {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Login"}
