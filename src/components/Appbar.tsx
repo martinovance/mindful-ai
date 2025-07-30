@@ -1,4 +1,4 @@
-import Logo from "@/assets/Logo.svg";
+import MindLogo from "@/assets/MindLogo.svg";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -102,7 +102,7 @@ const Appbar = () => {
             variant="link"
             className="hidden sm:flex cursor-pointer text-[#121417]"
           >
-            Login
+            Log In
           </Button>
         }
       >
@@ -119,7 +119,7 @@ const Appbar = () => {
           <Button
             size="sm"
             variant="default"
-            className="cursor-pointer bg-[#B2C9E5] text-[#121417] rounded-full hover:bg-[#9fb8d9]"
+            className="cursor-pointer bg-[#0D80F2] text-[#F7FAFC] rounded-full hover:bg-[#9fb8d9]"
           >
             Get Started
           </Button>
@@ -192,17 +192,17 @@ const Appbar = () => {
             to={user ? "/dashboard" : "/"}
             className="flex items-center gap-2"
           >
-            <img src={Logo} alt="app-logo" className="h-5 w-5" />
+            <img src={MindLogo} alt="app-logo" className="h-6 w-6" />
             <p className="text-lg font-bold text-foreground">{getTitle()}</p>
           </Link>
         </div>
 
         <div className="flex items-center gap-6">
           {isAuthPage ? renderAuthLinks() : user ? renderAppLinks() : null}
+        </div>
 
-          <div className="flex items-center gap-4">
-            {user ? renderUserControls() : renderAuthButton()}
-          </div>
+        <div className="flex items-center gap-4">
+          {user ? renderUserControls() : renderAuthButton()}
         </div>
       </div>
 

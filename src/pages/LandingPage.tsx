@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { GETSTARTED, HOMESCREEN } from "@/constant/homeDetails";
 import { Link } from "react-router-dom";
 import Rectangle4 from "@/assets/Images/Rectangle4.png";
+import Meditate from "@/assets/Images/Meditate.webp";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
@@ -28,7 +29,7 @@ const LandingPage = () => {
         <div className="flex items-center gap-3">
           <Link to="/">
             <Button
-              className="bg-[#B2C9E5] text-[#121417] font-bold rounded-md hover:text-white 
+              className="bg-[#0D80F2] text-[#FFFFFF] font-bold rounded-md hover:text-white 
           cursor-pointer"
             >
               Get started
@@ -137,16 +138,16 @@ const LandingPage = () => {
 
         <div className="relative flex flex-wrap gap-2 justify-center items-center bg-gray-50 h-[300px]">
           <img
-            src={Rectangle4}
+            src={Meditate}
             alt="therapist"
-            className="object-cover w-full h-full rounded-sm"
+            className="object-cover w-full h-full rounded-sm opacity-100"
           />
           <div className="absolute flex flex-col justify-center items-center gap-3">
             <div className="flex flex-col justify-center items-center">
-              <p className="text-[#000] text-xl font-bold">
+              <p className="text-[#FFFFFF] text-2xl font-bold">
                 Ready to Improve Your Mental Well-being?
               </p>
-              <p className="font-normal text-sm">
+              <p className="font-semibold text-xs text-[#FFFFFF]">
                 Join thousands of users who found balance, clarity, and support
                 with Mindful AI.
               </p>
