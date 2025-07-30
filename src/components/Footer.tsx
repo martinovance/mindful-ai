@@ -59,7 +59,10 @@ const Footer = () => {
             className="rounded-tr-xs rounded-br-xs h-full w-[87%] bg-[#074079] 
             border-[#074079] hover:border-none focus:border-none placeholder:text-[#ECF5FE]"
           />
-          <Button className="h-full rounded-tl-xs rounded-bl-xs w-[13%] bg-[#0D80F2] text-[#fff] hover:bg-[#0D80F2]">
+          <Button
+            className="h-full rounded-tl-xs rounded-bl-xs w-[13%] bg-[#0D80F2] 
+          text-[#fff] hover:bg-[#0D80F2]"
+          >
             <ArrowRight />
           </Button>
         </div>
