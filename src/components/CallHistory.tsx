@@ -89,7 +89,7 @@ const CallHistory = ({
 
   return (
     <Card className="shadow-none bg-[#fff] pt-0 pb-8 w-full flex flex-col gap-3">
-      <div className="flex justify-between items-center px-8 border-b-2 border-[#F5F5F5] h-[60px]">
+      <div className="flex justify-between items-center px-3 sm:px-8 border-b-2 border-[#F5F5F5] h-[60px]">
         <p className="text-xl font-semibold ">Call History</p>
         <Link to="/sessions">
           <Button
@@ -100,7 +100,7 @@ const CallHistory = ({
           </Button>
         </Link>
       </div>
-      <div className="px-8 flex flex-col gap-4 ">
+      <div className="px-3 sm:px-8 flex flex-col gap-4 ">
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <Search className="w-5 h-5 text-[#4F7396] color-[#4F7396]" />
@@ -118,26 +118,21 @@ const CallHistory = ({
             filteredCalls.map((call, index) => (
               <Card
                 key={index}
-                className="bg-[#f1f1f1] min-h-35 p-0 shadow-none border-none"
+                className="bg-[#f1f1f1] min-h-20 p-0 shadow-none border-none"
               >
                 <div className="flex h-full flex-col sm:flex-row justify-start items-center gap-4 p-2">
                   <img
                     src={getMoodImage(call?.mood)}
                     alt={`${call.mood} mood`}
-                    className="h-25 sm:h-35"
+                    className="h-25 sm:h-20"
                   />
                   <div className="w-full">
-                    <CardHeader className="px-1">
+                    <CardHeader className="px-1 flex flex-col md:flex-row justify-start md:justify-between gap-1">
                       <h3 className="font-semibold text-lg">{call.title}</h3>
-                    </CardHeader>
-                    <CardContent className="px-1">
-                      <p className="text-gray-600 mb-2">
-                        {call.summary.slice(0, 60)}...
-                      </p>
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-4 text-sm">
-                        <span className="text-gray-500">Date: {call.date}</span>
+                      <div className="flex items-start sm:items-center gap-1 sm:gap-4 text-sm">
+                        <span className="text-gray-500">{call.date}</span>
                         <span className="flex items-center">
-                          Mood: {call.mood}
+                          {call.mood}
                           <span
                             className={`w-3 h-3 rounded-full ml-2 ${
                               moodColorMap[call.moodColor]
@@ -145,6 +140,11 @@ const CallHistory = ({
                           ></span>
                         </span>
                       </div>
+                    </CardHeader>
+                    <CardContent className="px-1">
+                      <p className="text-gray-600 mb-2">
+                        {call.summary.slice(0, 60)}...
+                      </p>
                     </CardContent>
                     <CardFooter className="px-1">
                       <Button

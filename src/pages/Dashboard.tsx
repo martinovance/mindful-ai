@@ -97,7 +97,7 @@ const Dashboard = () => {
           >
             <div className="flex flex-col gap-0 justify-start items-start">
               <p className="font-semibold text-xl">Mood Trends</p>
-              <p className="font-medium text-center text-sm text-[#61758A]">
+              <p className="font-medium text-sm text-[#61758A]">
                 Track your emotional well-being over time to identify patterns
                 and triggers.
               </p>
