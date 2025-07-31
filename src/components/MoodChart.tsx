@@ -51,7 +51,7 @@ const MoodChart = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-      <Card>
+      <Card className="shadow-none">
         <CardContent>
           <div className="flex flex-col items-start">
             <p className="font-semibold text-lg">Mood Score</p>
@@ -87,7 +87,7 @@ const MoodChart = ({
                 <Line
                   type="monotone"
                   dataKey="value"
-                  stroke="#637387"
+                  stroke="#0D80F2"
                   strokeWidth={2}
                   dot={false}
                 />
@@ -97,7 +97,7 @@ const MoodChart = ({
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="shadow-none">
         <CardContent>
           <div className="flex flex-col items-start">
             <p className="font-semibold text-lg">Mood Distribution</p>
@@ -133,7 +133,7 @@ const MoodChart = ({
                 <Tooltip />
                 <Bar
                   dataKey="value"
-                  fill="#F0F2F5"
+                  fill="#F5FAFE"
                   barSize={40}
                   radius={[0, 0, 0, 0]}
                 >
@@ -154,7 +154,7 @@ const MoodChart = ({
                             x2={x + width}
                             y1={y - 4}
                             y2={y - 4}
-                            stroke="#000"
+                            stroke="#0D80F2"
                             strokeWidth={3}
                           />
                         );

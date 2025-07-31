@@ -52,23 +52,83 @@ const Dashboard = () => {
   return (
     <div className="p-4 md:p-8 flex flex-col justify-center items-center">
       <div className="flex flex-col justify-start items-start gap-5 w-full lg:w-[900px]">
-        <p className="font-bold text-2xl">Mood Trends</p>
-        <p className="font-medium text-center text-md text-[#637387]">
-          Track your emotional well-being over time to identify patterns and
-          triggers.
-        </p>
+        <div
+          className="p-5 w-full h-full md:h-[180px] flex flex-col justify-center items-start gap-3
+        bg-[#0D80F2] rounded-md"
+        >
+          <p className="text-[#FFFFFF] font-bold text-xl">
+            How are you feeling today?
+          </p>
+          <p className="text-[#F0F5FA] font-normal text-sm opacity-90">
+            Track your mood to better understand your emotional patterns
+          </p>
+          <div className="flex items-center gap-1 flex-wrap">
+            <div
+              className="p-3 rounded-full flex justify-center items-center gap-2 bg-[#3D99F5] 
+            text-[#F0F5FA] w-fit h-[35px]"
+            >
+              <p className="text-sm">🙂Happy</p>
+            </div>
+            <div
+              className="p-3 rounded-full flex justify-center items-center gap-2 bg-[#3D99F5] 
+            text-[#F0F5FA] w-fit h-[35px]"
+            >
+              <p className="text-sm">😐Neutral</p>
+            </div>
+            <div
+              className="p-3 rounded-full flex justify-center items-center gap-2 bg-[#3D99F5] 
+            text-[#F0F5FA] w-fit h-[35px]"
+            >
+              <p className="text-sm">☹Sad</p>
+            </div>
+            <div
+              className="p-3 rounded-full flex justify-center items-center gap-2 bg-[#3D99F5] 
+            text-[#F0F5FA] w-fit h-[35px]"
+            >
+              <p className="text-sm">😥Anxious</p>
+            </div>
+          </div>
+        </div>
+
         <Tabs defaultValue="weekly" className="w-full">
-          <TabsList className="w-full">
-            <TabsTrigger value="daily" className="cursor-pointer">
-              Daily
-            </TabsTrigger>
-            <TabsTrigger value="weekly" className="cursor-pointer">
-              Weekly
-            </TabsTrigger>
-            <TabsTrigger value="monthly" className="cursor-pointer">
-              Monthly
-            </TabsTrigger>
-          </TabsList>
+          <div
+            className="flex flex-col md:flex-row justify-start md:justify-between 
+          items-start md:items-center gap-2"
+          >
+            <div className="flex flex-col gap-0 justify-start items-start">
+              <p className="font-semibold text-xl">Mood Trends</p>
+              <p className="font-medium text-center text-sm text-[#61758A]">
+                Track your emotional well-being over time to identify patterns
+                and triggers.
+              </p>
+            </div>
+            <TabsList className="w-full md:w-[237px] rounded-full">
+              <TabsTrigger
+                value="daily"
+                className="rounded-full cursor-pointer 
+              data-[state=active]:bg-[#0D80F2] 
+              data-[state=active]:text-[#fff]"
+              >
+                Daily
+              </TabsTrigger>
+              <TabsTrigger
+                value="weekly"
+                className="rounded-full cursor-pointer 
+              data-[state=active]:bg-[#0D80F2] 
+              data-[state=active]:text-[#fff]"
+              >
+                Weekly
+              </TabsTrigger>
+              <TabsTrigger
+                value="monthly"
+                className="rounded-full cursor-pointer  
+              data-[state=active]:bg-[#0D80F2] 
+              data-[state=active]:text-[#fff]"
+              >
+                Monthly
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="daily">
             <MoodChart
@@ -107,13 +167,6 @@ const Dashboard = () => {
           onPageChange={setCurrentPage}
         />
         <Affirmation />
-        <div className="flex justify-between items-center gap-5 w-full mt-10">
-          <p className="text-[#637387] text-sm font-medium">Terms of Service</p>
-          <p className="text-[#637387] text-sm font-medium">Privacy Policy</p>
-        </div>
-        <p className=" text-[#637387] text-sm text-center font-medium w-full">
-          @2025 Mindful-HQ. All rights reserved.
-        </p>
       </div>
     </div>
   );

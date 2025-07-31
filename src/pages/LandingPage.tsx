@@ -142,12 +142,12 @@ const LandingPage = () => {
             alt="therapist"
             className="object-cover w-full h-full rounded-sm opacity-100"
           />
-          <div className="absolute flex flex-col justify-center items-center gap-3">
-            <div className="flex flex-col justify-center items-center">
+          <div className="w-full absolute flex flex-col justify-center items-center gap-3 text-center">
+            <div className="p-3 flex flex-col justify-center items-center">
               <p className="text-[#FFFFFF] text-2xl font-bold">
                 Ready to Improve Your Mental Well-being?
               </p>
-              <p className="font-semibold text-xs text-[#FFFFFF]">
+              <p className="w-full font-semibold text-xs text-[#FFFFFF]">
                 Join thousands of users who found balance, clarity, and support
                 with Mindful AI.
               </p>

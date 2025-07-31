@@ -21,7 +21,7 @@ function App() {
       }
     >
       <BrowserRouter>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 bg-[#F9F9F9]">
           <Appbar />
           <Routes>
             <Route
