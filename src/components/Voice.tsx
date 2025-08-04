@@ -1,40 +1,40 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import VoiceImg from "@/assets/VoiceImg.svg";
-import Recorder from "@/assets/Recorder.svg";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import MicPro from "@/assets/MicPro.svg";
+// import Recorder from "@/assets/Recorder.svg";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { showToast } from "@/shared/Toast";
 import { useState } from "react";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import { Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
-import WaveformPlayer from "@/shared/WaveformPlayer";
+// import WaveformPlayer from "@/shared/WaveformPlayer";
 import LiveWaveform from "@/shared/LiveWaveform";
 import {
-  fetchVoiceJournals,
+  // fetchVoiceJournals,
   saveAudioToFirestore,
 } from "@/services/fireStoreService";
 import { useAuth } from "@/hooks/useAuth";
-import WaveJournalPlayer from "@/shared/JournalPlayer";
-import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+// import WaveJournalPlayer from "@/shared/JournalPlayer";
+// import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 
 const Voice = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [title, setTitle] = useState("");
 
-  const itemsPerPage = 5;
-  const [page, setPage] = useState(1);
-  const [lastItems, setLastItems] = useState<
-    Record<number, QueryDocumentSnapshot<DocumentData> | null>
-  >({});
+  // const itemsPerPage = 5;
+  // // const [page, setPage] = useState(1);
+  // const [lastItems, setLastItems] = useState<
+  //   Record<number, QueryDocumentSnapshot<DocumentData> | null>
+  // >({});
 
   const {
     stopRecording,
     startRecording,
     recording,
-    audioURL,
+    // audioURL,
     analyserRef,
     dataArrayRef,
   } = useVoiceRecorder();
@@ -91,30 +91,30 @@ const Voice = () => {
     },
   });
 
-  const { data: voiceJournals /* isPending: LoadingJournals */ } = useQuery({
-    queryKey: ["voiceJournals", user?.uid, page],
-    queryFn: async () => {
-      const lastDoc = lastItems[page - 1] || null;
-      if (!user?.uid) throw new Error("User not authenticated");
-      const data = await fetchVoiceJournals(user?.uid, lastDoc, itemsPerPage);
+  // const { data: voiceJournals /* isPending: LoadingJournals */ } = useQuery({
+  //   queryKey: ["voiceJournals", user?.uid, page],
+  //   queryFn: async () => {
+  //     const lastDoc = lastItems[page - 1] || null;
+  //     if (!user?.uid) throw new Error("User not authenticated");
+  //     const data = await fetchVoiceJournals(user?.uid, lastDoc, itemsPerPage);
 
-      setLastItems((prev) => ({
-        ...prev,
-        [page]: data.lastVisible,
-      }));
-      return data;
-    },
-    enabled: !!user?.uid,
-  });
-  console.log(voiceJournals);
+  //     setLastItems((prev) => ({
+  //       ...prev,
+  //       [page]: data.lastVisible,
+  //     }));
+  //     return data;
+  //   },
+  //   enabled: !!user?.uid,
+  // });
+  // console.log(voiceJournals);
 
-  const totalPages = voiceJournals?.total
-    ? Math.ceil(voiceJournals?.total / itemsPerPage)
-    : 1;
+  // const totalPages = voiceJournals?.total
+  //   ? Math.ceil(voiceJournals?.total / itemsPerPage)
+  //   : 1;
 
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) setPage(page);
-  };
+  // const handlePageChange = (page: number) => {
+  //   if (page >= 1 && page <= totalPages) setPage(page);
+  // };
 
   const handleStop = () => {
     stopRecording((finalBlob) => {
@@ -132,14 +132,10 @@ const Voice = () => {
   };
 
   return (
-    <div className="p-0 md:p-8 flex flex-col justify-center items-center gap-5">
-      <p className="text-2xl font-bold">Record Your Thoughts</p>
-      <p className="text-sm text-[#121417] font-small">
-        Capture your reflections and insights in your personal voice journal.
-      </p>
-      <Card className="w-full lg:w-[850px] max-h-[619px] p-0 overflow-hidden">
+    <div className="flex flex-col justify-center items-center gap-5">
+      <Card className="w-full min-h-[159px] md:h-[240px] p-0 bg-[#F5F5F5] shadow-none overflow-hidden">
         <img
-          src={VoiceImg}
+          src={MicPro}
           alt="record"
           className="w-full h-full object-cover rounded-xl"
         />
@@ -163,7 +159,7 @@ const Voice = () => {
       {!recording ? (
         <Button
           onClick={startRecording}
-          className="bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white 
+          className="w-full bg-[#0D80F2] rounded-full hover:text-white 
               cursor-pointer"
         >
           Start Recording
@@ -171,7 +167,7 @@ const Voice = () => {
       ) : (
         <Button
           onClick={handleStop}
-          className="bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white 
+          className="w-full bg-[#0D80F2] rounded-full hover:text-white 
               cursor-pointer"
         >
           {isPending ? (
@@ -182,7 +178,7 @@ const Voice = () => {
         </Button>
       )}
 
-      {/* Playback */}
+      {/* Playback
       {isPending && audioURL && <WaveformPlayer audioURL={audioURL} />}
 
       <div className="flex flex-col justify-center w-full lg:w-[850px] items-start gap-5">
@@ -260,20 +256,7 @@ const Voice = () => {
             </Button>
           </div>
         </div>
-
-        <div className="flex flex-col justify-start items-start w-full gap-4 mt-4">
-          <p className="text-lg font-medium">Tips for Effective Journaling</p>
-          <p className="text-sm font-medium">
-            1. Find a quiet space where you can speak freely.
-          </p>
-          <p className="text-sm font-medium">
-            2. Set a timer to keep your recordings concise.
-          </p>
-          <p className="text-sm font-medium">
-            3. Focus on one topic or question per entry.
-          </p>
-        </div>
-      </div>
+      </div> */}
     </div>
   );
 };

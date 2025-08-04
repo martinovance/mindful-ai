@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import UserPin from "@/assets/UserPin.svg";
-import AgentPin from "@/assets/AgentPin.svg";
+import UserPin2 from "@/assets/UserPin2.svg";
+import Bot from "@/assets/Bot.svg";
 import { useAuth } from "@/hooks/useAuth";
 import { useVapi } from "@/hooks/useVapi";
 import { useEffect } from "react";
@@ -22,32 +22,29 @@ const Agent = () => {
   }, [user]);
 
   return (
-    <div className="p-0 md:p-8 w-full flex flex-col justify-center items-center gap-5">
-      <p className="text-2xl text-center font-bold">
-        Your Personal AI Therapist
-      </p>
-      <p className="text-sm text-[#121417] text-center font-small">
-        Engage in supportive, CBT-based talk therapy anytime, anywhere. Our AI
-        therapist is here to listen and guide you towards better mental
-        well-being.
-      </p>
-      <div className="flex flex-row justify-center items-center w-full lg:w-[850px] h-full sm:h-[400px] gap-3">
+    <div className="w-full flex flex-col justify-center items-center gap-5">
+      <div className="flex flex-row justify-center items-center w-full h-full sm:h-[150px] gap-3">
         <Card
-          className={`w-[50%] h-full p-0 overflow-hidden shadow-md transition duration-300,
-          ${isSpeaking ? "animate-pulse ring-4 ring-blue-400" : ""} `}
+          className={`bg-[#F9F9F9] shadow-none w-[50%] h-full p-0 overflow-hidden transition duration-300, ${
+            isSpeaking ? "animate-pulse ring-4 ring-blue-400" : ""
+          } `}
         >
-          <img
-            src={AgentPin}
-            alt="record"
-            className="w-full h-full object-cover rounded-xl"
-          />
+          <div className="w-full h-full flex justify-center items-center p-4">
+            <img
+              src={Bot}
+              alt="record"
+              className="w-20 h-20 object-cover rounded-full"
+            />
+          </div>
         </Card>
-        <Card className="w-[50%] h-full p-0 overflow-hidden">
-          <img
-            src={UserPin}
-            alt="record"
-            className="w-full h-full object-cover rounded-xl"
-          />
+        <Card className="w-[50%] bg-[#F9F9F9] shadow-none h-full p-0 overflow-hidden">
+          <div className="w-full h-full flex justify-center items-center p-4">
+            <img
+              src={UserPin2}
+              alt="record"
+              className="w-20 h-20 object-cover rounded-full"
+            />
+          </div>
         </Card>
       </div>
 
@@ -68,7 +65,7 @@ const Agent = () => {
 
       <Button
         onClick={isSpeaking ? stopCall : startCall}
-        className={`bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white 
+        className={`bg-[#0D80F2] rounded-full hover:text-white w-full 
               cursor-pointer, ${isSpeaking ? "bg-red-600" : "[#B2C9E5]"}`}
       >
         {isLoading ? (
