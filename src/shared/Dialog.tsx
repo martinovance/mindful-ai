@@ -30,7 +30,7 @@ const CustomDialog = ({
           {title && (
             <DialogTitle className="text-2xl font-bold">{title}</DialogTitle>
           )}
-          {description && <DialogDescription>{description}</DialogDescription>}
+          <DialogDescription>{description || ""}</DialogDescription>
         </DialogHeader>
         <div>{children}</div>
         {showClose && <DialogClose>✕</DialogClose>}
