@@ -12,6 +12,7 @@ import CustomDialog from "@/shared/Dialog";
 import Login from "@/pages/auth/Login";
 import CreateAccount from "@/pages/auth/CreateAccount";
 import CustomDropdown from "@/shared/Dropdown";
+import Notifications from "./Notifications";
 
 const Appbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,6 +22,8 @@ const Appbar = () => {
   const isAuthPage = ["/"].includes(pathname);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const [checkNotes, setCheckNotes] = useState(false);
 
   console.log(user);
 
@@ -134,16 +137,26 @@ const Appbar = () => {
   );
 
   const renderUserControls = () => (
-    <div className="flex items-center gap-4">
-      <div className="relative cursor-pointer">
-        <Bell className="h-6 w-6 p-1 bg-[#F0F2F5] rounded-full text-gray-600" />
-        <Badge
-          variant="destructive"
-          className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center"
-        >
-          3
-        </Badge>
-      </div>
+    <div className="flex items-center gap-6">
+      <CustomDropdown
+        title="Notifications"
+        open={checkNotes}
+        setCheckNotes={setCheckNotes}
+        trigger={
+          <div className="relative cursor-pointer">
+            <Bell className="h-6 w-6 p-1 bg-[#F0F2F5] rounded-full text-gray-600" />
+            <Badge
+              variant="destructive"
+              className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center"
+            >
+              3
+            </Badge>
+          </div>
+        }
+      >
+        <Notifications />
+      </CustomDropdown>
+
       <CustomDropdown
         title={user?.displayName || "User"}
         email={user?.email ?? ""}
@@ -155,14 +168,45 @@ const Appbar = () => {
           </Avatar>
         }
       >
-        <Button
-          variant="outline"
-          onClick={() => Auth.logOut()}
-          className="cursor-pointer border-none"
+        <CustomDialog
+          title=""
+          open={isLogoutOpen}
+          onOpenChange={setIsLogoutOpen}
+          trigger={
+            <Button
+              variant="outline"
+              onClick={() => setIsLogoutOpen(true)}
+              className="cursor-pointer border-none"
+            >
+              <LogOut className="mr-5" />
+              Log Out
+            </Button>
+          }
         >
-          <LogOut className="mr-5" />
-          Log Out
-        </Button>
+          <div className="flex flex-col justify-center items-center gap-5">
+            <LogOut className="h-8 w-8 text-[#0D80F2]" />
+            <p className="text-lg font-bold text-[#000]">
+              Do you really want to log out?
+            </p>
+            <div className="flex items-center gap-3 mb-3">
+              <Button
+                variant="default"
+                onClick={() => Auth.logOut()}
+                className="cursor-pointer bg-[#EA4335] text-[#fff]"
+              >
+                Yes, Log Out
+              </Button>
+              <Button
+                variant="default"
+                onClick={() => setIsLogoutOpen(false)}
+                className="cursor-pointer text-[#0D80F2] bg-transparent 
+                border border-[#0D80F2]"
+              >
+                No, Stay Logged In
+              </Button>
+            </div>
+          </div>
+        </CustomDialog>
       </CustomDropdown>
     </div>
   );
