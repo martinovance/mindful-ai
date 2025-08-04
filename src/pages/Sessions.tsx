@@ -3,7 +3,7 @@ import Agent from "../components/Agent";
 import Bot1 from "@/assets/Bot1.svg";
 import MicRec from "@/assets/MicRec.svg";
 import { Button } from "@/components/ui/button";
-import RecentSession from "@/components/RecentSession";
+// import RecentSession from "@/components/RecentSession";
 import CustomDialog from "@/shared/Dialog";
 
 const Sessions = () => {
@@ -75,7 +75,7 @@ const Sessions = () => {
           </div>
         </div>
 
-        <RecentSession />
+        {/* <RecentSession /> */}
 
         <div className="flex flex-col justify-start items-start w-full gap-4 mt-4">
           <p className="text-lg font-medium">Tips for Effective Journaling</p>
