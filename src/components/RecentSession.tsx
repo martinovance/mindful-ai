@@ -9,7 +9,12 @@ import YellowStatus from "@/assets/YellowStatus.svg";
 import NeutralStatus from "@/assets/NeutralStatus.svg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { MoodColorMap, MoodSession } from "@/types/vapiTypes";
+import {
+  CombinedEntry,
+  MoodColorMap,
+  MoodSession,
+  VoiceJournalEntry,
+} from "@/types/vapiTypes";
 import {
   formatDate,
   getCallTitle,
@@ -17,8 +22,7 @@ import {
 } from "@/utils/sessionDataTransformer";
 
 interface CallHistoryProps {
-  sessions?: MoodSession[];
-  paginatedSessions?: MoodSession[];
+  entries?: CombinedEntry[];
   totalItems: number;
   itemsPerPage?: number;
   currentPage: number;
@@ -26,10 +30,9 @@ interface CallHistoryProps {
 }
 
 const RecentSession = ({
-  sessions = [],
-  paginatedSessions = [],
+  entries = [],
   totalItems,
-  itemsPerPage = 1,
+  itemsPerPage = 5,
   currentPage,
   onPageChange,
 }: CallHistoryProps) => {
@@ -42,19 +45,37 @@ const RecentSession = ({
     date: formatDate(session.createdAt.toDate()),
     mood: session.moodLabel,
     moodColor: getMoodColor(session.moodLabel),
+    type: "session" as const,
+    data: session,
   });
 
-  const paginatedCalls = paginatedSessions.map(transformSession);
-  const allCalls = sessions.map(transformSession);
+  const transformJournal = (journal: VoiceJournalEntry) => ({
+    id: journal.id,
+    title: `Voice Journal - ${journal.title}`,
+    summary: "",
+    date: formatDate(journal.createdAt.toDate()),
+    mood: "",
+    moodColor: "",
+    type: "journal" as const,
+    data: journal,
+  });
+
+  const transformEntry = (entry: CombinedEntry) => {
+    return entry.type === "session"
+      ? transformSession(entry.data)
+      : transformJournal(entry.data);
+  };
+
+  const tranformedEntries = entries.map(transformEntry);
 
   const filteredCalls = searchQuery
-    ? allCalls.filter(
+    ? tranformedEntries.filter(
         (call) =>
           call.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           call.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
           call.mood.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : paginatedCalls;
+    : tranformedEntries;
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -158,7 +179,7 @@ const RecentSession = ({
                 </div>
               </Card>
             ))
-          ) : sessions?.length === 0 ? (
+          ) : entries?.length === 0 ? (
             <div className="flex flex-col justify-center items-center gap-3 text-center">
               <p className="text-gray-500">You haven't had any calls yet.</p>
               <Button className="bg-[#0D80F2] font-bold rounded-full hover:text-white cursor-pointer">

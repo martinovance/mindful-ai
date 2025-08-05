@@ -28,6 +28,20 @@ export interface MoodSession {
   createdAt: Timestamp;
 }
 
+export interface VoiceJournalEntry {
+  id: string;
+  title: string;
+  audioUrl: string;
+  createdAt: Timestamp;
+}
+
+export type CombinedEntry =
+  | { type: "session"; data: MoodSession }
+  | {
+      type: "voiceJournal";
+      data: VoiceJournalEntry;
+    };
+
 export interface TherapyCall {
   title: string;
   summary: string;

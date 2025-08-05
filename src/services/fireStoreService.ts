@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase/firebase";
-import { MoodSession } from "@/types/vapiTypes";
+import { CombinedEntry, MoodSession } from "@/types/vapiTypes";
 import { getTimeOfDay } from "@/utils/moodAnalyzer";
 import {
   collection,
@@ -15,6 +15,10 @@ import {
   DocumentData,
   startAfter,
   Timestamp,
+  // QuerySnapshot,
+  DocumentSnapshot,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
@@ -210,6 +214,121 @@ export const fetchVoiceJournals = async (
     };
   } catch (error) {
     console.log("Error fetching journals:", error);
+    throw error;
+  }
+};
+
+export const getCombinedEntries = async (
+  userId: string,
+  lastItem: { sessionId?: string; journalId?: string } | null = null,
+  itemsPerPage: number = 5
+): Promise<{
+  entries: CombinedEntry[];
+  total: number;
+  lastVisible: { sessionId?: string; journalId?: string } | null;
+}> => {
+  try {
+    const sessionsRef = collection(db, "sessions");
+    const voiceJournalsRef = collection(db, "voiceJournals");
+
+    let lastSessionDoc: DocumentSnapshot | null = null;
+    let lastJournalDoc: DocumentSnapshot | null = null;
+
+    if (lastItem) {
+      if (lastItem.sessionId) {
+        lastSessionDoc = await getDoc(doc(sessionsRef, lastItem.sessionId));
+      }
+      if (lastItem.journalId) {
+        lastJournalDoc = await getDoc(
+          doc(voiceJournalsRef, lastItem.journalId)
+        );
+      }
+    }
+
+    const sessionsQuery = query(
+      sessionsRef,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc"),
+      ...(lastSessionDoc ? [startAfter(lastSessionDoc)] : []),
+      limit(itemsPerPage)
+    );
+
+    const voiceJournalsQuery = query(
+      voiceJournalsRef,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc"),
+      ...(lastJournalDoc ? [startAfter(lastJournalDoc)] : []),
+      limit(itemsPerPage)
+    );
+
+    const [sessionsSnapshot, voiceJournalsSnapshot] = await Promise.all([
+      getDocs(sessionsQuery),
+      getDocs(voiceJournalsQuery),
+    ]);
+
+    const sessionsEntries = sessionsSnapshot.docs.map((doc) => ({
+      type: "session" as const,
+      data: {
+        id: doc.id,
+        ...(doc.data() as Omit<MoodSession, "id">),
+        createdAt:
+          doc.data().createdAt instanceof Timestamp
+            ? doc.data().createdAt
+            : Timestamp.fromDate(new Date(doc.data().createdAt)),
+      },
+    }));
+
+    const voiceJournalEntries = voiceJournalsSnapshot.docs.map((doc) => ({
+      type: "voiceJournal" as const,
+      data: {
+        id: doc.id,
+        title: doc.data().title,
+        audioUrl: doc.data().audioUrl,
+        createdAt:
+          doc.data().createdAt instanceof Timestamp
+            ? doc.data().createdAt
+            : Timestamp.fromDate(new Date(doc.data().createdAt)),
+      },
+    }));
+
+    const combinedEntries = [...sessionsEntries, ...voiceJournalEntries].sort(
+      (a, b) => {
+        const dateA = a.data.createdAt.toMillis();
+        const dateB = b.data.createdAt.toMillis();
+        return dateB - dateA;
+      }
+    );
+
+    //Get total counts for pagination
+    const [sessionsCount, voiceJournalsCount] = await Promise.all([
+      getCountFromServer(query(sessionsRef, where("userId", "==", userId))),
+      getCountFromServer(
+        query(voiceJournalsRef, where("userId", "==", userId))
+      ),
+    ]);
+
+    const total =
+      (sessionsCount.data().count || 0) +
+      (voiceJournalsCount.data().count || 0);
+
+    const lastSessionVisible =
+      sessionsSnapshot.docs[sessionsSnapshot.docs.length - 1];
+    const lastJournalVisible =
+      voiceJournalsSnapshot.docs[voiceJournalsSnapshot.docs.length - 1];
+
+    return {
+      entries: combinedEntries.slice(0, itemsPerPage),
+      total,
+      lastVisible:
+        lastSessionVisible || lastJournalVisible
+          ? {
+              sessionId: lastSessionVisible?.id,
+              journalId: lastJournalVisible?.id,
+            }
+          : null,
+    };
+  } catch (error) {
+    console.error("Error fetching combined entries:", error);
     throw error;
   }
 };
