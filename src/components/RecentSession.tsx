@@ -1,17 +1,14 @@
-import { Plus, Search } from "lucide-react";
+import { ArrowRight, Plus, Search } from "lucide-react";
 import { Input } from "./ui/input";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
+import { Card, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 
-import RedStatus from "@/assets/RedStatus.svg";
-import GreenStatus from "@/assets/GreenStatus.svg";
-import YellowStatus from "@/assets/YellowStatus.svg";
-import NeutralStatus from "@/assets/NeutralStatus.svg";
+import MicRec from "@/assets/MicRec.svg";
+import Vidmate from "@/assets/Vidmate.svg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   CombinedEntry,
-  MoodColorMap,
   MoodSession,
   VoiceJournalEntry,
 } from "@/types/vapiTypes";
@@ -72,8 +69,8 @@ const RecentSession = ({
     ? tranformedEntries.filter(
         (call) =>
           call.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          call.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          call.mood.toLowerCase().includes(searchQuery.toLowerCase())
+          call.date.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          call.type.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : tranformedEntries;
 
@@ -81,31 +78,6 @@ const RecentSession = ({
 
   const handlePageChange = (page: number) => {
     onPageChange?.(page);
-  };
-
-  const moodColorMap: MoodColorMap = {
-    red: "bg-red-500",
-    green: "bg-green-500",
-    yellow: "bg-yellow-500",
-    blue: "bg-blue-500",
-    gray: "bg-gray-500",
-  };
-
-  const moodImages = {
-    happy: GreenStatus,
-    sad: RedStatus,
-    neutral: NeutralStatus,
-    anxious: YellowStatus,
-    default: YellowStatus,
-  };
-
-  const getMoodImage = (mood?: string) => {
-    if (!mood) return moodImages.default;
-
-    const lowerCaseMood = mood.toLowerCase();
-    return (
-      moodImages[lowerCaseMood as keyof typeof moodImages] || moodImages.default
-    );
   };
 
   return (
@@ -139,47 +111,36 @@ const RecentSession = ({
             filteredCalls.map((call, index) => (
               <Card
                 key={index}
-                className="bg-[#f1f1f1] min-h-20 p-0 shadow-none border-none"
+                className="bg-[#f1f1f1] flex justify-center min-h-16 rounded-xs 
+                p-0 shadow-none border-none"
               >
-                <div className="flex h-full flex-col sm:flex-row justify-start items-center gap-4 p-2">
-                  <img
-                    src={getMoodImage(call?.mood)}
-                    alt={`${call.mood} mood`}
-                    className="h-25 sm:h-20"
-                  />
-                  <div className="w-full">
-                    <CardHeader className="px-1 flex flex-col md:flex-row justify-start md:justify-between gap-1">
+                <div
+                  className="flex h-full flex-col sm:flex-row justify-start 
+                items-start sm:items-center gap-2 p-2"
+                >
+                  <div className="w-full flex justify-start items-start sm:items-center gap-2">
+                    <div className="p-2 bg-[#ECF5FE] rounded-full">
+                      <img
+                        src={call?.type === "journal" ? MicRec : Vidmate}
+                        alt="Bot-icon"
+                        className="h-8 w-8"
+                      />
+                    </div>
+                    <CardHeader className="w-full px-1 flex flex-col justify-start md:justify-between">
                       <h3 className="font-semibold text-lg">{call.title}</h3>
                       <div className="flex items-start sm:items-center gap-1 sm:gap-4 text-sm">
                         <span className="text-gray-500">{call.date}</span>
-                        <span className="flex items-center">
-                          {call.mood}
-                          <span
-                            className={`w-3 h-3 rounded-full ml-2 ${
-                              moodColorMap[call.moodColor]
-                            }`}
-                          ></span>
-                        </span>
                       </div>
                     </CardHeader>
-                    <CardContent className="px-1">
-                      <p className="text-gray-600 mb-2">
-                        {call.summary.slice(0, 60)}...
-                      </p>
-                    </CardContent>
-                    <CardFooter className="px-1">
-                      <Button
-                        variant="link"
-                        className="text-blue-600 p-0 h-auto"
-                      >
-                        To view details, click here.
-                      </Button>
-                    </CardFooter>
                   </div>
+                  <Button variant="link" className="text-[#5D5CDE] p-0 h-auto">
+                    View details
+                    <ArrowRight />
+                  </Button>
                 </div>
               </Card>
             ))
-          ) : entries?.length === 0 ? (
+          ) : tranformedEntries?.length === 0 ? (
             <div className="flex flex-col justify-center items-center gap-3 text-center">
               <p className="text-gray-500">You haven't had any calls yet.</p>
               <Button className="bg-[#0D80F2] font-bold rounded-full hover:text-white cursor-pointer">

@@ -15,10 +15,6 @@ import {
   DocumentData,
   startAfter,
   Timestamp,
-  // QuerySnapshot,
-  DocumentSnapshot,
-  getDoc,
-  doc,
 } from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
@@ -220,50 +216,19 @@ export const fetchVoiceJournals = async (
 
 export const getCombinedEntries = async (
   userId: string,
-  lastItem: { sessionId?: string; journalId?: string } | null = null,
-  itemsPerPage: number = 5
+  itemsPerPage: number = 5,
+  currentPage: number = 1
 ): Promise<{
   entries: CombinedEntry[];
   total: number;
-  lastVisible: { sessionId?: string; journalId?: string } | null;
 }> => {
   try {
     const sessionsRef = collection(db, "sessions");
     const voiceJournalsRef = collection(db, "voiceJournals");
 
-    let lastSessionDoc: DocumentSnapshot | null = null;
-    let lastJournalDoc: DocumentSnapshot | null = null;
-
-    if (lastItem) {
-      if (lastItem.sessionId) {
-        lastSessionDoc = await getDoc(doc(sessionsRef, lastItem.sessionId));
-      }
-      if (lastItem.journalId) {
-        lastJournalDoc = await getDoc(
-          doc(voiceJournalsRef, lastItem.journalId)
-        );
-      }
-    }
-
-    const sessionsQuery = query(
-      sessionsRef,
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc"),
-      ...(lastSessionDoc ? [startAfter(lastSessionDoc)] : []),
-      limit(itemsPerPage)
-    );
-
-    const voiceJournalsQuery = query(
-      voiceJournalsRef,
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc"),
-      ...(lastJournalDoc ? [startAfter(lastJournalDoc)] : []),
-      limit(itemsPerPage)
-    );
-
     const [sessionsSnapshot, voiceJournalsSnapshot] = await Promise.all([
-      getDocs(sessionsQuery),
-      getDocs(voiceJournalsQuery),
+      getDocs(query(sessionsRef, where("userId", "==", userId))),
+      getDocs(query(voiceJournalsRef, where("userId", "==", userId))),
     ]);
 
     const sessionsEntries = sessionsSnapshot.docs.map((doc) => ({
@@ -299,33 +264,17 @@ export const getCombinedEntries = async (
       }
     );
 
-    //Get total counts for pagination
-    const [sessionsCount, voiceJournalsCount] = await Promise.all([
-      getCountFromServer(query(sessionsRef, where("userId", "==", userId))),
-      getCountFromServer(
-        query(voiceJournalsRef, where("userId", "==", userId))
-      ),
-    ]);
+    const total = combinedEntries.length;
 
-    const total =
-      (sessionsCount.data().count || 0) +
-      (voiceJournalsCount.data().count || 0);
-
-    const lastSessionVisible =
-      sessionsSnapshot.docs[sessionsSnapshot.docs.length - 1];
-    const lastJournalVisible =
-      voiceJournalsSnapshot.docs[voiceJournalsSnapshot.docs.length - 1];
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedEntries = combinedEntries.slice(
+      startIndex,
+      startIndex + itemsPerPage
+    );
 
     return {
-      entries: combinedEntries.slice(0, itemsPerPage),
+      entries: paginatedEntries,
       total,
-      lastVisible:
-        lastSessionVisible || lastJournalVisible
-          ? {
-              sessionId: lastSessionVisible?.id,
-              journalId: lastJournalVisible?.id,
-            }
-          : null,
     };
   } catch (error) {
     console.error("Error fetching combined entries:", error);

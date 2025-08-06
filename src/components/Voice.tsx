@@ -79,7 +79,7 @@ const Voice = () => {
         status: "success",
       });
       queryClient.invalidateQueries({
-        queryKey: ["voiceJournals", user?.uid],
+        queryKey: ["voiceJournals", "combinedEntries", user?.uid],
       });
     },
     onError: (error: Error) => {

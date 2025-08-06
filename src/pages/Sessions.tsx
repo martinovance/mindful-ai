@@ -13,11 +13,8 @@ import { getCombinedEntries } from "@/services/fireStoreService";
 
 const Sessions = () => {
   const { user } = useAuth();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [lastItems, setLastItems] = useState<
-    Record<number, { sessionId?: string; journalId?: string } | null>
-  >({});
   const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: combinedData } = useQuery({
     queryKey: ["combinedEntries", user?.uid, currentPage],
@@ -29,15 +26,7 @@ const Sessions = () => {
         });
         throw new Error("User not logged in");
       }
-      const lastItem = lastItems ? lastItems[currentPage - 1] : null;
-      const data = await getCombinedEntries(user.uid, lastItem, itemsPerPage);
-
-      setLastItems((prev) => ({
-        ...prev,
-        [currentPage]: data.lastVisible,
-      }));
-
-      return data;
+      return await getCombinedEntries(user.uid, itemsPerPage, currentPage);
     },
     enabled: !!user?.uid,
   });
