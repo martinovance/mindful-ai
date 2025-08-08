@@ -2,6 +2,7 @@ import Affirmation from "@/components/Affirmation";
 import CallHistory from "@/components/CallHistory";
 import MoodChart from "@/components/MoodChart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import VoiceHistory from "@/components/VoiceHistory";
 import { useAuth } from "@/hooks/useAuth";
 import { getUserSessions } from "@/services/fireStoreService";
 import {
@@ -166,6 +167,7 @@ const Dashboard = () => {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
+        <VoiceHistory />
         <Affirmation />
       </div>
     </div>

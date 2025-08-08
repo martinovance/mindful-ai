@@ -83,7 +83,7 @@ const RecentSession = ({
   return (
     <Card className="shadow-none bg-[#fff] pt-0 pb-8 w-full flex flex-col gap-3">
       <div className="flex justify-between items-center px-3 sm:px-8 border-b-2 border-[#F5F5F5] h-[60px]">
-        <p className="text-xl font-semibold ">Recent Session</p>
+        <p className="text-xl font-semibold">Recent Session</p>
         <Link to="/sessions">
           <Button
             className="bg-[#0D80F2] text-[#FFFFFF] rounded-full 
@@ -101,7 +101,8 @@ const RecentSession = ({
           <Input
             type="search"
             placeholder="Search calls"
-            className="block w-full p-4 pl-10 text-sm placeholder:text-[#4F7396] placeholder: rounded-lg bg-[#E8EDF2] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            className="block w-full p-4 pl-10 text-sm placeholder:text-[#4F7396] placeholder: rounded-lg 
+            bg-[#E8EDF2] border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
