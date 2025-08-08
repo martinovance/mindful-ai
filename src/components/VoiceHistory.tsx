@@ -52,12 +52,11 @@ const VoiceHistory = () => {
             className="bg-[#0D80F2] text-[#FFFFFF] rounded-full 
           hover:text-[#B2C9E5] cursor-pointer h-[30px]"
           >
-            <Plus /> New Journal
+            <Plus /> New
           </Button>
         </Link>
       </div>
       <div className="flex flex-col justify-center w-full items-start gap-5 px-3 sm:px-8">
-        <p className="text-lg font-medium">Recent Recordings</p>
         <div className="flex flex-col justify-start items-start w-full min-h-[80px] gap-4">
           {(voiceJournals?.result ?? [])?.length > 0 ? (
             voiceJournals?.result?.map((record, i) => (
