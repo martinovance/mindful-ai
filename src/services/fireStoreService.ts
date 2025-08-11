@@ -281,3 +281,22 @@ export const getCombinedEntries = async (
     throw error;
   }
 };
+
+export const postAffrimations = async ({
+  userId,
+  title,
+  content,
+  thumbnail,
+}: {
+  userId: string;
+  title: string;
+  content: string;
+  thumbnail: string;
+}) => {
+  await addDoc(collection(db, "affirmations"), {
+    userId,
+    title,
+    content,
+    thumbnail,
+  });
+};

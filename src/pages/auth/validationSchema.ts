@@ -31,3 +31,17 @@ export const loginSchema = z.object({
     message: "Password must be at least 8 characters",
   }),
 });
+
+export const affirmationSchema = z.object({
+  title: z
+    .string()
+    .min(5, "Title must be at least 5 characters")
+    .max(100, "Title cannot exceed 100 characters"),
+  content: z
+    .string()
+    .min(10, "Content must be at least 10 characters")
+    .max(250, "Content cannot exceed 500 characters"),
+  thumbnail: z.custom<File | string>((val) => val !== undefined, {
+    message: "Image is required",
+  }),
+});
