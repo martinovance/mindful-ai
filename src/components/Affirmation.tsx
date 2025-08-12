@@ -4,8 +4,10 @@ import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import CustomDialog from "@/shared/Dialog";
 import CreateAffirmation from "./CreateAffirmation";
+import { useState } from "react";
 
 const Affirmation = () => {
+  const [open, setOpen] = useState(false);
   return (
     <div className="pt-4 w-full">
       <div className="flex justify-between items-center gap-3">
@@ -18,6 +20,8 @@ const Affirmation = () => {
 
         <CustomDialog
           title="Create Affirmation"
+          open={open}
+          onOpenChange={setOpen}
           trigger={
             <Button
               className="bg-[#0D80F2] text-[#FFFFFF] rounded-full 
@@ -27,7 +31,7 @@ const Affirmation = () => {
             </Button>
           }
         >
-          <CreateAffirmation />
+          <CreateAffirmation open={open} setOpen={setOpen} />
         </CustomDialog>
       </div>
       <Card className="shadow-none bg-[#fff] p-3 md:p-8 w-full flex flex-col gap-3">

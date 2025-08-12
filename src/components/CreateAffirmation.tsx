@@ -15,7 +15,6 @@ import { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { CircleX } from "lucide-react";
 import { showToast } from "@/shared/Toast";
-import { Link } from "react-router-dom";
 import { postAffrimations } from "@/services/fireStoreService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,7 +23,13 @@ import { affirmationSchema } from "@/pages/auth/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 
-const CreateAffirmation = () => {
+const CreateAffirmation = ({
+  // open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) => {
   const [file, setFile] = useState<FileWithPath | null>(null);
   const form = useForm<z.infer<typeof affirmationSchema>>({
     resolver: zodResolver(affirmationSchema),
@@ -123,10 +128,11 @@ const CreateAffirmation = () => {
         title: "Created!",
         description: "Affirmation created.",
         status: "success",
-      }),
-        queryClient.invalidateQueries({
-          queryKey: ["affirmations", user?.uid],
-        });
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["affirmations", user?.uid],
+      });
+      setOpen(false);
     },
     onError: (error: Error) => {
       showToast({
@@ -232,7 +238,6 @@ const CreateAffirmation = () => {
               )}
             </div>
           </FormItem>
-          {/* <Link to="#"> */}
           <Button
             disabled={!file}
             type="submit"
@@ -241,7 +246,6 @@ const CreateAffirmation = () => {
           >
             {"Create"}
           </Button>
-          {/* </Link> */}
         </form>
       </Form>
     </section>
