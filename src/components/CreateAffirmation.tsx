@@ -13,7 +13,7 @@ import { Textarea } from "./ui/textarea";
 import AddFile from "@/assets/AddFile.svg";
 import { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
-import { CircleX } from "lucide-react";
+import { CircleX, Loader } from "lucide-react";
 import { showToast } from "@/shared/Toast";
 import { postAffrimations } from "@/services/fireStoreService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -87,7 +87,7 @@ const CreateAffirmation = ({
     setFile(null);
   };
 
-  const { mutate: uploadAffirmations } = useMutation({
+  const { mutate: uploadAffirmations, isPending } = useMutation({
     mutationFn: async (values: z.infer<typeof affirmationSchema>) => {
       const formData = new FormData();
       formData.append("file", values.thumbnail);
@@ -244,7 +244,11 @@ const CreateAffirmation = ({
             className="mt-4 w-full bg-[#0D80F2] text-[#fff] font-bold rounded-sm 
               hover:text-white cursor-pointer"
           >
-            {"Create"}
+            {isPending ? (
+              <Loader className="animate-spin text-[#fff]" />
+            ) : (
+              "Create"
+            )}
           </Button>
         </form>
       </Form>

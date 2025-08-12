@@ -29,7 +29,7 @@ const Dashboard = () => {
     },
     enabled: !!user?.uid,
   });
-  console.log(sessionsData);
+  // console.log(sessionsData);
 
   const {
     paginatedSessions = [],

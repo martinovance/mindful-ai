@@ -1,13 +1,48 @@
-import { affirmations } from "@/constant/dashData";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import CustomDialog from "@/shared/Dialog";
 import CreateAffirmation from "./CreateAffirmation";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAffirmations } from "@/services/fireStoreService";
+import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 
 const Affirmation = () => {
+  const { user } = useAuth();
+  const itemsPerPage = 5;
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [lastItems, setLastItems] = useState<
+    Record<number, QueryDocumentSnapshot<DocumentData> | null>
+  >({});
+
+  const { data: getAffirmations } = useQuery({
+    queryKey: ["affirmations", user?.uid, page],
+    queryFn: async () => {
+      const lastDoc = lastItems[page - 1] || null;
+      if (!user?.uid) throw new Error("User not authenticated");
+      const data = await fetchAffirmations(user?.uid, lastDoc, itemsPerPage);
+
+      setLastItems((prev) => ({
+        ...prev,
+        [page]: data.lastVisible,
+      }));
+      return data;
+    },
+    enabled: !!user?.uid,
+  });
+  console.log(getAffirmations);
+
+  const totalPages = getAffirmations?.total
+    ? Math.ceil(getAffirmations?.total / itemsPerPage)
+    : 1;
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) setPage(page);
+  };
+
   return (
     <div className="pt-4 w-full">
       <div className="flex justify-between items-center gap-3">
@@ -35,23 +70,72 @@ const Affirmation = () => {
         </CustomDialog>
       </div>
       <Card className="shadow-none bg-[#fff] p-3 md:p-8 w-full flex flex-col gap-3">
-        {affirmations.map((affirm, i) => (
-          <div key={i} className="flex flex-col sm:flex-row gap-3">
-            <Card className="w-full sm:max-w-[50%] min-h-full sm:max-h-[256px] p-0 overflow-hidden">
-              <img
-                src={affirm.icon}
-                alt={`${affirm.title}`}
-                className="w-full h-full object-cover rounded-xl"
-              />
-            </Card>
-            <div className="w-full sm:w-[50%] flex flex-col justify-start items-start gap-2">
-              <p className="text-md font-medium">{affirm.title}</p>
-              <p className="text-sm font-normal text-[#637387]">
-                {affirm.description}
-              </p>
+        {(getAffirmations?.result ?? [])?.length > 0 ? (
+          getAffirmations?.result?.map((affirm, i) => (
+            <div key={i} className="flex flex-col sm:flex-row gap-3">
+              <Card className="w-full sm:max-w-[50%] min-h-full sm:max-h-[256px] p-0 overflow-hidden">
+                <img
+                  src={affirm.thumbnail}
+                  alt={`${affirm.title}`}
+                  className="w-full h-full object-cover rounded-xl"
+                />
+              </Card>
+              <div className="w-full sm:w-[50%] flex flex-col justify-start items-start gap-2">
+                <p className="text-md font-medium">{affirm.title}</p>
+                <p className="text-sm font-normal text-[#637387]">
+                  {affirm.content}
+                </p>
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="flex justify-center items-center gap-3 text-center w-full">
+            <p className="text-gray-500 text-center">
+              You haven't created any affirmation for yourself. Click create
+            </p>
           </div>
-        ))}
+        )}
+
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <Button
+            variant="outline"
+            disabled={page === 1}
+            onClick={() => handlePageChange(page - 1)}
+          >
+            Previous
+          </Button>
+
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (page <= 3) {
+              pageNum = i + 1;
+            } else if (page >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = page - 2 + i;
+            }
+
+            return (
+              <Button
+                key={pageNum}
+                variant={page === pageNum ? "default" : "outline"}
+                onClick={() => handlePageChange(pageNum)}
+              >
+                {pageNum}
+              </Button>
+            );
+          })}
+
+          <Button
+            variant="outline"
+            disabled={page === totalPages}
+            onClick={() => handlePageChange(page + 1)}
+          >
+            Next
+          </Button>
+        </div>
       </Card>
     </div>
   );

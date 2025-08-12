@@ -298,5 +298,60 @@ export const postAffrimations = async ({
     title,
     content,
     thumbnail,
+    createdAt: new Date(),
   });
+};
+
+export const fetchAffirmations = async (
+  userId: string,
+  lastItem: QueryDocumentSnapshot<DocumentData> | null,
+  itemsPerPage: number = 5
+): Promise<{
+  result: {
+    id: string;
+    title: string;
+    content: string;
+    thumbnail: string;
+    createdAt: { seconds: number };
+  }[];
+  total: number;
+  lastVisible: QueryDocumentSnapshot<DocumentData> | null;
+}> => {
+  try {
+    const affirmationsRef = collection(db, "affirmations");
+
+    const countQuery = query(affirmationsRef, where("userId", "==", userId));
+    const countSnapshot = await getCountFromServer(countQuery);
+    const total = countSnapshot.data().count || 0;
+
+    const baseQuery = query(
+      affirmationsRef,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc"),
+      ...(lastItem ? [startAfter(lastItem)] : []),
+      limit(itemsPerPage)
+    );
+
+    const snapshot = await getDocs(baseQuery);
+    const lastVisible = snapshot.docs[snapshot.docs.length - 1] ?? null;
+    const result = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as {
+      id: string;
+      title: string;
+      content: string;
+      thumbnail: string;
+      createdAt: { seconds: number };
+    }[];
+
+    return {
+      result,
+      total,
+      lastVisible,
+    };
+  } catch (error) {
+    console.log("Error fetching affirmations", error);
+    throw error;
+  }
 };

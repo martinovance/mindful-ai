@@ -33,7 +33,7 @@ const VoiceHistory = () => {
     },
     enabled: !!user?.uid,
   });
-  console.log(voiceJournals);
+  // console.log(voiceJournals);
 
   const totalPages = voiceJournals?.total
     ? Math.ceil(voiceJournals?.total / itemsPerPage)
@@ -57,7 +57,7 @@ const VoiceHistory = () => {
         </Link>
       </div>
       <div className="flex flex-col justify-center w-full items-start gap-5 px-3 sm:px-8">
-        <div className="flex flex-col justify-start items-start w-full min-h-[80px] gap-4">
+        <div className="flex flex-col justify-start items-center w-full min-h-[80px] gap-4">
           {(voiceJournals?.result ?? [])?.length > 0 ? (
             voiceJournals?.result?.map((record, i) => (
               <div
