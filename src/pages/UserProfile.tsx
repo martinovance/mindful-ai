@@ -5,12 +5,15 @@ import { Label } from "@/components/ui/label";
 
 import AvatarImg from "@/assets/AvatarImg.svg";
 import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/hooks/useAuth";
 
 const UserProfile = () => {
-  const user = {
+  const { user } = useAuth();
+
+  const userDefault = {
     firstName: "Martins",
     lastName: "Ogunsina",
-    email: "martinsogunsina@gmail.com",
+    email: "max@gmail.com",
     password: "#########",
   };
 
@@ -25,7 +28,8 @@ const UserProfile = () => {
                 <Label htmlFor="first-name">First Name</Label>
                 <Input
                   id="first-name"
-                  value={user.firstName}
+                  readOnly
+                  value={userDefault.firstName}
                   className="w-full h-[45px]"
                 />
               </div>
@@ -33,7 +37,8 @@ const UserProfile = () => {
                 <Label htmlFor="last-name">Last Name</Label>
                 <Input
                   id="last-name"
-                  value={user.lastName}
+                  readOnly
+                  value={userDefault.lastName}
                   className="w-full h-[45px]"
                 />
               </div>
@@ -41,7 +46,8 @@ const UserProfile = () => {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  value={user.email}
+                  readOnly
+                  value={user?.email || userDefault.email}
                   className="w-full h-[45px]"
                 />
               </div>
@@ -50,7 +56,8 @@ const UserProfile = () => {
                 <Input
                   id="password"
                   type="password"
-                  value={user.password}
+                  readOnly
+                  value={userDefault.password}
                   className="w-full h-[45px]"
                 />
               </div>
@@ -86,8 +93,8 @@ const UserProfile = () => {
         </div>
 
         <div
-          className="w-full md:w-[30%] order-1 md:order-2 h-full flex flex-col justify-center items-center gap-3 
-        bg-[#fff] shadow-sm p-4"
+          className="w-full md:w-[30%] order-1 md:order-2 h-full flex flex-col justify-center 
+          items-center gap-3 bg-[#fff] shadow-sm p-4 rounded-sm"
         >
           <h1 className="font-semibold text-sm">Profile Picture</h1>
           <Avatar className="h-30 w-30 rounded-full">
