@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import AvatarImg from "@/assets/AvatarImg.svg";
-import { Bell, LogOut, Menu, X } from "lucide-react";
+import { Bell, LogOut, Menu, User, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Auth from "@/utils/auth";
 import { useState } from "react";
@@ -24,6 +24,7 @@ const Appbar = () => {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [checkNotes, setCheckNotes] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   console.log(user);
 
@@ -141,7 +142,7 @@ const Appbar = () => {
       <CustomDropdown
         title="Notifications"
         open={checkNotes}
-        setCheckNotes={setCheckNotes}
+        onOpenChange={setCheckNotes}
         trigger={
           <div className="relative cursor-pointer">
             <Bell className="h-6 w-6 p-1 bg-[#F0F2F5] rounded-full text-gray-600" />
@@ -161,6 +162,8 @@ const Appbar = () => {
         title={user?.displayName || "User"}
         email={user?.email ?? ""}
         image={user?.photoURL ?? AvatarImg}
+        open={profileOpen}
+        onOpenChange={setProfileOpen}
         trigger={
           <Avatar className="h-8 w-8 cursor-pointer">
             <AvatarImage src={AvatarImg} />
@@ -168,6 +171,18 @@ const Appbar = () => {
           </Avatar>
         }
       >
+        <Link to="/profile">
+          <Button
+            variant="default"
+            onClick={() => setProfileOpen(false)}
+            className="bg-[#0D80F2] 
+            cursor-pointer border-none w-full rounded-sm flex justify-start items-center"
+          >
+            <User className="mr-1" />
+            Profile Settings
+          </Button>
+        </Link>
+
         <CustomDialog
           title=""
           open={isLogoutOpen}
@@ -176,9 +191,9 @@ const Appbar = () => {
             <Button
               variant="outline"
               onClick={() => setIsLogoutOpen(true)}
-              className="cursor-pointer border-none"
+              className="cursor-pointer border-none flex items-center justify-start"
             >
-              <LogOut className="mr-5" />
+              <LogOut className="mr-1" />
               Log Out
             </Button>
           }

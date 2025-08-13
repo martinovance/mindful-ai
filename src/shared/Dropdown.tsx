@@ -15,7 +15,7 @@ interface DropTypes {
   trigger: React.ReactNode;
   children: React.ReactNode;
   open?: boolean;
-  setCheckNotes?: (open: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const CustomDropdown = ({
@@ -25,10 +25,10 @@ const CustomDropdown = ({
   trigger,
   children,
   open,
-  setCheckNotes,
+  onOpenChange,
 }: DropTypes) => {
   return (
-    <DropdownMenu open={open} onOpenChange={setCheckNotes}>
+    <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
@@ -54,7 +54,7 @@ const CustomDropdown = ({
           <div className="flex justify-between items-center">
             <p className="font-bold text-lg text-gray-800">{title}</p>
             <CircleX
-              onClick={() => setCheckNotes && setCheckNotes(false)}
+              onClick={() => onOpenChange && onOpenChange(false)}
               className="cursor-pointer"
             />
           </div>

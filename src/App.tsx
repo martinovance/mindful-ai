@@ -5,23 +5,24 @@ const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Sessions = lazy(() => import("./pages/Sessions"));
 const Resources = lazy(() => import("./pages/Resources"));
-import { LoaderCircle } from "lucide-react";
+import { Loader } from "lucide-react";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import PublicRoute from "./utils/PublicRoute";
 import { Toaster } from "sonner";
 import Footer from "./components/Footer";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   return (
     <Suspense
       fallback={
         <div className="flex justify-center items-center h-[100vh] w-full">
-          <LoaderCircle className="w-10 h-10 animate-spin" />
+          <Loader className="w-10 h-10 animate-spin" />
         </div>
       }
     >
       <BrowserRouter>
-        <div className="flex flex-col bg-[#F9F9F9]">
+        <div className="flex flex-col bg-[#F9F9F9] min-h-screen">
           <Appbar />
           <Routes>
             <Route
@@ -53,6 +54,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Resources />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <UserProfile />
                 </ProtectedRoute>
               }
             />
