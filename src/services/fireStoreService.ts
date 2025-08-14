@@ -1,6 +1,7 @@
-import { db } from "@/lib/firebase/firebase";
+import { auth, db } from "@/lib/firebase/firebase";
 import { CombinedEntry, MoodSession } from "@/types/vapiTypes";
 import { getTimeOfDay } from "@/utils/moodAnalyzer";
+import { updateProfile } from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -354,4 +355,19 @@ export const fetchAffirmations = async (
     console.log("Error fetching affirmations", error);
     throw error;
   }
+};
+
+export interface UpdateProfilePayload {
+  displayName?: string;
+  photoURL?: string;
+}
+
+export const uploadProfilePicture = async (
+  payload: UpdateProfilePayload
+): Promise<void> => {
+  const user = auth.currentUser;
+
+  if (!user) throw new Error("User not authenticated");
+
+  await updateProfile(user, payload);
 };

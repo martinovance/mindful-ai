@@ -6,15 +6,75 @@ import { Label } from "@/components/ui/label";
 import AvatarImg from "@/assets/AvatarImg.svg";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
+import { useRef } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { uploadProfilePicture } from "@/services/fireStoreService";
+import { Loader2 } from "lucide-react";
+import { showToast } from "@/shared/Toast";
 
 const UserProfile = () => {
   const { user } = useAuth();
+  const displayName = user?.displayName || "";
+  const [firstName, lastName] = displayName && displayName.split(" ");
 
-  const userDefault = {
-    firstName: "Martins",
-    lastName: "Ogunsina",
-    email: "max@gmail.com",
-    password: "#########",
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+
+  const { mutate: uploadPicture, isPending: uploading } = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append(
+        "upload_preset",
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+      );
+      formData.append("folder", "user");
+
+      const res = await fetch(
+        import.meta.env.VITE_CLOUDINARY_IMAGE_UPLOAD_URL,
+        {
+          method: "post",
+          body: formData,
+        }
+      );
+
+      if (!res.ok) throw new Error("Upload to Cloudinary failed");
+
+      const data = await res.json();
+      const photoURL = data.secure_url;
+
+      if (!user?.uid) throw new Error("User not authenticated");
+      await uploadProfilePicture({ photoURL });
+      return photoURL;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["auth", "currentUser"],
+      });
+      showToast({
+        title: "Profile image changed successful",
+        status: "success",
+      });
+    },
+    onError: (error) => {
+      showToast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+      });
+    },
+  });
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    console.log(file);
+    if (!file) return;
+
+    try {
+      uploadPicture(file);
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -29,7 +89,7 @@ const UserProfile = () => {
                 <Input
                   id="first-name"
                   readOnly
-                  value={userDefault.firstName}
+                  value={firstName || ""}
                   className="w-full h-[45px]"
                 />
               </div>
@@ -38,7 +98,7 @@ const UserProfile = () => {
                 <Input
                   id="last-name"
                   readOnly
-                  value={userDefault.lastName}
+                  value={lastName || ""}
                   className="w-full h-[45px]"
                 />
               </div>
@@ -47,23 +107,10 @@ const UserProfile = () => {
                 <Input
                   id="email"
                   readOnly
-                  value={user?.email || userDefault.email}
+                  value={user?.email || ""}
                   className="w-full h-[45px]"
                 />
               </div>
-              <div className="flex flex-col gap-2 w-full">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  readOnly
-                  value={userDefault.password}
-                  className="w-full h-[45px]"
-                />
-              </div>
-              <Button className="bg-[#0D80F2] rounded-xs cursor-pointer">
-                Update Profile
-              </Button>
             </div>
           </div>
 
@@ -77,7 +124,10 @@ const UserProfile = () => {
                     Receive session reminders and updates
                   </p>
                 </div>
-                <Switch className="data-[state=checked]:bg-[#0D80F2] data-[state=unchecked]:bg-[#818282]" />
+                <Switch
+                  className="data-[state=checked]:bg-[#0D80F2] 
+                data-[state=unchecked]:bg-[#818282]"
+                />
               </div>
               <div className="w-full flex justify-between items-center">
                 <div className="flex flex-col items-start">
@@ -86,7 +136,10 @@ const UserProfile = () => {
                     Audio reminders for journaling
                   </p>
                 </div>
-                <Switch className="data-[state=checked]:bg-[#0D80F2] data-[state=unchecked]:bg-[#818282]" />
+                <Switch
+                  className="data-[state=checked]:bg-[#0D80F2] 
+                data-[state=unchecked]:bg-[#818282]"
+                />
               </div>
             </div>
           </div>
@@ -98,10 +151,26 @@ const UserProfile = () => {
         >
           <h1 className="font-semibold text-sm">Profile Picture</h1>
           <Avatar className="h-30 w-30 rounded-full">
-            <AvatarImage src={AvatarImg} />
+            <AvatarImage src={user?.photoURL || AvatarImg} />
           </Avatar>
-          <Button className="bg-[#0D80F2] rounded-xs cursor-pointer">
-            Change Picture
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleUpload}
+            accept="image/*"
+            className="hidden"
+          />
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            className="bg-[#0D80F2] rounded-sm cursor-pointer"
+          >
+            {uploading ? (
+              <Loader2 className="animate-spin text-[#fff]" />
+            ) : user?.photoURL === null ? (
+              "Upload picture"
+            ) : (
+              "Change Picture"
+            )}
           </Button>
         </div>
       </div>

@@ -166,7 +166,7 @@ const Appbar = () => {
         onOpenChange={setProfileOpen}
         trigger={
           <Avatar className="h-8 w-8 cursor-pointer">
-            <AvatarImage src={AvatarImg} />
+            <AvatarImage src={user?.photoURL || AvatarImg} />
             <AvatarFallback>MO</AvatarFallback>
           </Avatar>
         }
