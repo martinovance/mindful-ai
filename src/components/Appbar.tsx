@@ -1,5 +1,5 @@
 import MindLogo from "@/assets/MindLogo.svg";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import AvatarImg from "@/assets/AvatarImg.svg";
@@ -73,24 +73,36 @@ const Appbar = () => {
 
   const renderAppLinks = () => (
     <nav className="hidden md:flex items-center gap-6">
-      <Link
+      <NavLink
         to="/dashboard"
-        className="text-sm font-medium hover:text-primary transition-colors"
+        className={({ isActive }) =>
+          `text-sm font-medium transition-colors ${
+            isActive ? "text-[#0D80F2]" : ""
+          }`
+        }
       >
         Home
-      </Link>
-      <Link
+      </NavLink>
+      <NavLink
         to="/sessions"
-        className="text-sm font-medium hover:text-primary transition-colors"
+        className={({ isActive }) =>
+          `text-sm font-medium transition-colors ${
+            isActive ? "text-[#0D80F2]" : ""
+          }`
+        }
       >
         Sessions
-      </Link>
-      <Link
+      </NavLink>
+      <NavLink
         to="/resources"
-        className="text-sm font-medium hover:text-primary transition-colors"
+        className={({ isActive }) =>
+          `text-sm font-medium transition-colors ${
+            isActive ? "text-[#0D80F2]" : ""
+          }`
+        }
       >
         Resources
-      </Link>
+      </NavLink>
     </nav>
   );
 
