@@ -52,7 +52,8 @@ const UserProfile = () => {
         queryKey: ["auth", "currentUser"],
       });
       showToast({
-        title: "Profile image changed successful",
+        title: "Success",
+        description: "Profile image upload successful",
         status: "success",
       });
     },
