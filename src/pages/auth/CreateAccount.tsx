@@ -65,7 +65,7 @@ const CreateAccount = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
                 <FormMessage />
                 <FormControl>
                   <Input
-                    placeholder="Full Name"
+                    placeholder="Full Name e.g John Doe"
                     {...field}
                     className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
                     focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"

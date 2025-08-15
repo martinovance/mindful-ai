@@ -1,4 +1,5 @@
 import { auth, db } from "@/lib/firebase/firebase";
+import { notTypes, UpdateProfilePayload } from "@/types/firestoreType";
 import { CombinedEntry, MoodSession } from "@/types/vapiTypes";
 import { getTimeOfDay } from "@/utils/moodAnalyzer";
 import { updateProfile } from "firebase/auth";
@@ -16,6 +17,7 @@ import {
   DocumentData,
   startAfter,
   Timestamp,
+  onSnapshot,
 } from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
@@ -357,11 +359,6 @@ export const fetchAffirmations = async (
   }
 };
 
-export interface UpdateProfilePayload {
-  displayName?: string;
-  photoURL?: string;
-}
-
 export const uploadProfilePicture = async (
   payload: UpdateProfilePayload
 ): Promise<void> => {
@@ -370,4 +367,48 @@ export const uploadProfilePicture = async (
   if (!user) throw new Error("User not authenticated");
 
   await updateProfile(user, payload);
+};
+
+export const createNotifications = async (
+  userId: string,
+  data: {
+    title: string;
+    message: string;
+    type: string;
+  }
+) => {
+  await addDoc(collection(db, "notifications"), {
+    userId,
+    ...data,
+    createdAt: serverTimestamp(),
+    read: false,
+  });
+};
+
+export const getUserNotifications = (
+  userId: string,
+  callback: (data: notTypes[]) => void
+) => {
+  const q = query(
+    collection(db, "notifications"),
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc")
+  );
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const data: notTypes[] = snapshot.docs.map((doc) => {
+      const docData = doc.data() as DocumentData;
+      return {
+        id: doc.id,
+        title: docData.title,
+        message: docData.message,
+        type: docData.message,
+        createdAt: docData.createdAt?.toDate?.(),
+        read: docData.read ?? false,
+      };
+    });
+    callback(data);
+  });
+
+  return unsubscribe;
 };

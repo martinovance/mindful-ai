@@ -15,7 +15,10 @@ import { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { CircleX, Loader } from "lucide-react";
 import { showToast } from "@/shared/Toast";
-import { postAffrimations } from "@/services/fireStoreService";
+import {
+  createNotifications,
+  postAffrimations,
+} from "@/services/fireStoreService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
@@ -123,7 +126,7 @@ const CreateAffirmation = ({
         createdAt: new Date(),
       };
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       showToast({
         title: "Created!",
         description: "Affirmation created.",
@@ -133,6 +136,11 @@ const CreateAffirmation = ({
         queryKey: ["affirmations", user?.uid],
       });
       setOpen(false);
+      await createNotifications(user?.uid ?? "", {
+        title: "Affirmations",
+        message: "A new affirmation has been created",
+        type: "affirmation",
+      });
     },
     onError: (error: Error) => {
       showToast({
