@@ -1,23 +1,17 @@
 import { useNotifications } from "@/hooks/useNotifications";
+import { markNotificationAsRead } from "@/services/fireStoreService";
 import { CalendarHeartIcon, MessageSquare, Mic } from "lucide-react";
 
 const Notifications = () => {
   const { notifications } = useNotifications();
 
-  // const { data: notifications } = useQuery<notTypes[]>({
-  //   queryKey: ["notifications", user?.uid],
-  //   queryFn: () => Promise.resolve([]),
-  //   enabled: !!user?.uid,
-  //   initialData: [],
-  // });
-  console.log(notifications);
-
   return (
-    <div className="flex flex-col gap-3 min-h-[40px]" onClick={() => {}}>
+    <div className="flex flex-col gap-3 min-h-[40px]">
       {notifications?.map((item, index) => (
         <div
           key={index}
-          className="relative flex justify-start items-start bg-[#F8FAFC] p-1 gap-1"
+          className="relative flex justify-start items-start bg-[#F8FAFC] p-1 gap-1 cursor-pointer"
+          onClick={() => markNotificationAsRead("notifications", item.id)}
         >
           <div className="p-2 bg-white">
             {item.type === "session" ? (

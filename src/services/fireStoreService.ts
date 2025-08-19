@@ -18,6 +18,8 @@ import {
   startAfter,
   Timestamp,
   onSnapshot,
+  updateDoc,
+  doc,
 } from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
@@ -412,4 +414,13 @@ export const getUserNotifications = (
   });
 
   return unsubscribe;
+};
+
+export const markNotificationAsRead = async (
+  userId: string,
+  notId: string
+): Promise<void> => {
+  await updateDoc(doc(db, "notifications", notId), {
+    read: true,
+  });
 };
