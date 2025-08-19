@@ -399,6 +399,7 @@ export const getUserNotifications = (
     const data: notTypes[] = snapshot.docs.map((doc) => {
       const docData = doc.data() as DocumentData;
       return {
+        userId,
         id: doc.id,
         title: docData.title,
         message: docData.message,

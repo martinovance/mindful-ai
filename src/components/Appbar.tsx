@@ -13,6 +13,7 @@ import Login from "@/pages/auth/Login";
 import CreateAccount from "@/pages/auth/CreateAccount";
 import CustomDropdown from "@/shared/Dropdown";
 import Notifications from "./Notifications";
+import { useNotifications } from "@/hooks/useNotifications";
 
 const Appbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,6 +26,7 @@ const Appbar = () => {
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [checkNotes, setCheckNotes] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const { unreadCount } = useNotifications();
 
   console.log(user);
 
@@ -162,7 +164,7 @@ const Appbar = () => {
               variant="destructive"
               className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center"
             >
-              3
+              {unreadCount}
             </Badge>
           </div>
         }

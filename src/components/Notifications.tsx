@@ -1,38 +1,19 @@
-import { useAuth } from "@/hooks/useAuth";
-import { getUserNotifications } from "@/services/fireStoreService";
-import { notTypes } from "@/types/firestoreType";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNotifications } from "@/hooks/useNotifications";
 import { CalendarHeartIcon, MessageSquare, Mic } from "lucide-react";
 
 const Notifications = () => {
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
+  const { notifications } = useNotifications();
 
-  const { data: notifications } = useQuery<notTypes[]>({
-    queryKey: ["notifications", user?.uid],
-    queryFn: () => {
-      if (!user?.uid) return Promise.resolve([]);
-
-      return new Promise<notTypes[]>((resolve, reject) => {
-        try {
-          const unsubscribe = getUserNotifications(user?.uid, (data) => {
-            queryClient.setQueryData(["notifications", user?.uid], data);
-            resolve(data);
-          });
-
-          return () => unsubscribe();
-        } catch (error) {
-          reject(error);
-        }
-      });
-    },
-    enabled: !!user?.uid,
-    initialData: [],
-  });
-  console.log(notifications?.filter((item) => !item.read === true).length);
+  // const { data: notifications } = useQuery<notTypes[]>({
+  //   queryKey: ["notifications", user?.uid],
+  //   queryFn: () => Promise.resolve([]),
+  //   enabled: !!user?.uid,
+  //   initialData: [],
+  // });
+  console.log(notifications);
 
   return (
-    <div className="flex flex-col gap-3" onClick={() => {}}>
+    <div className="flex flex-col gap-3 min-h-[40px]" onClick={() => {}}>
       {notifications?.map((item, index) => (
         <div
           key={index}

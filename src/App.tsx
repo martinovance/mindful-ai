@@ -11,8 +11,11 @@ import PublicRoute from "./utils/PublicRoute";
 import { Toaster } from "sonner";
 import Footer from "./components/Footer";
 import UserProfile from "./pages/UserProfile";
+import { NotificationProvider } from "./context/NotificationsProvider";
+import { useAuth } from "./hooks/useAuth";
 
 function App() {
+  const { user } = useAuth();
   return (
     <Suspense
       fallback={
@@ -22,53 +25,55 @@ function App() {
       }
     >
       <BrowserRouter>
-        <div className="flex flex-col bg-[#F9F9F9] min-h-screen">
-          <Appbar />
-          <Routes>
-            <Route
-              index
-              element={
-                <PublicRoute>
-                  <LandingPage />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/sessions"
-              element={
-                <ProtectedRoute>
-                  <Sessions />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/resources"
-              element={
-                <ProtectedRoute>
-                  <Resources />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <UserProfile />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-          <Footer />
-          <Toaster />
-        </div>
+        <NotificationProvider userId={user?.uid ?? ""}>
+          <div className="flex flex-col bg-[#F9F9F9] min-h-screen">
+            <Appbar />
+            <Routes>
+              <Route
+                index
+                element={
+                  <PublicRoute>
+                    <LandingPage />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/sessions"
+                element={
+                  <ProtectedRoute>
+                    <Sessions />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/resources"
+                element={
+                  <ProtectedRoute>
+                    <Resources />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <UserProfile />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+            <Footer />
+            <Toaster />
+          </div>
+        </NotificationProvider>
       </BrowserRouter>
     </Suspense>
   );
