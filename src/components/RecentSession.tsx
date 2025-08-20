@@ -134,10 +134,15 @@ const RecentSession = ({
                       </div>
                     </CardHeader>
                   </div>
-                  <Button variant="link" className="text-[#5D5CDE] p-0 h-auto">
-                    View details
-                    <ArrowRight />
-                  </Button>
+                  <Link to={`/sessions/${call.type}/${call.id}`}>
+                    <Button
+                      variant="link"
+                      className="text-[#5D5CDE] p-0 h-auto"
+                    >
+                      View details
+                      <ArrowRight />
+                    </Button>
+                  </Link>
                 </div>
               </Card>
             ))

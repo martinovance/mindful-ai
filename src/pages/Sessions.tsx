@@ -30,7 +30,6 @@ const Sessions = () => {
     },
     enabled: !!user?.uid,
   });
-  console.log(combinedData);
 
   const { entries = [], total = 0 } = combinedData || {};
 

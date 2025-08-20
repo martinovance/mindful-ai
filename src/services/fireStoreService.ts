@@ -1,6 +1,10 @@
 import { auth, db } from "@/lib/firebase/firebase";
 import { notTypes, UpdateProfilePayload } from "@/types/firestoreType";
-import { CombinedEntry, MoodSession } from "@/types/vapiTypes";
+import {
+  CombinedEntry,
+  MoodSession,
+  VoiceJournalEntry,
+} from "@/types/vapiTypes";
 import { getTimeOfDay } from "@/utils/moodAnalyzer";
 import { updateProfile } from "firebase/auth";
 import {
@@ -20,6 +24,7 @@ import {
   onSnapshot,
   updateDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
@@ -423,4 +428,31 @@ export const markNotificationAsRead = async (
   await updateDoc(doc(db, "notifications", notId), {
     read: true,
   });
+};
+
+export const getUserDocById = async (
+  collectionName: "sessions" | "voiceJournals",
+  docId: string
+): Promise<CombinedEntry | null> => {
+  const docRef = doc(db, collectionName, docId);
+  const docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists()) return null;
+
+  const data = docSnap.data();
+
+  if (collectionName === "sessions") {
+    return {
+      type: "session",
+      data: { id: docSnap.id, ...data } as MoodSession,
+    };
+  }
+
+  if (collectionName === "voiceJournals") {
+    return {
+      type: "voiceJournal",
+      data: { id: docSnap.id, ...data } as VoiceJournalEntry,
+    };
+  }
+  return null;
 };

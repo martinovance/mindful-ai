@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 import UserProfile from "./pages/UserProfile";
 import { NotificationProvider } from "./context/NotificationsProvider";
 import { useAuth } from "./hooks/useAuth";
+import CallInfo from "./pages/CallInfo";
 
 function App() {
   const { user } = useAuth();
@@ -45,14 +46,25 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/sessions"
-                element={
-                  <ProtectedRoute>
-                    <Sessions />
-                  </ProtectedRoute>
-                }
-              />
+              <Route>
+                <Route
+                  index
+                  path="/sessions"
+                  element={
+                    <ProtectedRoute>
+                      <Sessions />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/sessions/:type/:id"
+                  element={
+                    <ProtectedRoute>
+                      <CallInfo />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
               <Route
                 path="/resources"
                 element={
