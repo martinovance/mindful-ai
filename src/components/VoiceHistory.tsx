@@ -9,6 +9,7 @@ import Recorder from "@/assets/Recorder.svg";
 import { Card } from "./ui/card";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
 
 const VoiceHistory = () => {
   const { user } = useAuth();
@@ -18,7 +19,7 @@ const VoiceHistory = () => {
     Record<number, QueryDocumentSnapshot<DocumentData> | null>
   >({});
 
-  const { data: voiceJournals /* isPending: LoadingJournals */ } = useQuery({
+  const { data: voiceJournals, isPending: LoadingJournals } = useQuery({
     queryKey: ["voiceJournals", user?.uid, page],
     queryFn: async () => {
       const lastDoc = lastItems[page - 1] || null;
@@ -58,7 +59,28 @@ const VoiceHistory = () => {
       </div>
       <div className="flex flex-col justify-center w-full items-start gap-5 px-3 sm:px-8">
         <div className="flex flex-col justify-start items-center w-full min-h-[80px] gap-4">
-          {(voiceJournals?.result ?? [])?.length > 0 ? (
+          {LoadingJournals ? (
+            // Skeleton loader list
+            Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex flex-row justify-between items-center w-full min-h-[80px] gap-3 animate-pulse"
+              >
+                {/* Left icon skeleton */}
+                <div className="flex justify-center items-center w-[80px] min-h-[80px]">
+                  <Skeleton className="h-10 w-10 rounded-md" />
+                </div>
+
+                {/* Right content skeleton */}
+                <div className="flex flex-col justify-between items-start gap-2 h-full w-full">
+                  <Skeleton className="h-4 w-32 rounded-md" /> {/* Title */}
+                  <Skeleton className="h-8 w-full rounded-md" />{" "}
+                  {/* Audio player */}
+                  <Skeleton className="h-3 w-24 rounded-md" /> {/* Timestamp */}
+                </div>
+              </div>
+            ))
+          ) : (voiceJournals?.result ?? [])?.length > 0 ? (
             voiceJournals?.result?.map((record, i) => (
               <div
                 key={i}

@@ -18,7 +18,7 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const { data: sessionsData } = useQuery({
+  const { data: sessionsData, isPending } = useQuery({
     queryKey: ["session", user?.uid, currentPage],
     queryFn: () => {
       if (!user?.uid) {
@@ -138,6 +138,7 @@ const Dashboard = () => {
               averageScore={averageScore}
               totalSessions={totalSessions}
               happyPercentage={happyPercentage}
+              isPending={isPending}
             />
           </TabsContent>
           <TabsContent value="weekly">
@@ -147,6 +148,7 @@ const Dashboard = () => {
               averageScore={averageScore}
               totalSessions={totalSessions}
               happyPercentage={happyPercentage}
+              isPending={isPending}
             />
           </TabsContent>
           <TabsContent value="monthly">
@@ -156,6 +158,7 @@ const Dashboard = () => {
               averageScore={averageScore}
               totalSessions={totalSessions}
               happyPercentage={happyPercentage}
+              isPending={isPending}
             />
           </TabsContent>
         </Tabs>
@@ -166,6 +169,7 @@ const Dashboard = () => {
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
+          isPending={isPending}
         />
         <VoiceHistory />
         <Affirmation />

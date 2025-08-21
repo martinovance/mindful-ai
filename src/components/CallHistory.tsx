@@ -15,6 +15,7 @@ import {
   getCallTitle,
   getMoodColor,
 } from "@/utils/sessionDataTransformer";
+import { Skeleton } from "./ui/skeleton";
 
 interface CallHistoryProps {
   sessions?: MoodSession[];
@@ -23,6 +24,7 @@ interface CallHistoryProps {
   itemsPerPage?: number;
   currentPage: number;
   onPageChange?: (page: number) => void;
+  isPending: boolean;
 }
 
 const CallHistory = ({
@@ -32,6 +34,7 @@ const CallHistory = ({
   itemsPerPage = 1,
   currentPage,
   onPageChange,
+  isPending,
 }: CallHistoryProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -114,7 +117,33 @@ const CallHistory = ({
           />
         </div>
         <div className="space-y-4">
-          {filteredCalls.length > 0 ? (
+          {isPending ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <Card
+                key={i}
+                className="bg-[#f1f1f1] min-h-20 p-0 shadow-none border-none animate-pulse"
+              >
+                <div className="flex h-full flex-col sm:flex-row justify-start items-center gap-4 p-2">
+                  <Skeleton className="h-20 w-20 rounded-md" />
+                  <div className="w-full space-y-2">
+                    <CardHeader className="px-1 space-y-2">
+                      <Skeleton className="h-5 w-32" />
+                      <div className="flex gap-4">
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-4 w-16" />
+                      </div>
+                    </CardHeader>
+                    <CardContent className="px-1">
+                      <Skeleton className="h-4 w-full" />
+                    </CardContent>
+                    <CardFooter className="px-1">
+                      <Skeleton className="h-4 w-28" />
+                    </CardFooter>
+                  </div>
+                </div>
+              </Card>
+            ))
+          ) : filteredCalls.length > 0 ? (
             filteredCalls.map((call, index) => (
               <Card
                 key={index}

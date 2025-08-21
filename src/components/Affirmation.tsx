@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAffirmations } from "@/services/fireStoreService";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+import { Skeleton } from "./ui/skeleton";
 
 const Affirmation = () => {
   const { user } = useAuth();
@@ -18,7 +19,7 @@ const Affirmation = () => {
     Record<number, QueryDocumentSnapshot<DocumentData> | null>
   >({});
 
-  const { data: getAffirmations } = useQuery({
+  const { data: getAffirmations, isPending: loadingAffirmations } = useQuery({
     queryKey: ["affirmations", user?.uid, page],
     queryFn: async () => {
       const lastDoc = lastItems[page - 1] || null;
@@ -70,7 +71,29 @@ const Affirmation = () => {
         </CustomDialog>
       </div>
       <Card className="shadow-none bg-[#fff] p-3 md:p-8 w-full flex flex-col gap-3">
-        {(getAffirmations?.result ?? [])?.length > 0 ? (
+        {loadingAffirmations ? (
+          // Skeleton Loader
+          Array.from({ length: 2 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex flex-col sm:flex-row gap-3 animate-pulse"
+            >
+              {/* Image Skeleton */}
+              <Card className="w-full sm:max-w-[50%] min-h-[180px] sm:max-h-[256px] p-0 overflow-hidden">
+                <Skeleton className="w-full h-full rounded-xl" />
+              </Card>
+
+              {/* Text Skeletons */}
+              <div className="w-full sm:w-[50%] flex flex-col justify-start items-start gap-2">
+                <Skeleton className="h-5 w-40 rounded-md" /> {/* Title */}
+                <Skeleton className="h-4 w-full rounded-md" />{" "}
+                {/* Content line 1 */}
+                <Skeleton className="h-4 w-3/4 rounded-md" />{" "}
+                {/* Content line 2 */}
+              </div>
+            </div>
+          ))
+        ) : (getAffirmations?.result ?? [])?.length > 0 ? (
           getAffirmations?.result?.map((affirm, i) => (
             <div key={i} className="flex flex-col sm:flex-row gap-3">
               <Card className="w-full sm:max-w-[50%] min-h-full sm:max-h-[256px] p-0 overflow-hidden">

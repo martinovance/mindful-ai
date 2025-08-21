@@ -12,6 +12,7 @@ import {
 
 import { Card, CardContent } from "./ui/card";
 import { useEffect, useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 interface MoodData {
   type: string;
@@ -24,6 +25,7 @@ interface MoodChartProps {
   averageScore?: number;
   totalSessions?: number;
   happyPercentage: number;
+  isPending: boolean;
 }
 
 const MoodChart = ({
@@ -32,6 +34,7 @@ const MoodChart = ({
   averageScore = 0,
   totalSessions = 0,
   happyPercentage,
+  isPending,
 }: MoodChartProps) => {
   const percentageChange = totalSessions > 0 ? 0.5 : 0;
   const distributionChange = totalSessions > 0 ? 10 : 0;
@@ -54,45 +57,61 @@ const MoodChart = ({
       <Card className="shadow-none">
         <CardContent>
           <div className="flex flex-col items-start">
-            <p className="font-semibold text-lg">Mood Score</p>
-            <p className="font-bold text-2xl">{averageScore.toFixed(1)}</p>
-            <div className="flex flex-row gap-2 mb-4">
-              <p className="font-small text-sm">
-                Last {data?.length} {data?.length > 1 ? "days" : "day"}
-              </p>
-              <p
-                className={`font-small text-sm ${
-                  percentageChange >= 0 ? "text-[#08873B]" : "text-[#E53E3E]"
-                }`}
-              >
-                {percentageChange >= 0 ? "+" : ""}
-                {percentageChange}%
-              </p>
-            </div>
+            {isPending ? (
+              <>
+                <Skeleton className="h-5 w-28 mb-2" />
+                <Skeleton className="h-7 w-16 mb-2" />
+                <div className="flex flex-row gap-2 mb-4">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-12" />
+                </div>
+                <Skeleton className="h-[150px] w-full rounded-md" />
+              </>
+            ) : (
+              <>
+                <p className="font-semibold text-lg">Mood Score</p>
+                <p className="font-bold text-2xl">{averageScore.toFixed(1)}</p>
+                <div className="flex flex-row gap-2 mb-4">
+                  <p className="font-small text-sm">
+                    Last {data?.length} {data?.length > 1 ? "days" : "day"}
+                  </p>
+                  <p
+                    className={`font-small text-sm ${
+                      percentageChange >= 0
+                        ? "text-[#08873B]"
+                        : "text-[#E53E3E]"
+                    }`}
+                  >
+                    {percentageChange >= 0 ? "+" : ""}
+                    {percentageChange}%
+                  </p>
+                </div>
 
-            <ResponsiveContainer width="100%" height={150}>
-              <LineChart data={data}>
-                <XAxis
-                  dataKey="type"
-                  axisLine={false}
-                  tickLine={false}
-                  interval={0}
-                  padding={{
-                    left: sampleValue === "Mon" ? 10 : 25,
-                    right: sampleValue === "Mon" ? 10 : 25,
-                  }}
-                />
-                <YAxis hide />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#0D80F2"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+                <ResponsiveContainer width="100%" height={150}>
+                  <LineChart data={data}>
+                    <XAxis
+                      dataKey="type"
+                      axisLine={false}
+                      tickLine={false}
+                      interval={0}
+                      padding={{
+                        left: sampleValue === "Mon" ? 10 : 25,
+                        right: sampleValue === "Mon" ? 10 : 25,
+                      }}
+                    />
+                    <YAxis hide />
+                    <Tooltip />
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#0D80F2"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -100,72 +119,93 @@ const MoodChart = ({
       <Card className="shadow-none">
         <CardContent>
           <div className="flex flex-col items-start">
-            <p className="font-semibold text-lg">Mood Distribution</p>
-            <p className="font-bold text-2xl">{totalSessions}</p>
-            <div className="flex flex-row gap-4">
-              <div className="flex flex-row gap-2 mb-5">
-                <p className="font-small text-sm">Total sessions</p>
-                <p
-                  className={`font-small text-sm ${
-                    distributionChange > 0 ? "text-[#08873B]" : "text-[#E53E3E]"
-                  }`}
-                >
-                  {distributionChange >= 0 ? "+" : ""}
-                  {distributionChange}%
-                </p>
-              </div>
-              <div className="flex flex-row gap-2 mb-5">
-                <p className="font-small text-sm">Happy sessions</p>
-                <p
-                  className={`font-small text-sm ${
-                    happyPercentage > 0 ? "text-[#08873B]" : "text-[#E53E3E]"
-                  }`}
-                >
-                  {happyPercentage}%
-                </p>
-              </div>
-            </div>
+            {isPending ? (
+              <>
+                <Skeleton className="h-5 w-28 mb-2" />
+                <Skeleton className="h-7 w-16 mb-2" />
+                <div className="flex flex-row gap-2 mb-4">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-12" />
+                </div>
+                <Skeleton className="h-[150px] w-full rounded-md" />
+              </>
+            ) : (
+              <>
+                <p className="font-semibold text-lg">Mood Distribution</p>
+                <p className="font-bold text-2xl">{totalSessions}</p>
+                <div className="flex flex-row gap-4">
+                  <div className="flex flex-row gap-2 mb-5">
+                    <p className="font-small text-sm">Total sessions</p>
+                    <p
+                      className={`font-small text-sm ${
+                        distributionChange > 0
+                          ? "text-[#08873B]"
+                          : "text-[#E53E3E]"
+                      }`}
+                    >
+                      {distributionChange >= 0 ? "+" : ""}
+                      {distributionChange}%
+                    </p>
+                  </div>
+                  <div className="flex flex-row gap-2 mb-5">
+                    <p className="font-small text-sm">Happy sessions</p>
+                    <p
+                      className={`font-small text-sm ${
+                        happyPercentage > 0
+                          ? "text-[#08873B]"
+                          : "text-[#E53E3E]"
+                      }`}
+                    >
+                      {happyPercentage}%
+                    </p>
+                  </div>
+                </div>
 
-            <ResponsiveContainer width={isMobile ? "100%" : "70%"} height={150}>
-              <BarChart data={distData} barCategoryGap="20%">
-                <XAxis dataKey="type" axisLine={false} tickLine={false} />
-                <YAxis hide />
-                <Tooltip />
-                <Bar
-                  dataKey="value"
-                  fill="#F5FAFE"
-                  barSize={40}
-                  radius={[0, 0, 0, 0]}
+                <ResponsiveContainer
+                  width={isMobile ? "100%" : "70%"}
+                  height={150}
                 >
-                  <LabelList
-                    dataKey="value"
-                    position="top"
-                    content={(props) => {
-                      const { x, y, width } = props;
+                  <BarChart data={distData} barCategoryGap="20%">
+                    <XAxis dataKey="type" axisLine={false} tickLine={false} />
+                    <YAxis hide />
+                    <Tooltip />
+                    <Bar
+                      dataKey="value"
+                      fill="#F5FAFE"
+                      barSize={40}
+                      radius={[0, 0, 0, 0]}
+                    >
+                      <LabelList
+                        dataKey="value"
+                        position="top"
+                        content={(props) => {
+                          const { x, y, width } = props;
 
-                      if (
-                        typeof x === "number" &&
-                        typeof y === "number" &&
-                        typeof width === "number"
-                      ) {
-                        return (
-                          <line
-                            x1={x}
-                            x2={x + width}
-                            y1={y - 4}
-                            y2={y - 4}
-                            stroke="#0D80F2"
-                            strokeWidth={3}
-                          />
-                        );
-                      }
+                          if (
+                            typeof x === "number" &&
+                            typeof y === "number" &&
+                            typeof width === "number"
+                          ) {
+                            return (
+                              <line
+                                x1={x}
+                                x2={x + width}
+                                y1={y - 4}
+                                y2={y - 4}
+                                stroke="#0D80F2"
+                                strokeWidth={3}
+                              />
+                            );
+                          }
 
-                      return null;
-                    }}
-                  />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+                          return null;
+                        }}
+                      />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </>
+            )}
           </div>
         </CardContent>
       </Card>

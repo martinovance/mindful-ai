@@ -17,6 +17,7 @@ import {
   getCallTitle,
   getMoodColor,
 } from "@/utils/sessionDataTransformer";
+import { Skeleton } from "./ui/skeleton";
 
 interface CallHistoryProps {
   entries?: CombinedEntry[];
@@ -24,6 +25,7 @@ interface CallHistoryProps {
   itemsPerPage?: number;
   currentPage: number;
   onPageChange?: (page: number) => void;
+  isPending: boolean;
 }
 
 const RecentSession = ({
@@ -32,6 +34,7 @@ const RecentSession = ({
   itemsPerPage = 5,
   currentPage,
   onPageChange,
+  isPending,
 }: CallHistoryProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -108,7 +111,20 @@ const RecentSession = ({
           />
         </div>
         <div className="space-y-4">
-          {filteredCalls.length > 0 ? (
+          {isPending ? (
+            [...Array(3)].map((_, i) => (
+              <Card
+                key={i}
+                className="p-4 bg-[#f1f1f1] rounded-md flex items-center gap-4"
+              >
+                <Skeleton className="h-10 w-10 rounded-full bg-gray-300" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4 bg-gray-300" />
+                  <Skeleton className="h-4 w-1/2 bg-gray-200" />
+                </div>
+              </Card>
+            ))
+          ) : filteredCalls.length > 0 ? (
             filteredCalls.map((call, index) => (
               <Card
                 key={index}

@@ -16,7 +16,7 @@ const Sessions = () => {
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: combinedData } = useQuery({
+  const { data: combinedData, isPending } = useQuery({
     queryKey: ["combinedEntries", user?.uid, currentPage],
     queryFn: async () => {
       if (!user?.uid) {
@@ -49,7 +49,7 @@ const Sessions = () => {
           >
             <div className="flex justify-start items-center gap-2">
               <div className="p-1 bg-[#ECF5FE] rounded-full">
-                <img src={Bot1} alt="Bot-icon" />
+                <img src={Bot1} loading="lazy" alt="Bot-icon" />
               </div>
               <div className="flex flex-col">
                 <p className="text-sm font-semibold">AI Therapist</p>
@@ -77,7 +77,7 @@ const Sessions = () => {
           >
             <div className="flex justify-start items-center gap-2">
               <div className="p-1 bg-[#ECF5FE] rounded-full">
-                <img src={MicRec} alt="Bot-icon" />
+                <img src={MicRec} loading="lazy" alt="Bot-icon" />
               </div>
               <div className="flex flex-col">
                 <p className="text-sm font-semibold">Voice Journaling</p>
@@ -107,6 +107,7 @@ const Sessions = () => {
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
+          isPending={isPending}
         />
 
         <div className="flex flex-col justify-start items-start w-full gap-4 mt-4">
