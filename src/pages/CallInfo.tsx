@@ -154,7 +154,7 @@ const CallInfo = () => {
                   <div className="w-full flex flex-col justify-start items-start">
                     <div className="w-full flex justify-start items-start gap-2">
                       <div className="p-2 bg-[#ECF5FE] rounded-full">
-                        <img src={Mic} alt="" />
+                        <img src={Mic} loading="lazy" alt="" />
                       </div>
                       <div className="flex flex-col items-start">
                         <p className="font-bold text-sm">Mindful AI</p>
@@ -172,7 +172,7 @@ const CallInfo = () => {
             {getSession?.type === "session" && (
               <div className="w-full flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  <img src={Conversation} alt="" />
+                  <img src={Conversation} loading="lazy" alt="" />
                   <p className="font-semibold text-md text-[#0D80F2]">
                     Conversation Transcript
                   </p>
@@ -184,7 +184,7 @@ const CallInfo = () => {
                   <div className="w-full flex flex-col items-start justify-start gap-6">
                     <div className="w-full flex justify-start items-start gap-2">
                       <div className="p-2 bg-[#ECF5FE] rounded-full">
-                        <img src={Bot1} alt="" />
+                        <img src={Bot1} loading="lazy" alt="" />
                       </div>
                       <div className="flex flex-col items-start">
                         <p className="font-bold text-sm">Mindful AI</p>

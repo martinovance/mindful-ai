@@ -87,7 +87,12 @@ const VoiceHistory = () => {
               >
                 <div className="flex flex-row gap-3 items-center w-full min-h-[80px]">
                   <div className="flex justify-center items-center w-[80px] min-h-[80px] bg-[#F0F2F5] rounded-8">
-                    <img src={Recorder} alt="recorder" className="h-10 w-10" />
+                    <img
+                      src={Recorder}
+                      loading="lazy"
+                      alt="recorder"
+                      className="h-10 w-10"
+                    />
                   </div>
 
                   <div className="flex flex-col justify-between items-start gap-2 h-full w-full">

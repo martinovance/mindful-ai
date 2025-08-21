@@ -1,4 +1,4 @@
-import MindLogo from "@/assets/Images/MindLogo.webp";
+import MindLogo from "@/assets/MindLogo.svg";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -263,7 +263,12 @@ const Appbar = () => {
             to={user ? "/dashboard" : "/"}
             className="flex items-center gap-2"
           >
-            <img src={MindLogo} alt="app-logo" className="h-6 w-6" />
+            <img
+              src={MindLogo}
+              loading="lazy"
+              alt="app-logo"
+              className="h-6 w-6"
+            />
             <p className="text-lg font-bold text-foreground">{getTitle()}</p>
           </Link>
         </div>

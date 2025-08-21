@@ -211,7 +211,7 @@ const CreateAffirmation = ({
               <Input {...getInputProps()} />
               {!file ? (
                 <div className="h-full w-full flex flex-col justify-center items-center gap-2">
-                  <img src={AddFile} alt="add-icon" />
+                  <img src={AddFile} loading="lazy" alt="add-icon" />
                   <div className="flex flex-col items-center">
                     <p className="text-gray-500 text-xs">
                       {isDragActive
