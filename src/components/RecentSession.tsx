@@ -115,12 +115,20 @@ const RecentSession = ({
             [...Array(3)].map((_, i) => (
               <Card
                 key={i}
-                className="p-4 bg-[#f1f1f1] rounded-md flex items-center gap-4"
+                className="p-4 bg-[#f1f1f1] flex justify-center rounded-md gap-1"
               >
-                <Skeleton className="h-10 w-10 rounded-full bg-gray-300" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-3/4 bg-gray-300" />
-                  <Skeleton className="h-4 w-1/2 bg-gray-200" />
+                <div className="w-full flex flex-col sm:flex-row gap-2 justify-between items-center">
+                  <div
+                    className="w-full flex h-full justify-start 
+                      items-start sm:items-center gap-2 p-2"
+                  >
+                    <Skeleton className="h-10 w-10 rounded-full bg-gray-300" />
+                    <div className="w-full flex flex-col space-y-2">
+                      <Skeleton className="h-4 w-[30%] bg-gray-300" />
+                      <Skeleton className="h-4 w-[20%] bg-gray-200" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-4 w-[20%] bg-gray-200" />
                 </div>
               </Card>
             ))

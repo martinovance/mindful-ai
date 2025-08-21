@@ -34,7 +34,6 @@ const Affirmation = () => {
     },
     enabled: !!user?.uid,
   });
-  console.log(getAffirmations);
 
   const totalPages = getAffirmations?.total
     ? Math.ceil(getAffirmations?.total / itemsPerPage)

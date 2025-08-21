@@ -30,7 +30,6 @@ const CallInfo = () => {
       <div className="flex flex-col justify-start items-start gap-5 lg:w-[850px]">
         {loadingCallInfo ? (
           <>
-            {/* Card 1 - Session Header */}
             <div className="h-full w-full bg-[#fff] rounded-sm shadow-xs p-2 md:p-6 flex flex-col gap-6">
               <div className="flex justify-start items-start gap-2">
                 <Skeleton className="h-10 w-10 rounded-full" />
@@ -52,14 +51,12 @@ const CallInfo = () => {
               </div>
             </div>
 
-            {/* Card 2 - Summary / Player */}
             <div className="h-full w-full bg-[#fff] rounded-sm shadow-xs p-2 md:p-6 flex flex-col gap-6">
               <Skeleton className="h-4 w-40" />
               <Skeleton className="h-3 w-full" />
               <Skeleton className="h-3 w-[80%]" />
             </div>
 
-            {/* Card 3 - Transcript */}
             <div className="w-full flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <Skeleton className="h-6 w-6 rounded-full" />

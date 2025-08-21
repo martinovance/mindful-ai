@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import MicPro from "@/assets/MicPro.svg";
+import MicPro from "@/assets/Images/MicPro.webp";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { showToast } from "@/shared/Toast";
 import { useState } from "react";

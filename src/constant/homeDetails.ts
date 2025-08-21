@@ -1,7 +1,7 @@
-import Image1 from "@/assets/Mic1.svg";
-import Image2 from "@/assets/Analysis1.svg";
-import Image3 from "@/assets/Galaxy1.svg";
-import Image4 from "@/assets/Therapist1.svg";
+import Image1 from "@/assets/Images/Mic1.webp";
+import Image2 from "@/assets/Images/Analysis1.webp";
+import Image3 from "@/assets/Images/Galaxy1.webp";
+import Image4 from "@/assets/Images/Therapist1.webp";
 import { Mic, UserPlus } from "lucide-react";
 
 export const HOMESCREEN = [

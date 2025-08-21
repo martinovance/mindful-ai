@@ -3,10 +3,10 @@ import { Input } from "./ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 
-import RedStatus from "@/assets/RedStatus.svg";
-import GreenStatus from "@/assets/GreenStatus.svg";
-import YellowStatus from "@/assets/YellowStatus.svg";
-import NeutralStatus from "@/assets/NeutralStatus.svg";
+import RedStatus from "@/assets/Images/RedStatus.webp";
+import GreenStatus from "@/assets/Images/GreenStatus.webp";
+import YellowStatus from "@/assets/Images/YellowStatus.webp";
+import NeutralStatus from "@/assets/Images/NeutralStatus.webp";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { MoodColorMap, MoodSession } from "@/types/vapiTypes";

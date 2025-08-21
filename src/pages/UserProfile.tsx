@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import AvatarImg from "@/assets/AvatarImg.svg";
+import AvatarImg from "@/assets/Images/AvatarImg.webp";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
 import { useRef } from "react";
@@ -68,7 +68,6 @@ const UserProfile = () => {
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
     if (!file) return;
 
     try {

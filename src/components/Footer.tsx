@@ -1,4 +1,4 @@
-import MindLogo from "@/assets/MindLogo.svg";
+import MindLogo from "@/assets/Images/MindLogo.webp";
 import { ArrowRight } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -15,7 +15,7 @@ const Footer = () => {
     >
       <div className="flex flex-col justify-start items-start gap-3">
         <div className="flex gap-1 items-center">
-          <img src={MindLogo} alt="Ming-Logo" />
+          <img src={MindLogo} loading="lazy" alt="Ming-Logo" />
           <p className="font-bold text-lg text-[#FFFFFF]">Mindful AI</p>
         </div>
         <p className="font-normal text-sm text-[#D1DEE8]">
@@ -25,10 +25,10 @@ const Footer = () => {
           <br /> available 24/7.
         </p>
         <div className="flex gap-2 items-center">
-          <img src={XLogo} alt="X" />
-          <img src={LinkedinLogo} alt="Linkedin" />
-          <img src={TwitterLogo} alt="Twitter" />
-          <img src={InstagramLogo} alt="Instagram" />
+          <img src={XLogo} loading="lazy" alt="X" />
+          <img src={LinkedinLogo} loading="lazy" alt="Linkedin" />
+          <img src={TwitterLogo} loading="lazy" alt="Twitter" />
+          <img src={InstagramLogo} loading="lazy" alt="Instagram" />
         </div>
       </div>
 

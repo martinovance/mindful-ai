@@ -24,8 +24,7 @@ const Login = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
   const { mutate: LoginUser, isPending } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       LoginUserCredentials(email, password),
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
       showToast({
         title: "Success!",
         description: "User signed in successfully.",

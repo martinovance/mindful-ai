@@ -1,8 +1,8 @@
-import MindLogo from "@/assets/MindLogo.svg";
+import MindLogo from "@/assets/Images/MindLogo.webp";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import AvatarImg from "@/assets/AvatarImg.svg";
+import AvatarImg from "@/assets/Images/AvatarImg.webp";
 import { Bell, LogOut, Menu, User, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Auth from "@/utils/auth";
@@ -27,8 +27,6 @@ const Appbar = () => {
   const [checkNotes, setCheckNotes] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const { unreadCount } = useNotifications();
-
-  console.log(user);
 
   const getTitle = () => {
     switch (pathname) {

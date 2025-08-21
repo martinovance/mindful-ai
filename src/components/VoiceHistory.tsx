@@ -5,7 +5,7 @@ import { fetchVoiceJournals } from "@/services/fireStoreService";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
-import Recorder from "@/assets/Recorder.svg";
+import Recorder from "@/assets/Images/Recorder.webp";
 import { Card } from "./ui/card";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
@@ -34,7 +34,6 @@ const VoiceHistory = () => {
     },
     enabled: !!user?.uid,
   });
-  // console.log(voiceJournals);
 
   const totalPages = voiceJournals?.total
     ? Math.ceil(voiceJournals?.total / itemsPerPage)

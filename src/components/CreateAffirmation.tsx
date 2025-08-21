@@ -152,7 +152,6 @@ const CreateAffirmation = ({
   });
 
   const onSubmit = (values: z.infer<typeof affirmationSchema>) => {
-    console.log(values);
     uploadAffirmations(values);
   };
 

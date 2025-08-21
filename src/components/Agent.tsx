@@ -1,11 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import UserPin2 from "@/assets/UserPin2.svg";
-import Bot from "@/assets/Bot.svg";
+import UserPin2 from "@/assets/Images/UserPin2.webp";
+import Bot from "@/assets/Images/Bot.webp";
 import { useAuth } from "@/hooks/useAuth";
 import { useVapi } from "@/hooks/useVapi";
-import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
@@ -14,12 +13,6 @@ const Agent = () => {
   const { isLoading, isSpeaking, transcript, startCall, stopCall } = useVapi(
     user?.uid ?? ""
   );
-
-  useEffect(() => {
-    if (user) {
-      console.log("Logged-in user:", user);
-    }
-  }, [user]);
 
   return (
     <div className="w-full flex flex-col justify-center items-center gap-5">
@@ -40,7 +33,7 @@ const Agent = () => {
         <Card className="w-[50%] bg-[#F9F9F9] shadow-none h-full p-0 overflow-hidden">
           <div className="w-full h-full flex justify-center items-center p-4">
             <img
-              src={UserPin2}
+              src={user?.photoURL || UserPin2}
               alt="record"
               className="w-20 h-20 object-cover rounded-full"
             />

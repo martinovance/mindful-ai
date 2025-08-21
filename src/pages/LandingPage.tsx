@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { GETSTARTED, HOMESCREEN } from "@/constant/homeDetails";
 import { Link } from "react-router-dom";
-import Rectangle4 from "@/assets/Images/Rectangle4.png";
+import Rectangle4 from "@/assets/Images/Rectangle4.webp";
 import Meditate from "@/assets/Images/Meditate.webp";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, X } from "lucide-react";
@@ -51,6 +51,7 @@ const LandingPage = () => {
         <img
           src={Rectangle4}
           alt="therapist"
+          loading="lazy"
           className="object-cover w-full h-full rounded-sm"
         />
       </div>
@@ -69,6 +70,7 @@ const LandingPage = () => {
                 <img
                   src={item.img}
                   alt="therapist"
+                  loading="lazy"
                   className="object-cover w-full h-full rounded-sm"
                 />
               </div>
@@ -136,10 +138,14 @@ const LandingPage = () => {
           ))}
         </div>
 
-        <div className="px-0 md:px-8 w-full relative flex flex-wrap gap-2 justify-center items-center bg-gray-50 h-[300px]">
+        <div
+          className="px-0 md:px-8 w-full relative flex flex-wrap gap-2 justify-center 
+            items-center bg-gray-50 h-[300px] mb-4"
+        >
           <img
             src={Meditate}
             alt="therapist"
+            loading="lazy"
             className="object-cover w-full h-full rounded-sm opacity-100"
           />
           <div className="w-full absolute flex flex-col justify-center items-center gap-3 text-center">

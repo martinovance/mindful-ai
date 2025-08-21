@@ -122,25 +122,6 @@ const Sessions = () => {
             3. Focus on one topic or question per entry.
           </p>
         </div>
-
-        {/* <Tabs defaultValue="agent" className="w-full">
-          <TabsList className="w-full sm:w-[50%] mb-0">
-            <TabsTrigger value="agent" className="cursor-pointer">
-              AI Therapist
-            </TabsTrigger>
-            <TabsTrigger value="record" className="cursor-pointer">
-              Voice Journaling
-            </TabsTrigger>
-          </TabsList>
-          <Separator className="mt-0" />
-
-          <TabsContent className="m-0" value="agent">
-            <Agent />
-          </TabsContent>
-          <TabsContent value="record">
-            <Voice />
-          </TabsContent>
-        </Tabs> */}
       </div>
     </div>
   );
