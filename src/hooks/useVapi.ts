@@ -10,10 +10,14 @@ import {
   getTimeOfDay,
   summarizeTranscript,
 } from "@/utils/moodAnalyzer";
+import { useQueryClient } from "@tanstack/react-query";
 import { Timestamp } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
+import { useAuth } from "./useAuth";
 
 export const useVapi = (userId: string) => {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [transcript, setTranscript] = useState<string[]>([]);
   const [pendingTranscript, setPendingTranscript] = useState<string[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -94,6 +98,10 @@ export const useVapi = (userId: string) => {
 
         const docId = await storeSessionData(session);
         setCurrentSessionId(docId);
+        queryClient.invalidateQueries({ queryKey: ["session", user?.uid] });
+        queryClient.invalidateQueries({
+          queryKey: ["combinedEntries", user?.uid],
+        });
       } catch (error) {
         console.log(error);
       }
@@ -123,6 +131,8 @@ export const useVapi = (userId: string) => {
     pendingTranscript,
     currentSessionId,
     updateTranscript,
+    queryClient,
+    user,
   ]);
 
   const startCall = async () => {

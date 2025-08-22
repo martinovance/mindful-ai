@@ -10,10 +10,13 @@ import { Loader2 } from "lucide-react";
 import { Input } from "./ui/input";
 // import WaveformPlayer from "@/shared/WaveformPlayer";
 import LiveWaveform from "@/shared/LiveWaveform";
-import { saveAudioToFirestore } from "@/services/fireStoreService";
+import {
+  createNotifications,
+  saveAudioToFirestore,
+} from "@/services/fireStoreService";
 import { useAuth } from "@/hooks/useAuth";
 
-const Voice = () => {
+const Voice = ({ setVoiceOpen }: { setVoiceOpen: (open: boolean) => void }) => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [title, setTitle] = useState("");
@@ -60,15 +63,21 @@ const Voice = () => {
         createdAt: new Date(),
       };
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["voiceJournals", user?.uid] });
+      queryClient.invalidateQueries({
+        queryKey: ["combinedEntries", user?.uid],
+      });
+      setVoiceOpen(false);
+      await createNotifications(user?.uid ?? "", {
+        title: `${title || "Notification"}`,
+        message: "A new journal has been created",
+        type: "journal",
+      });
       showToast({
         title: "Uploaded!",
         description: "Recording successfully uploaded.",
         status: "success",
-      });
-      queryClient.invalidateQueries({ queryKey: ["voiceJournals", user?.uid] });
-      queryClient.invalidateQueries({
-        queryKey: ["combinedEntries", user?.uid],
       });
     },
     onError: (error: Error) => {
@@ -120,7 +129,15 @@ const Voice = () => {
         />
       )}
 
-      {!recording ? (
+      {isPending ? (
+        <Button
+          className="w-full bg-[#0D80F2] rounded-full hover:text-white 
+              cursor-pointer"
+        >
+          <Loader2 className="h-4 w-4 animate-spin text-[#fff]" />
+          Saving journal...
+        </Button>
+      ) : !recording ? (
         <Button
           onClick={startRecording}
           className="w-full bg-[#0D80F2] rounded-full hover:text-white 
@@ -134,11 +151,7 @@ const Voice = () => {
           className="w-full bg-[#0D80F2] rounded-full hover:text-white 
               cursor-pointer"
         >
-          {isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            "Stop & save"
-          )}
+          "Stop & save"
         </Button>
       )}
 

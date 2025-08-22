@@ -381,7 +381,7 @@ export const createNotifications = async (
   data: {
     title: string;
     message: string;
-    type: string;
+    type: "session" | "journal" | "affirmation";
   }
 ) => {
   await addDoc(collection(db, "notifications"), {
@@ -410,7 +410,7 @@ export const getUserNotifications = (
         id: doc.id,
         title: docData.title,
         message: docData.message,
-        type: docData.message,
+        type: docData.type,
         createdAt: docData.createdAt?.toDate?.(),
         read: docData.read ?? false,
       };

@@ -12,6 +12,8 @@ import { showToast } from "@/shared/Toast";
 import { getCombinedEntries } from "@/services/fireStoreService";
 
 const Sessions = () => {
+  const [voiceOpen, setVoiceOpen] = useState(false);
+  const [callOpen, setCallOpen] = useState(false);
   const { user } = useAuth();
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,13 +64,15 @@ const Sessions = () => {
             <CustomDialog
               title="Your Personal AI Therapist"
               description="Engage in supportive CBT-based talk therapy anytime, anywhere. Gideon is here and ready to guide you towards better mental well-being"
+              open={callOpen}
+              onOpenChange={setCallOpen}
               trigger={
                 <Button className="cursor-pointer bg-[#0D80F2] rounded-full">
                   Start Session
                 </Button>
               }
             >
-              <Agent />
+              <Agent setCallOpen={setCallOpen} />
             </CustomDialog>
           </div>
           <div
@@ -90,13 +94,15 @@ const Sessions = () => {
             <CustomDialog
               title="Record your thought"
               description="Capture your reflection and insights in your personal voice journal"
+              open={voiceOpen}
+              onOpenChange={setVoiceOpen}
               trigger={
                 <Button className="cursor-pointer bg-[#34A853] rounded-full">
                   Start Session
                 </Button>
               }
             >
-              <Voice />
+              <Voice setVoiceOpen={setVoiceOpen} />
             </CustomDialog>
           </div>
         </div>
