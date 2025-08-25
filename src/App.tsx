@@ -5,7 +5,6 @@ const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Sessions = lazy(() => import("./pages/Sessions"));
 const Resources = lazy(() => import("./pages/Resources"));
-import { Loader } from "lucide-react";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import PublicRoute from "./utils/PublicRoute";
 import { Toaster } from "sonner";
@@ -14,17 +13,17 @@ import UserProfile from "./pages/UserProfile";
 import { NotificationProvider } from "./context/NotificationsProvider";
 import { useAuth } from "./hooks/useAuth";
 import CallInfo from "./pages/CallInfo";
+import { PageLoader } from "./shared/Loader";
 
 function App() {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
+
+  if (authLoading) {
+    return <PageLoader />;
+  }
+
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center items-center h-[100vh] w-full">
-          <Loader className="w-10 h-10 animate-spin" />
-        </div>
-      }
-    >
+    <Suspense fallback={<PageLoader />}>
       <BrowserRouter>
         <NotificationProvider userId={user?.uid ?? ""}>
           <div className="flex flex-col bg-[#F9F9F9] min-h-screen">

@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null | undefined>(undefined);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
+      setAuthLoading(false);
     });
 
     return () => unsubscribe();
@@ -37,5 +39,12 @@ export const useAuth = () => {
     setUser(null);
   };
 
-  return { user, getToken, getDecodedJwt, isAuthenticated, logOut };
+  return {
+    user,
+    authLoading,
+    getToken,
+    getDecodedJwt,
+    isAuthenticated,
+    logOut,
+  };
 };
