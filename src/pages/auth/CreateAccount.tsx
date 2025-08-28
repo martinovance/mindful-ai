@@ -15,9 +15,13 @@ import { useMutation } from "@tanstack/react-query";
 import { CreateUserAccount } from "@/services/authService";
 import { Loader2 } from "lucide-react";
 import { showToast } from "@/shared/Toast";
-import { AuthTypes, DialogOpen } from "@/types/auth";
+import { AuthTypes } from "@/types/auth";
 
-const CreateAccount = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
+const CreateAccount = ({
+  setActiveDialog,
+}: {
+  setActiveDialog: (dialog: "login" | "signup" | "closed") => void;
+}) => {
   const { mutate: CreateUser, isPending } = useMutation({
     mutationFn: ({ fullName, email, password }: AuthTypes) =>
       CreateUserAccount({ fullName, email, password }),
@@ -142,10 +146,7 @@ const CreateAccount = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
           <p className="font-medium text-sm text-center mt-1">
             Already have an account? {""}
             <span
-              onClick={() => {
-                setIsLoginOpen(true);
-                setIsSignupOpen(false);
-              }}
+              onClick={() => setActiveDialog("login")}
               className="text-blue-700 cursor-pointer"
             >
               Login

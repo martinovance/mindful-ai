@@ -1,15 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { GETSTARTED, HOMESCREEN } from "@/constant/homeDetails";
-import { Link } from "react-router-dom";
 import Rectangle4 from "@/assets/Images/Rectangle4.webp";
 import Meditate from "@/assets/Images/Meditate.webp";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { Faqs } from "@/constant/dashData";
+import { HashLink } from "react-router-hash-link";
+import CreateAccount from "./auth/CreateAccount";
+import CustomDialog from "@/shared/Dialog";
+import Login from "./auth/Login";
 
 const LandingPage = () => {
   const [isOpen, setIsOpen] = useState<number | null>(null);
+  const [activeDialog, setActiveDialog] = useState<
+    "login" | "signup" | "closed"
+  >("closed");
 
   const handleToggle = (index: number) => {
     setIsOpen(isOpen === index ? null : index);
@@ -17,7 +23,10 @@ const LandingPage = () => {
 
   return (
     <div className=" flex flex-col justify-center items-center gap-8">
-      <div className="p-3 md:p-8 w-full flex flex-col gap-3 justify-center items-center lg:w-[800px]">
+      <div
+        id="home"
+        className="p-3 md:p-8 w-full flex flex-col gap-3 justify-center items-center lg:w-[800px]"
+      >
         <p className="font-bold text-center text-3xl">
           Your Personal Mental Wellness Companion
         </p>
@@ -27,23 +36,39 @@ const LandingPage = () => {
           support and guidance anytime, anywhere.
         </p>
         <div className="flex items-center gap-3">
-          <Link to="/">
-            <Button
-              className="bg-[#0D80F2] text-[#FFFFFF] font-bold rounded-md hover:text-white 
-          cursor-pointer"
-            >
-              Get started
-            </Button>
-          </Link>
+          <CustomDialog
+            title="Create Account"
+            open={activeDialog === "signup"}
+            onOpenChange={(open) => setActiveDialog(open ? "signup" : "closed")}
+            trigger={
+              <Button
+                size="sm"
+                variant="default"
+                className="bg-[#0D80F2] font-bold rounded-md cursor-pointer"
+                onClick={() => setActiveDialog("signup")}
+              >
+                Get Started
+              </Button>
+            }
+          >
+            <CreateAccount setActiveDialog={setActiveDialog} />
+          </CustomDialog>
+          <CustomDialog
+            title="Login"
+            open={activeDialog === "login"}
+            onOpenChange={(open) => setActiveDialog(open ? "login" : "closed")}
+          >
+            <Login setActiveDialog={setActiveDialog} />
+          </CustomDialog>
 
-          <Link to="/">
+          <HashLink to="/#services">
             <Button
               variant="outline"
               className="text-[#121417] font-bold rounded-md cursor-pointer"
             >
               How it works
             </Button>
-          </Link>
+          </HashLink>
         </div>
       </div>
 
@@ -56,7 +81,10 @@ const LandingPage = () => {
         />
       </div>
 
-      <div className="px-3 md:px-8 w-full flex flex-col justify-start items-start gap-3 lg:w-[800px]">
+      <div
+        id="about"
+        className="px-3 md:px-8 w-full flex flex-col justify-start items-start gap-3 lg:w-[800px]"
+      >
         <div className="flex flex-col justify-start items-start">
           <p className="font-semibold text-md">How Mindful AI Supports You</p>
           <p className="font-normal text-sm">
@@ -81,7 +109,10 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="p-5 bg-[#0D80F2] w-full h-full md:h-[294px] flex flex-col justify-center items-center gap-3 ">
+      <div
+        id="services"
+        className="p-5 bg-[#0D80F2] w-full h-full md:h-[294px] flex flex-col justify-center items-center gap-3 "
+      >
         <div className="px-8 grid grid-cols-1 md:grid-cols-3 gap-3 lg:w-[800px]">
           {GETSTARTED.map((items) => (
             <div
@@ -139,6 +170,7 @@ const LandingPage = () => {
         </div>
 
         <div
+          id="contact"
           className="px-0 md:px-8 w-full relative flex flex-wrap gap-2 justify-center 
             items-center bg-gray-50 h-[300px] mb-4"
         >
@@ -159,23 +191,32 @@ const LandingPage = () => {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Link to="/">
-                <Button
-                  className="bg-[#0D80F2] text-[#fff] font-bold rounded-md hover:text-white 
-          cursor-pointer"
-                >
-                  Get started
-                </Button>
-              </Link>
+              <CustomDialog
+                title="Create Account"
+                open={activeDialog === "signup"}
+                onOpenChange={(open) =>
+                  setActiveDialog(open ? "signup" : "closed")
+                }
+                trigger={
+                  <Button
+                    size="sm"
+                    variant="default"
+                    className="bg-[#0D80F2] font-bold rounded-md cursor-pointer"
+                    onClick={() => setActiveDialog("signup")}
+                  >
+                    Get Started
+                  </Button>
+                }
+              >
+                <CreateAccount setActiveDialog={setActiveDialog} />
+              </CustomDialog>
 
-              <Link to="/">
-                <Button
-                  variant="outline"
-                  className="text-[#121417] font-bold rounded-md cursor-pointer"
-                >
-                  learn more
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                className="text-[#121417] font-bold rounded-md cursor-pointer"
+              >
+                learn more
+              </Button>
             </div>
           </div>
         </div>

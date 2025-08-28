@@ -14,6 +14,7 @@ import CreateAccount from "@/pages/auth/CreateAccount";
 import CustomDropdown from "@/shared/Dropdown";
 import Notifications from "./Notifications";
 import { useNotifications } from "@/hooks/useNotifications";
+import { HashLink } from "react-router-hash-link";
 
 const Appbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,12 +22,17 @@ const Appbar = () => {
   const pathname = location.pathname;
   const { user } = useAuth();
   const isAuthPage = ["/"].includes(pathname);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [activeDialog, setActiveDialog] = useState<
+    "login" | "signup" | "closed"
+  >("closed");
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [checkNotes, setCheckNotes] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const { unreadCount } = useNotifications();
+
+  const isActive = (hash: string) => {
+    return location.hash === hash;
+  };
 
   const getTitle = () => {
     switch (pathname) {
@@ -43,31 +49,43 @@ const Appbar = () => {
   };
 
   const renderAuthLinks = () => (
-    <nav className="hidden md:flex items center gap-6">
-      <Link
-        to="/"
-        className="text-sm font-medium hover:text-primary transition-colors"
+    <nav className="hidden md:flex items-center gap-6">
+      <HashLink
+        smooth
+        to="/#home"
+        className={`${
+          isActive("#home") && "active text-[#0D80F2]"
+        } "text-sm font-medium hover:text-primary transition-colors`}
       >
         Home
-      </Link>
-      <Link
-        to="/"
-        className="text-sm font-medium hover:text-primary transition-colors"
+      </HashLink>
+      <HashLink
+        smooth
+        to="/#about"
+        className={`${
+          isActive("#about") && "active text-[#0D80F2]"
+        } "text-sm font-medium hover:text-primary transition-colors`}
       >
         About
-      </Link>
-      <Link
-        to="/"
-        className="text-sm font-medium hover:text-primary transition-colors"
+      </HashLink>
+      <HashLink
+        smooth
+        to="/#services"
+        className={`${
+          isActive("#services") && "active text-[#0D80F2]"
+        } "text-sm font-medium hover:text-primary transition-colors`}
       >
         Services
-      </Link>
-      <Link
-        to="/"
-        className="text-sm font-medium hover:text-primary transition-colors"
+      </HashLink>
+      <HashLink
+        smooth
+        to="/#contact"
+        className={`${
+          isActive("#contact") && "active text-[#0D80F2]"
+        } "text-sm font-medium hover:text-primary transition-colors`}
       >
         Contact
-      </Link>
+      </HashLink>
     </nav>
   );
 
@@ -110,8 +128,8 @@ const Appbar = () => {
     <>
       <CustomDialog
         title="Login"
-        open={isLoginOpen}
-        onOpenChange={setIsLoginOpen}
+        open={activeDialog === "login"}
+        onOpenChange={(open) => setActiveDialog(open ? "login" : "closed")}
         trigger={
           <Button
             size="sm"
@@ -122,15 +140,12 @@ const Appbar = () => {
           </Button>
         }
       >
-        <Login
-          setIsSignupOpen={setIsSignupOpen}
-          setIsLoginOpen={setIsLoginOpen}
-        />
+        <Login setActiveDialog={setActiveDialog} />
       </CustomDialog>
       <CustomDialog
         title="Create Account"
-        open={isSignupOpen}
-        onOpenChange={setIsSignupOpen}
+        open={activeDialog === "signup"}
+        onOpenChange={(open) => setActiveDialog(open ? "signup" : "closed")}
         trigger={
           <Button
             size="sm"
@@ -141,10 +156,7 @@ const Appbar = () => {
           </Button>
         }
       >
-        <CreateAccount
-          setIsLoginOpen={setIsLoginOpen}
-          setIsSignupOpen={setIsSignupOpen}
-        />
+        <CreateAccount setActiveDialog={setActiveDialog} />
       </CustomDialog>
     </>
   );
@@ -241,8 +253,8 @@ const Appbar = () => {
   return (
     <header
       className="top-0 z-50 w-full border-b 
-    bg-[E5E8EB] backdrop-blur supports-[backdrop-filter]:bg-white/60 
-    dark:bg-gray-950/90"
+      bg-[E5E8EB] backdrop-blur supports-[backdrop-filter]:bg-white/60 
+      dark:bg-gray-950/90"
     >
       <div className="flex h-16 items-center justify-between px-3 sm:px-6">
         <div className="flex items-center gap-2">
@@ -326,8 +338,10 @@ const Appbar = () => {
             {!user && (
               <CustomDialog
                 title="Create Account"
-                open={isSignupOpen}
-                onOpenChange={setIsSignupOpen}
+                open={activeDialog === "signup"}
+                onOpenChange={(open) =>
+                  setActiveDialog(open ? "signup" : "closed")
+                }
                 trigger={
                   <Button
                     size="sm"
@@ -338,10 +352,7 @@ const Appbar = () => {
                   </Button>
                 }
               >
-                <CreateAccount
-                  setIsLoginOpen={setIsLoginOpen}
-                  setIsSignupOpen={setIsSignupOpen}
-                />
+                <CreateAccount setActiveDialog={setActiveDialog} />
               </CustomDialog>
             )}
           </div>

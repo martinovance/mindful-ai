@@ -6,7 +6,7 @@ export interface AuthTypes {
 export interface CustomDialogProps {
   title?: string;
   description?: string;
-  trigger: React.ReactNode;
+  trigger?: React.ReactNode;
   children: React.ReactNode;
   showClose?: boolean;
   open?: boolean;

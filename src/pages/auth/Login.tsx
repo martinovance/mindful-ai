@@ -16,9 +16,12 @@ import { useMutation } from "@tanstack/react-query";
 import { LoginUserCredentials } from "@/services/authService";
 import { Loader2 } from "lucide-react";
 import { showToast } from "@/shared/Toast";
-import { DialogOpen } from "@/types/auth";
 
-const Login = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
+const Login = ({
+  setActiveDialog,
+}: {
+  setActiveDialog: (dialog: "login" | "signup" | "closed") => void;
+}) => {
   const navigate = useNavigate();
 
   const { mutate: LoginUser, isPending } = useMutation({
@@ -105,10 +108,7 @@ const Login = ({ setIsLoginOpen, setIsSignupOpen }: DialogOpen) => {
           <p className="font-medium text-sm text-center mt-1">
             Don't have an account? {""}
             <span
-              onClick={() => {
-                setIsLoginOpen(false);
-                setIsSignupOpen(true);
-              }}
+              onClick={() => setActiveDialog("signup")}
               className="text-blue-700 cursor-pointer"
             >
               Sign up
