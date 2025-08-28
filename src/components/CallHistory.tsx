@@ -176,12 +176,14 @@ const CallHistory = ({
                       </p>
                     </CardContent>
                     <CardFooter className="px-1">
-                      <Button
-                        variant="link"
-                        className="text-blue-600 p-0 h-auto"
-                      >
-                        To view details, click here.
-                      </Button>
+                      <Link to={`/sessions/session/${call.id}`}>
+                        <Button
+                          variant="link"
+                          className="text-blue-600 p-0 h-auto cursor-pointer"
+                        >
+                          To view details, click here.
+                        </Button>
+                      </Link>
                     </CardFooter>
                   </div>
                 </div>

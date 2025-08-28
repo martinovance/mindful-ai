@@ -1,4 +1,4 @@
-import { ArrowRight, Plus, Search } from "lucide-react";
+import { ArrowRight, Home, Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { Card, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
@@ -87,12 +87,12 @@ const RecentSession = ({
     <Card className="shadow-none bg-[#fff] pt-0 pb-8 w-full flex flex-col gap-3">
       <div className="flex justify-between items-center px-3 sm:px-8 border-b-2 border-[#F5F5F5] h-[60px]">
         <p className="text-xl font-semibold">Recent Session</p>
-        <Link to="/sessions">
+        <Link to="/dashboard">
           <Button
             className="bg-[#0D80F2] text-[#FFFFFF] rounded-full 
           hover:text-[#B2C9E5] cursor-pointer h-[30px]"
           >
-            <Plus /> New Call
+            <Home /> Dashboard
           </Button>
         </Link>
       </div>
@@ -161,7 +161,7 @@ const RecentSession = ({
                   <Link to={`/sessions/${call.type}/${call.id}`}>
                     <Button
                       variant="link"
-                      className="text-[#5D5CDE] p-0 h-auto"
+                      className="text-[#5D5CDE] p-0 h-auto cursor-pointer"
                     >
                       View details
                       <ArrowRight />

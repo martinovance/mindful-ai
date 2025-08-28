@@ -77,7 +77,7 @@ const Agent = ({ setCallOpen }: { setCallOpen: (open: boolean) => void }) => {
       <Button
         onClick={isSpeaking ? handleStopCall : startCall}
         className={`bg-[#0D80F2] rounded-full hover:text-white w-full 
-              cursor-pointer, ${isSpeaking ? "bg-red-600" : "[#B2C9E5]"}`}
+              cursor-pointer ${isSpeaking ? "bg-red-600" : "bg-[#0D80F2]"}`}
       >
         {isLoading ? (
           <>
@@ -87,7 +87,7 @@ const Agent = ({ setCallOpen }: { setCallOpen: (open: boolean) => void }) => {
         ) : isSpeaking ? (
           "End Call"
         ) : (
-          "Start Voice Session"
+          "Start Call Session"
         )}
       </Button>
     </div>

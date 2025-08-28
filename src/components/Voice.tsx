@@ -151,7 +151,7 @@ const Voice = ({ setVoiceOpen }: { setVoiceOpen: (open: boolean) => void }) => {
           className="w-full bg-[#0D80F2] rounded-full hover:text-white 
               cursor-pointer"
         >
-          "Stop & save"
+          Stop & save
         </Button>
       )}
 
