@@ -299,36 +299,67 @@ const Appbar = () => {
           <div className="flex flex-col space-y-3">
             {isAuthPage ? (
               <>
-                <Link to="/" className="py-2 px-3 rounded-md hover:bg-accent">
+                <HashLink
+                  smooth
+                  to="/#home"
+                  className={`${
+                    isActive("#home") && "active text-[#0D80F2]"
+                  } "text-sm font-medium hover:text-primary transition-colors`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Home
-                </Link>
-                <Link to="/" className="py-2 px-3 rounded-md hover:bg-accent">
+                </HashLink>
+                <HashLink
+                  smooth
+                  to="/#about"
+                  className={`${
+                    isActive("#about") && "active text-[#0D80F2]"
+                  } "text-sm font-medium hover:text-primary transition-colors`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   About
-                </Link>
-                <Link to="/" className="py-2 px-3 rounded-md hover:bg-accent">
+                </HashLink>
+                <HashLink
+                  smooth
+                  to="/#services"
+                  className={`${
+                    isActive("#services") && "active text-[#0D80F2]"
+                  } "text-sm font-medium hover:text-primary transition-colors`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Services
-                </Link>
-                <Link to="/" className="py-2 px-3 rounded-md hover:bg-accent">
+                </HashLink>
+                <HashLink
+                  smooth
+                  to="/#contact"
+                  className={`${
+                    isActive("#contact") && "active text-[#0D80F2]"
+                  } "text-sm font-medium hover:text-primary transition-colors`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Contact
-                </Link>
+                </HashLink>
               </>
             ) : user ? (
               <>
                 <Link
                   to="/dashboard"
                   className="py-2 px-3 rounded-md hover:bg-accent"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Home
                 </Link>
                 <Link
                   to="/sessions"
                   className="py-2 px-3 rounded-md hover:bg-accent"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Sessions
                 </Link>
                 <Link
                   to="/resources"
                   className="py-2 px-3 rounded-md hover:bg-accent"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Resources
                 </Link>
@@ -346,7 +377,7 @@ const Appbar = () => {
                   <Button
                     size="sm"
                     variant="default"
-                    className="cursor-pointer bg-[#B2C9E5] text-[#121417] rounded-full hover:bg-[#9fb8d9]"
+                    className="cursor-pointer bg-[#0D80F2] text-[#fff] rounded-full hover:bg-[#9fb8d9]"
                   >
                     Get started
                   </Button>
