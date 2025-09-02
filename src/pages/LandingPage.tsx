@@ -25,7 +25,8 @@ const LandingPage = () => {
     <div className=" flex flex-col justify-center items-center gap-8">
       <div
         id="home"
-        className="p-3 md:p-8 w-full flex flex-col gap-3 justify-center items-center lg:w-[800px]"
+        className="p-3 md:pt-8 md:pr-8 md:pl-8 w-full flex flex-col gap-3 justify-center 
+        items-center lg:w-[800px]"
       >
         <p className="font-bold text-center text-3xl">
           Your Personal Mental Wellness Companion
@@ -40,8 +41,15 @@ const LandingPage = () => {
             title="Create Account"
             open={activeDialog === "signup"}
             onOpenChange={(open) => setActiveDialog(open ? "signup" : "closed")}
+            onCloseComplete={() => {
+              const topTrigger = document.querySelector(
+                '[data-trigger="signup-top"]'
+              ) as HTMLElement | null;
+              topTrigger?.focus();
+            }}
             trigger={
               <Button
+                data-trigger="signup-top"
                 size="sm"
                 variant="default"
                 className="bg-[#0D80F2] font-bold rounded-md cursor-pointer"
@@ -72,7 +80,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="p-3 md:p-8 flex flex-wrap gap-2 justify-center items-center lg:w-[800px]">
+      <div className="p-3 md:px-8 flex flex-wrap gap-2 justify-center items-center lg:w-[800px]">
         <img
           src={Rectangle4}
           alt="therapist"
@@ -111,7 +119,7 @@ const LandingPage = () => {
 
       <div
         id="services"
-        className="p-5 bg-[#0D80F2] w-full h-full md:h-[294px] flex flex-col justify-center items-center gap-3 "
+        className="p-5 bg-[#0D80F2] w-full h-full md:h-[294px] flex flex-col justify-center items-center gap-3"
       >
         <div className="px-8 grid grid-cols-1 md:grid-cols-3 gap-3 lg:w-[800px]">
           {GETSTARTED.map((items) => (
@@ -197,16 +205,21 @@ const LandingPage = () => {
                 onOpenChange={(open) =>
                   setActiveDialog(open ? "signup" : "closed")
                 }
-                trigger={
-                  <Button
-                    size="sm"
-                    variant="default"
-                    className="bg-[#0D80F2] font-bold rounded-md cursor-pointer"
-                    onClick={() => setActiveDialog("signup")}
-                  >
-                    Get Started
-                  </Button>
-                }
+                onCloseComplete={() => {
+                  const bottomTrigger = document.querySelector(
+                    '[data-trigger="signup-bottom"]'
+                  ) as HTMLElement | null;
+                  bottomTrigger?.focus();
+                }}
+                // <Button
+                //   data-trigger="signup-bottom"
+                //   size="sm"
+                //   variant="default"
+                //   className="bg-[#0D80F2] font-bold rounded-md cursor-pointer"
+                //   onClick={() => setActiveDialog("signup")}
+                // >
+                //   Get Started
+                // </Button>
               >
                 <CreateAccount setActiveDialog={setActiveDialog} />
               </CustomDialog>

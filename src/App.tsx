@@ -14,6 +14,7 @@ import { NotificationProvider } from "./context/NotificationsProvider";
 import { useAuth } from "./hooks/useAuth";
 import CallInfo from "./pages/CallInfo";
 import { PageLoader } from "./shared/Loader";
+import ScrollToTop from "./utils/scrollToTop";
 
 function App() {
   const { user, authLoading } = useAuth();
@@ -25,6 +26,7 @@ function App() {
   return (
     <Suspense fallback={<PageLoader />}>
       <BrowserRouter>
+        <ScrollToTop />
         <NotificationProvider userId={user?.uid ?? ""}>
           <div className="flex flex-col bg-[#F9F9F9] min-h-screen">
             <Appbar />

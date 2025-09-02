@@ -11,6 +11,7 @@ export interface CustomDialogProps {
   showClose?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onCloseComplete?: (open: boolean) => void;
 }
 
 export interface DialogOpen {
