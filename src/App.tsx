@@ -15,6 +15,7 @@ import { useAuth } from "./hooks/useAuth";
 import CallInfo from "./pages/CallInfo";
 import { PageLoader } from "./shared/Loader";
 import ScrollToTop from "./utils/scrollToTop";
+import NotFound from "./components/NotFound";
 
 function App() {
   const { user, authLoading } = useAuth();
@@ -82,6 +83,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
             <Toaster />
