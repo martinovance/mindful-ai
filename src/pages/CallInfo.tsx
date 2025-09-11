@@ -2,14 +2,24 @@ import Vidmate from "@/assets/Vidmate.svg";
 import Mic from "@/assets/MicRec.svg";
 import Conversation from "@/assets/Conversation.svg";
 import Bot1 from "@/assets/Bot1.svg";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getUserDocById } from "@/services/fireStoreService";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteUserDoc, getUserDocById } from "@/services/fireStoreService";
 import { CombinedEntry } from "@/types/vapiTypes";
 import WaveformPlayer from "@/shared/WaveformPlayer";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
+import CustomDialog from "@/shared/Dialog";
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { showToast } from "@/shared/Toast";
 
 const CallInfo = () => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const { type, id } = useParams<{
     type: "session" | "journal";
     id: string;
@@ -24,6 +34,39 @@ const CallInfo = () => {
         return getUserDocById(collectionName, id);
       },
     });
+
+  const { mutate: deleteSession, isPending } = useMutation({
+    mutationFn: async (docId: string | undefined) => {
+      if (!user?.uid) return;
+
+      return await deleteUserDoc(collectionName, docId ?? "");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["combinedEntries", user?.uid],
+      });
+      queryClient.invalidateQueries({ queryKey: ["sessions", user?.uid] });
+      queryClient.invalidateQueries({ queryKey: ["voiceJournals", user?.uid] });
+      navigate("/sessions");
+      showToast({
+        title:
+          type === "session"
+            ? "Session deleted successfully"
+            : "Voice journal deleted successfully",
+        status: "success",
+      });
+    },
+    onError: (error) => {
+      showToast({
+        title:
+          type === "session"
+            ? "Session couldn't be deleted"
+            : "Voice journal couldn't be deleted",
+        description: error && `${error}`,
+        status: "error",
+      });
+    },
+  });
 
   return (
     <div className="p-4 md:p-8 flex flex-col justify-center items-center gap-5">
@@ -135,12 +178,56 @@ const CallInfo = () => {
                     </div>
                   </>
                 )}
+                <div className="w-full flex justify-between items-center">
+                  <CustomDialog
+                    open={Boolean(deleteModalOpen)}
+                    onOpenChange={setDeleteModalOpen}
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        className="mt-auto ml-auto cursor-pointer text-red-400"
+                        // onClick={() => setDeleteModalOpen(id)}
+                      >
+                        <Trash2 />
+                        Delete
+                      </Button>
+                    }
+                  >
+                    <div className="flex flex-col justify-center items-center gap-5 text-center">
+                      <Trash2 className="h-8 w-8 text-red-400" />
+                      <p className="text-lg font-bold text-[#000]">
+                        Are you sure you want to delete this affirmation?
+                      </p>
+                      <div className="flex items-center gap-3 mb-3">
+                        <Button
+                          variant="default"
+                          onClick={() => deleteSession(id)}
+                          className="cursor-pointer bg-[#EA4335] text-[#fff]"
+                        >
+                          {isPending ? (
+                            <Loader2 className="animate-spin" />
+                          ) : (
+                            "Yes"
+                          )}
+                        </Button>
+                        <Button
+                          variant="default"
+                          onClick={() => setDeleteModalOpen(false)}
+                          className="cursor-pointer text-[#0D80F2] bg-transparent 
+                        border border-[#0D80F2]"
+                        >
+                          No
+                        </Button>
+                      </div>
+                    </div>
+                  </CustomDialog>
+                </div>
               </div>
             </div>
 
             <div
               className="h-full w-full bg-[#fff] rounded-sm shadow-xs p-2 md:p-6 
-          flex flex-col gap-6 justify-start"
+                flex flex-col gap-6 justify-start"
             >
               {getSession?.type === "session" ? (
                 <div className="flex flex-col justify-start items-start">
@@ -152,16 +239,26 @@ const CallInfo = () => {
               ) : (
                 getSession?.type === "voiceJournal" && (
                   <div className="w-full flex flex-col justify-start items-start">
-                    <div className="w-full flex justify-start items-start gap-2">
-                      <div className="p-2 bg-[#ECF5FE] rounded-full">
-                        <img src={Mic} loading="lazy" alt="" />
+                    <div className="w-full flex justify-between items-center gap-2">
+                      <div className="w-full flex justify-start items-start gap-2">
+                        <div className="p-2 bg-[#ECF5FE] rounded-full">
+                          <img src={Mic} loading="lazy" alt="" />
+                        </div>
+                        <div className="flex flex-col items-start">
+                          <p className="font-bold text-sm">Mindful AI</p>
+                          <p className="font-normal text-xs text-[#61758A]">
+                            Your wellness assistant
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex flex-col items-start">
-                        <p className="font-bold text-sm">Mindful AI</p>
-                        <p className="font-normal text-xs text-[#61758A]">
-                          Your wellness assistant
-                        </p>
-                      </div>
+                      <Link to="/sessions">
+                        <Button
+                          className="bg-[#0D80F2] text-[#FFFFFF] rounded-full 
+                          hover:text-[#B2C9E5] cursor-pointer h-[30px]"
+                        >
+                          <ArrowLeft /> Sessions
+                        </Button>
+                      </Link>
                     </div>
                     <WaveformPlayer audioURL={getSession?.data?.audioUrl} />
                   </div>
@@ -171,15 +268,25 @@ const CallInfo = () => {
 
             {getSession?.type === "session" && (
               <div className="w-full flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <img src={Conversation} loading="lazy" alt="" />
-                  <p className="font-semibold text-md text-[#0D80F2]">
-                    Conversation Transcript
-                  </p>
+                <div className="w-full flex justify-between items-center gap-2">
+                  <div className="flex items-center gap-2">
+                    <img src={Conversation} loading="lazy" alt="" />
+                    <p className="font-semibold text-md text-[#0D80F2]">
+                      Conversation Transcript
+                    </p>
+                  </div>
+                  <Link to="/sessions">
+                    <Button
+                      className="bg-[#0D80F2] text-[#FFFFFF] rounded-full 
+                      hover:text-[#B2C9E5] cursor-pointer h-[30px]"
+                    >
+                      <ArrowLeft /> Sessions
+                    </Button>
+                  </Link>
                 </div>
                 <div
                   className="h-full w-full bg-[#fff] rounded-sm shadow-xs p-2 md:p-6 
-          flex flex-col gap-6 justify-start"
+                    flex flex-col gap-6 justify-start"
                 >
                   <div className="w-full flex flex-col items-start justify-start gap-6">
                     <div className="w-full flex justify-start items-start gap-2">
