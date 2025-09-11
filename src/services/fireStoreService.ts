@@ -25,6 +25,7 @@ import {
   updateDoc,
   doc,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 export const storeSessionData = async (session: MoodSession) => {
@@ -455,4 +456,20 @@ export const getUserDocById = async (
     };
   }
   return null;
+};
+
+export const deleteUserDoc = async (
+  collectionName: "sessions" | "voiceJournals" | "affirmations",
+  docId: string
+): Promise<void> => {
+  try {
+    const refDoc = doc(db, collectionName, docId);
+    await deleteDoc(refDoc);
+    console.log(
+      `${collectionName} document with ID ${docId} deleted successfully`
+    );
+  } catch (error) {
+    console.error(`Error deleting ${collectionName} document:`, error);
+    throw error;
+  }
 };

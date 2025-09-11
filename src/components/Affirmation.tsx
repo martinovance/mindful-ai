@@ -1,12 +1,12 @@
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
+import { Loader2, Plus, Trash2 } from "lucide-react";
 import CustomDialog from "@/shared/Dialog";
 import CreateAffirmation from "./CreateAffirmation";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
-import { fetchAffirmations } from "@/services/fireStoreService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteUserDoc, fetchAffirmations } from "@/services/fireStoreService";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { Skeleton } from "./ui/skeleton";
 
@@ -18,6 +18,9 @@ const Affirmation = () => {
   const [lastItems, setLastItems] = useState<
     Record<number, QueryDocumentSnapshot<DocumentData> | null>
   >({});
+  const [deleteModalOpen, setDeleteModalOpen] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
 
   const { data: getAffirmations, isPending: loadingAffirmations } = useQuery({
     queryKey: ["affirmations", user?.uid, page],
@@ -42,6 +45,18 @@ const Affirmation = () => {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) setPage(page);
   };
+
+  const { mutate: deleteAffrimation, isPending } = useMutation({
+    mutationFn: async (docId: string) => {
+      if (!user?.uid) return;
+
+      return await deleteUserDoc("affirmations", docId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["affirmations", user?.uid] });
+      setDeleteModalOpen(null);
+    },
+  });
 
   return (
     <div className="pt-4 w-full">
@@ -103,10 +118,58 @@ const Affirmation = () => {
                 />
               </Card>
               <div className="w-full sm:w-[50%] flex flex-col justify-start items-start gap-2">
-                <p className="text-md font-medium">{affirm.title}</p>
-                <p className="text-sm font-normal text-[#637387]">
-                  {affirm.content}
-                </p>
+                <div className="w-full flex flex-col justify-start items-start gap-2">
+                  <p className="text-md font-medium">{affirm.title}</p>
+                  <p className="text-sm font-normal text-[#637387]">
+                    {affirm.content}
+                  </p>
+                </div>
+                <CustomDialog
+                  open={Boolean(deleteModalOpen)}
+                  onOpenChange={(isOpen) => {
+                    if (!isOpen) setDeleteModalOpen(null);
+                  }}
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      className="mt-auto ml-auto cursor-pointer text-red-400"
+                      onClick={() => setDeleteModalOpen(affirm.id)}
+                    >
+                      <Trash2 />
+                      Delete
+                    </Button>
+                  }
+                >
+                  <div className="flex flex-col justify-center items-center gap-5 text-center">
+                    <Trash2 className="h-8 w-8 text-red-400" />
+                    <p className="text-lg font-bold text-[#000]">
+                      Are you sure you want to delete this affirmation?
+                    </p>
+                    <div className="flex items-center gap-3 mb-3">
+                      <Button
+                        variant="default"
+                        onClick={() =>
+                          deleteModalOpen && deleteAffrimation(deleteModalOpen)
+                        }
+                        className="cursor-pointer bg-[#EA4335] text-[#fff]"
+                      >
+                        {isPending ? (
+                          <Loader2 className="animate-spin" />
+                        ) : (
+                          "Yes"
+                        )}
+                      </Button>
+                      <Button
+                        variant="default"
+                        onClick={() => setDeleteModalOpen(null)}
+                        className="cursor-pointer text-[#0D80F2] bg-transparent 
+                        border border-[#0D80F2]"
+                      >
+                        No
+                      </Button>
+                    </div>
+                  </div>
+                </CustomDialog>
               </div>
             </div>
           ))
