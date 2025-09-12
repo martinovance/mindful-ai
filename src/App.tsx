@@ -16,6 +16,7 @@ import CallInfo from "./pages/CallInfo";
 import { PageLoader } from "./shared/Loader";
 import ScrollToTop from "./utils/scrollToTop";
 import NotFound from "./components/NotFound";
+import AppErrorBoundary from "./shared/GlobalErrorBoundary";
 
 function App() {
   const { user, authLoading } = useAuth();
@@ -26,70 +27,72 @@ function App() {
 
   return (
     <Suspense fallback={<PageLoader />}>
-      <BrowserRouter>
-        <ScrollToTop />
-        <NotificationProvider userId={user?.uid ?? ""}>
-          <div className="flex flex-col bg-[#F9F9F9] min-h-screen">
-            <Appbar />
-            <Routes>
-              <Route
-                index
-                element={
-                  <PublicRoute>
-                    <LandingPage />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route>
+      <AppErrorBoundary>
+        <BrowserRouter>
+          <ScrollToTop />
+          <NotificationProvider userId={user?.uid ?? ""}>
+            <div className="flex flex-col bg-[#F9F9F9] min-h-screen">
+              <Appbar />
+              <Routes>
                 <Route
                   index
-                  path="/sessions"
+                  element={
+                    <PublicRoute>
+                      <LandingPage />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard"
                   element={
                     <ProtectedRoute>
-                      <Sessions />
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route>
+                  <Route
+                    index
+                    path="/sessions"
+                    element={
+                      <ProtectedRoute>
+                        <Sessions />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/sessions/:type/:id"
+                    element={
+                      <ProtectedRoute>
+                        <CallInfo />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Route>
+                <Route
+                  path="/resources"
+                  element={
+                    <ProtectedRoute>
+                      <Resources />
                     </ProtectedRoute>
                   }
                 />
                 <Route
-                  path="/sessions/:type/:id"
+                  path="/profile"
                   element={
                     <ProtectedRoute>
-                      <CallInfo />
+                      <UserProfile />
                     </ProtectedRoute>
                   }
                 />
-              </Route>
-              <Route
-                path="/resources"
-                element={
-                  <ProtectedRoute>
-                    <Resources />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <UserProfile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Footer />
-            <Toaster />
-          </div>
-        </NotificationProvider>
-      </BrowserRouter>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Footer />
+              <Toaster />
+            </div>
+          </NotificationProvider>
+        </BrowserRouter>
+      </AppErrorBoundary>
     </Suspense>
   );
 }
