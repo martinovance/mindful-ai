@@ -25,10 +25,38 @@ const Footer = () => {
           <br /> available 24/7.
         </p>
         <div className="flex gap-2 items-center">
-          <img src={XLogo} loading="lazy" alt="X" />
-          <img src={LinkedinLogo} loading="lazy" alt="Linkedin" />
-          <img src={TwitterLogo} loading="lazy" alt="Twitter" />
-          <img src={InstagramLogo} loading="lazy" alt="Instagram" />
+          <a
+            href="https://x.com/MartinsOgunsina"
+            className="cursor-pointer"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={XLogo} loading="lazy" alt="X" />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/martins-ogunsina-107473194/"
+            className="cursor-pointer"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={LinkedinLogo} loading="lazy" alt="Linkedin" />
+          </a>
+          <a
+            href="https://fancydev.netlify.app/"
+            className="cursor-pointer"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={TwitterLogo} loading="lazy" alt="Twitter" />
+          </a>
+          <a
+            href="https://www.instagram.com/lance_.martin/"
+            className="cursor-pointer"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={InstagramLogo} loading="lazy" alt="Instagram" />
+          </a>
         </div>
       </div>
 
@@ -56,11 +84,12 @@ const Footer = () => {
         <div className="flex items-center h-[40px] w-full">
           <Input
             placeholder="Your email address"
-            className="rounded-tr-xs rounded-br-xs h-full w-[87%] bg-[#074079] 
-            border-[#074079] hover:border-none focus:border-none placeholder:text-[#ECF5FE]"
+            className="rounded-tr-xs rounded-br-xs h-full w-[87%] 
+            bg-[#074079] border-none focus-visible:ring-0 focus-visible:outline-none
+              focus:border-none placeholder:text-[#ECF5FE] text-white"
           />
           <Button
-            className="h-full rounded-tl-xs rounded-bl-xs w-[13%] bg-[#0D80F2] 
+            className="cursor-pointer h-full rounded-tl-xs rounded-bl-xs w-[13%] bg-[#0D80F2] 
           text-[#fff] hover:bg-[#0D80F2]"
           >
             <ArrowRight />

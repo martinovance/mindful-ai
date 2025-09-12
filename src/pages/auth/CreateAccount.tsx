@@ -71,6 +71,7 @@ const CreateAccount = ({
                   <Input
                     placeholder="Full Name e.g John Doe"
                     {...field}
+                    autoFocus={false}
                     className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
                     focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"
                   />
@@ -88,6 +89,7 @@ const CreateAccount = ({
                   <Input
                     placeholder="Email"
                     {...field}
+                    autoFocus={false}
                     className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
                     focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"
                   />
@@ -105,6 +107,7 @@ const CreateAccount = ({
                   <Input
                     placeholder="Password"
                     {...field}
+                    autoFocus={false}
                     type="password"
                     className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
                     focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"
@@ -123,6 +126,7 @@ const CreateAccount = ({
                   <Input
                     placeholder="Confirm password"
                     {...field}
+                    autoFocus={false}
                     type="password"
                     className="bg-[#F0F2F5] rounded-xl border-none focus-visible:ring-0 
                     focus-visible:ring-offset-0 placeholder:text-[#637387] text-sm h-12 mb-5"
