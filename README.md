@@ -1,54 +1,39 @@
-# React + TypeScript + Vite
+# MINDFUL-AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Empowering Mindful Living Through Intelligent Awareness**
 
-Currently, two official plugins are available:
+# 🌿 Overview
+*A wellness companion that listens, supports, and helps you stay mindful.*  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Mindful AI is an **AI-powered wellness app** designed to be your everyday companion for mental and emotional well-being.  
+It’s not therapy — instead, it’s a supportive buddy that encourages **reflection, balance, and mindful living** through **voice journaling, mood tracking, and AI-guided conversations**.  
 
-## Expanding the ESLint configuration
+Whether you’re managing daily stress, looking to build healthier habits, or simply want a safe space to talk, Mindful AI provides the tools and insights to help you stay grounded.  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## ✨ Key Features  
+- 🎙️ **Voice Journaling** – Record your thoughts and feelings in your own voice.  
+- 📊 **Mood Tracking Dashboard** – Visualize emotional trends over time.  
+- 🤖 **AI-Powered Conversations** – Get compassionate, context-aware responses from your wellness buddy.  
+- 🧘 **Mindfulness Guidance** – Gentle prompts, reflections, and daily practices to stay balanced.  
+- 🔒 **Privacy First** – Your data is secure and never shared without your consent.  
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚫 What Mindful AI is *not*  
+Mindful AI is **not a replacement for therapy or medical treatment**.  
+If you’re in crisis or need urgent support, please call **911 or your local emergency number**.  
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+---
+
+## 🛠️ Tech Stack  
+- **Frontend:** React + Vite + TypeScript + TailwindCSS + ShadCN UI  
+- **Voice AI:** Vapi AI integration  
+- **Backend & Auth:** Firebase (Authentication & Firestore)  
+- **Storage:** Cloudinary for audio journals  
+- **Data Visualization:** Recharts for mood insights  
+
+---
+<img width="1893" height="895" alt="Mindful2" src="https://github.com/user-attachments/assets/ebe20b20-2f65-4ff7-a731-32d91a4fcfde" />
+
