@@ -121,24 +121,34 @@ const LandingPage = () => {
         id="services"
         className="p-5 bg-[#0D80F2] w-full h-full md:h-[294px] flex flex-col justify-center items-center gap-3"
       >
-        <div className="px-8 grid grid-cols-1 md:grid-cols-3 gap-3 lg:w-[800px]">
-          {GETSTARTED.map((items) => (
-            <div
-              key={items.title}
-              className="p-2 rounded-sm w-full flex justify-center items-center gap-3 h-[134px] 
+        <div className="lg:w-[800px] lg:px-8 flex flex-col justify-start items-start gap-4">
+          <div className="flex flex-col justify-start items-start">
+            <p className="font-bold text-2xl text-[#fff]">
+              Get Started in 3 Simple Steps
+            </p>
+            <p className="font-light text-lg text-[#F5FAFE]">
+              Join thousands who found balance with Mindful-AI
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {GETSTARTED.map((items) => (
+              <div
+                key={items.title}
+                className="p-2 rounded-sm w-full flex justify-center items-center gap-3 h-[134px] 
               bg-[#FFFFFF]"
-            >
-              <div className="p-2 bg-[#ECF2F9] text-[#0D80F2] rounded-full">
-                <items.icon />
+              >
+                <div className="p-2 bg-[#ECF2F9] text-[#0D80F2] rounded-full">
+                  <items.icon />
+                </div>
+                <div className="flex flex-col justify-start gap-1">
+                  <p className="text-[#000] font-semibold text-md">
+                    {items.title}
+                  </p>
+                  <p>{items.description}</p>
+                </div>
               </div>
-              <div className="flex flex-col justify-start gap-1">
-                <p className="text-[#0D171C] font-semibold text-md">
-                  {items.title}
-                </p>
-                <p>{items.description}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 

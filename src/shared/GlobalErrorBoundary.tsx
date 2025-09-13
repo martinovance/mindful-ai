@@ -16,12 +16,12 @@ export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
       </div>
       <div
         role="alert"
-        className="flex flex-col items-center justify-center p-6 text-center"
+        className="lg:w-[800px] flex flex-col items-center justify-center p-6 text-center"
       >
         <h2 className="text-xl font-bold mb-2">Something went wrong</h2>
-        <pre className="text-sm mb-4 text-red-600">
+        <p className="heighttext-sm mb-4 text-red-600">
           {error?.message ?? "Unknown error"}
-        </pre>
+        </p>
         <Button
           onClick={resetErrorBoundary}
           className="px-4 py-2 bg-[#0D80F2] text-white rounded-lg cursor-pointer"
