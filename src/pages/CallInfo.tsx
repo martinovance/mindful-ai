@@ -154,14 +154,14 @@ const CallInfo = () => {
                     {getSession?.data.createdAt.toDate().toDateString()}
                   </p>
                 </div>
-                {getSession?.type === "voiceJournal" && (
+                {/* {getSession?.type === "voiceJournal" && (
                   <div className="w-full flex justify-between items-center">
                     <p className="font-bold text-sm">Duration</p>
                     <p className="font-bold text-sm text-[#61758A]">
                       45 minutes
                     </p>
                   </div>
-                )}
+                )} */}
                 {getSession?.type === "session" && (
                   <>
                     <div className="w-full flex justify-between items-center">

@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Faqs, steps } from "@/constant/dashData";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import CustomDialog from "@/shared/Dialog";
+import { ChevronDown, ChevronRight, Speaker } from "lucide-react";
 import { useState } from "react";
 
 const Resources = () => {
@@ -75,12 +76,24 @@ const Resources = () => {
         </div>
       </div>
 
-      <Button
-        className="bg-[#B2C9E5] text-[#121417] rounded-full hover:text-white 
+      <CustomDialog
+        title="Coming Soon"
+        trigger={
+          <Button
+            className="bg-[#0D80F2] text-[#fff] rounded-full
               cursor-pointer"
+          >
+            Request a Therapist Connection
+          </Button>
+        }
       >
-        Request a Therapist Connection
-      </Button>
+        <div className="flex flex-col justify-center items-center gap-5 text-center">
+          <Speaker className="text-[#0D80F2] h-10 w-10" />
+          <p className="text-lg font-bold text-[#000]">
+            Feature will be available soon
+          </p>
+        </div>
+      </CustomDialog>
     </div>
   );
 };

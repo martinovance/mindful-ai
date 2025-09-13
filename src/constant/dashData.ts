@@ -83,20 +83,24 @@ interface faqsType {
 
 export const Faqs: faqsType[] = [
   {
-    title: "Will this help if I already have bladder issues or bone concerns?",
-    desc: "Yes! Many women see improvement in bladder control within just a few weeks of regular practice. The bone health techniques work regardless of where you're starting from, and everything can be modified to meet you where you are.",
+    title: "Can I use Mindful AI if I have existing health conditions?",
+    desc: "Mindful AI is designed as a supportive wellness companion, not a medical treatment. If you have bladder issues, bone concerns, or other health conditions, the app can help with mindfulness, stress management, and daily wellness practices — but it should never replace advice from your doctor or therapist. Always consult your healthcare provider for medical guidance.",
   },
   {
-    title: "Is Mindful Ai a replacement for therapy?",
-    desc: "All therapists are licensed professionals with extensive experience in mental health care.",
+    title: "Is Mindful AI the same as seeing a therapist?",
+    desc: "No. Mindful AI is not a replacement for therapy or professional medical care. Instead, it serves as a friendly companion to help you track your moods, practice mindfulness, and reflect on your well-being. Think of it as a wellness buddy that’s available anytime, not a substitute for licensed mental health support.",
   },
   {
-    title: "What if I can't attend the live Q&A sessions?",
-    desc: "If you are in immediate help or in immediate danger, please call 911 or your local emergency number.",
+    title: "What if I miss a live session or can’t use the app every day?",
+    desc: "That’s okay! Mindful AI is flexible and meant to fit into your life, not add pressure. You can revisit past guided sessions, explore journaling prompts, and use the app at your own pace. Progress comes from consistency over time, not perfection.",
   },
   {
-    title: "Will I need special equipment?",
-    desc: "If you are in immediate help or in immediate danger, please call 911 or your local emergency number.",
+    title: "Do I need special tools or equipment to get started?",
+    desc: "No. Everything you need is built into the app — voice journaling, guided reflections, and mood tracking. You don’t need any extra gear, just your phone or computer. Optional items like headphones or a quiet space may enhance the experience, but they’re not required.",
+  },
+  {
+    title: "Can Mindful AI help me in an emergency or crisis situation?",
+    desc: "If you are in need of immediate help or in immediate danger, please call 911 or your local toll-free/emergency number.",
   },
 ];
 
