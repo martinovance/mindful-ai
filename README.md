@@ -2,22 +2,6 @@
 
 **Empowering Mindful Living Through Intelligent Awareness**
 
-TypeScript 97.0%  
-Languages 4  
-
-*Built with the tools and technologies:*
-     
-Firebase  
-JavaScript  
-React  
-Yarn  
-TypeScript  
-Zod  
-Vite  
-ESLint  
-Axios  
-React Hook Form
-
 # 🌿 Overview
 *A wellness companion that listens, supports, and helps you stay mindful.*  
 
