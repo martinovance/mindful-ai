@@ -1,5 +1,3 @@
-<img width="1893" height="895" alt="Mindful2" src="https://github.com/user-attachments/assets/ebe20b20-2f65-4ff7-a731-32d91a4fcfde" />
-
 # MINDFUL-AI
 
 **Empowering Mindful Living Through Intelligent Awareness**
