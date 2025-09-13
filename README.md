@@ -1,3 +1,5 @@
+<img width="1893" height="895" alt="Mindful2" src="https://github.com/user-attachments/assets/ebe20b20-2f65-4ff7-a731-32d91a4fcfde" />
+
 # MINDFUL-AI
 
 **Empowering Mindful Living Through Intelligent Awareness**
@@ -35,3 +37,5 @@ If you’re in crisis or need urgent support, please call **911 or your local em
 - **Data Visualization:** Recharts for mood insights  
 
 ---
+<img width="1893" height="895" alt="Mindful2" src="https://github.com/user-attachments/assets/ebe20b20-2f65-4ff7-a731-32d91a4fcfde" />
+
