@@ -15,6 +15,7 @@ import CustomDropdown from "@/shared/Dropdown";
 import Notifications from "./Notifications";
 import { useNotifications } from "@/hooks/useNotifications";
 import { HashLink } from "react-router-hash-link";
+import { getInitials } from "@/utils/getInitials";
 
 const Appbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -190,8 +191,10 @@ const Appbar = () => {
         onOpenChange={setProfileOpen}
         trigger={
           <Avatar className="h-8 w-8 cursor-pointer">
-            <AvatarImage src={user?.photoURL || AvatarImg} />
-            <AvatarFallback>MO</AvatarFallback>
+            <AvatarImage src={user?.photoURL ?? ""} />
+            <AvatarFallback className="font-bold">
+              {getInitials(user?.displayName) || AvatarImg}
+            </AvatarFallback>
           </Avatar>
         }
       >

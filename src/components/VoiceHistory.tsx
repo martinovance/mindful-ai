@@ -110,7 +110,7 @@ const VoiceHistory = () => {
           ) : (
             <div className="flex justify-center items-center gap-3 text-center w-full">
               <p className="text-gray-500 text-center">
-                You haven't had any calls yet.
+                You haven't recorded any journal yet.
               </p>
             </div>
           )}

@@ -172,10 +172,7 @@ const RecentSession = ({
             ))
           ) : tranformedEntries?.length === 0 ? (
             <div className="flex flex-col justify-center items-center gap-3 text-center">
-              <p className="text-gray-500">You haven't had any calls yet.</p>
-              <Button className="bg-[#0D80F2] font-bold rounded-full hover:text-white cursor-pointer">
-                Start a call with your AI therapist
-              </Button>
+              <p className="text-gray-500">You haven't had any session.</p>
             </div>
           ) : (
             <div className="flex flex-col justify-center items-center gap-3 text-center py-8">

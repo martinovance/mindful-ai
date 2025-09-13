@@ -191,9 +191,9 @@ const CallHistory = ({
             ))
           ) : sessions?.length === 0 ? (
             <div className="flex flex-col justify-center items-center gap-3 text-center">
-              <p className="text-gray-500">You haven't had any calls yet.</p>
+              <p className="text-gray-500">You haven't had any call yet.</p>
               <Link to="/sessions">
-                <Button className="bg-[#B2C9E5] text-[#121417] font-bold rounded-full hover:text-white cursor-pointer">
+                <Button className="bg-[#0D80F2] text-[#fff] font-bold rounded-full hover:text-white cursor-pointer">
                   Start a call with your AI therapist
                 </Button>
               </Link>

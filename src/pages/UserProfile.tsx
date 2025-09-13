@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadProfilePicture } from "@/services/fireStoreService";
 import { Loader2 } from "lucide-react";
 import { showToast } from "@/shared/Toast";
+import { getInitials } from "@/utils/getInitials";
 
 const UserProfile = () => {
   const { user } = useAuth();
@@ -151,7 +152,10 @@ const UserProfile = () => {
         >
           <h1 className="font-semibold text-sm">Profile Picture</h1>
           <Avatar className="h-30 w-30 rounded-full">
-            <AvatarImage src={user?.photoURL || AvatarImg} />
+            <AvatarImage src={user?.photoURL ?? ""} />
+            <AvatarFallback className="font-bold text-2xl">
+              {getInitials(user?.displayName) || AvatarImg}
+            </AvatarFallback>
           </Avatar>
           <input
             type="file"
