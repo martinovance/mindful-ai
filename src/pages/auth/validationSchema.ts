@@ -40,7 +40,7 @@ export const affirmationSchema = z.object({
   content: z
     .string()
     .min(10, "Content must be at least 10 characters")
-    .max(250, "Content cannot exceed 500 characters"),
+    .max(500, "Content cannot exceed 500 characters"),
   thumbnail: z.custom<File | string>((val) => val !== undefined, {
     message: "Image is required",
   }),
